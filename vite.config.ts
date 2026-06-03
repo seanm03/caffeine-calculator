@@ -4,7 +4,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/testing-vibecoding/',
+  base: '/caffeine-calculator/',
   plugins: [react()],
   resolve: {
     alias: {
