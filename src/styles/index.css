@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Coffee Caffeine Calculator - Custom Styles */
+
+/* ── CSS Custom Properties ────────────────────────────────────────── */
+:root {
+  --color-coffee-brown: #8b5e3c;
+  --color-coffee-cream: #f0e6d8;
+  --color-coffee-espresso: #2a1a10;
+  --color-coffee-amber: #c67b4b;
+}
+
+.dark {
+  --color-coffee-brown: #c9a87c;
+  --color-coffee-cream: #3a3028;
+  --color-coffee-espresso: #e8d5c4;
+}
+
+@layer base {
+  body {
+    @apply bg-coffee-50 text-coffee-900 antialiased;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-coffee {
+    @apply bg-coffee-600 hover:bg-coffee-700 text-white font-semibold py-2 px-4 rounded-lg
+           transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-coffee-400
+           focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .input-coffee {
+    @apply w-full px-3 py-2 border border-coffee-300 rounded-lg
+           focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:border-coffee-500
+           bg-white text-coffee-900 placeholder-coffee-400
+           transition-shadow duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-md border border-coffee-200 p-6
+           transition-shadow duration-300;
+  }
+
+  .card:hover {
+    box-shadow: 0 4px 20px rgba(139, 94, 60, 0.1);
+  }
+
+  /* Collapsible panel transition */
+  .collapse-panel {
+    transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ── Animations ──────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes numberPop {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-number-pop {
+  animation: numberPop 0.4s ease-out;
+}
+
+/* ── Focus ring for keyboard accessibility ───────────────────────── */
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-coffee-500
+         focus-visible:ring-offset-2 dark:focus-visible:ring-offset-coffee-900;
+}
+
+/* ── Number transition for ResultsDisplay ────────────────────────── */
+.number-transition {
+  transition: color 0.5s ease, transform 0.3s ease;
+}
+
