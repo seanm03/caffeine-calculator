@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, useCallback, useMemo } from 'react';
 
 export interface SegmentedControlProps<T extends string> {
   options: { value: T; label: string; indicator?: string }[];
@@ -15,10 +15,35 @@ export default function SegmentedControl<T extends string>({
 }: SegmentedControlProps<T>) {
   const baseId = useId();
 
+  const optionValues = useMemo(() => options.map((o) => o.value), [options]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const idx = optionValues.indexOf(value);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const nextIdx = (idx + 1) % optionValues.length;
+        onChange(optionValues[nextIdx]);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prevIdx = (idx - 1 + optionValues.length) % optionValues.length;
+        onChange(optionValues[prevIdx]);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        onChange(optionValues[0]);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        onChange(optionValues[optionValues.length - 1]);
+      }
+    },
+    [value, onChange, optionValues],
+  );
+
   return (
     <div
       className="flex overflow-x-auto rounded-lg border border-coffee-300 dark:border-coffee-600"
       role="radiogroup"
+      onKeyDown={handleKeyDown}
     >
       {options.map((opt, i) => {
         const isSelected = value === opt.value;
@@ -30,7 +55,7 @@ export default function SegmentedControl<T extends string>({
             type="button"
             role="radio"
             aria-checked={isSelected}
-            tabIndex={i === 0 ? 0 : -1}
+            tabIndex={isSelected ? 0 : -1}
             onClick={() => onChange(opt.value)}
             className={`
               flex-1 min-w-fit flex items-center justify-center gap-1.5 whitespace-nowrap

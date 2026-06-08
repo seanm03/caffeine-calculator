@@ -19,7 +19,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 354,
     caffeineMg: 235,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
@@ -28,7 +28,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 310,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
@@ -37,7 +37,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 591,
     caffeineMg: 410,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
@@ -46,16 +46,16 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 360,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
     name: 'Dark Roast',
     size: 'Grande',
     volumeMl: 473,
-    caffeineMg: 260,
+    caffeineMg: 265,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
@@ -64,7 +64,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 225,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
@@ -73,7 +73,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 150,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
@@ -82,7 +82,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 150,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
@@ -91,7 +91,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 60,
     caffeineMg: 150,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
@@ -100,7 +100,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 200,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
 
   // Starbucks — Additional drinks
@@ -111,7 +111,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 150,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
@@ -120,7 +120,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 195,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
@@ -129,16 +129,16 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 175,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Starbucks',
     name: 'Iced Coffee',
     size: 'Grande',
     volumeMl: 473,
-    caffeineMg: 190,
+    caffeineMg: 165,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
 
   // -----------------------------------------------------------------------
@@ -151,7 +151,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 296,
     caffeineMg: 180,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Dunkin'",
@@ -160,16 +160,16 @@ const brandData: BrandDrink[] = [
     volumeMl: 414,
     caffeineMg: 210,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Dunkin'",
     name: 'Original Blend',
     size: 'Large',
     volumeMl: 591,
-    caffeineMg: 300,
+    caffeineMg: 270,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Dunkin'",
@@ -178,7 +178,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 414,
     caffeineMg: 260,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Dunkin'",
@@ -187,7 +187,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 414,
     caffeineMg: 118,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Dunkin'",
@@ -196,16 +196,16 @@ const brandData: BrandDrink[] = [
     volumeMl: 414,
     caffeineMg: 118,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Dunkin'",
     name: 'Iced Coffee',
     size: 'Medium',
     volumeMl: 414,
-    caffeineMg: 198,
+    caffeineMg: 175,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Dunkin'",
@@ -214,7 +214,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 414,
     caffeineMg: 237,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
 
   // -----------------------------------------------------------------------
@@ -227,7 +227,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 355,
     caffeineMg: 109,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "McDonald's",
@@ -236,7 +236,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 145,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "McDonald's",
@@ -245,7 +245,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 621,
     caffeineMg: 180,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "McDonald's",
@@ -254,16 +254,16 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 142,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "McDonald's",
     name: 'McCafé Mocha',
     size: 'Medium',
     volumeMl: 473,
-    caffeineMg: 100,
+    caffeineMg: 110,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "McDonald's",
@@ -272,7 +272,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 200,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
 
   // -----------------------------------------------------------------------
@@ -285,7 +285,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 425,
     caffeineMg: 205,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Tim Hortons',
@@ -294,7 +294,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 425,
     caffeineMg: 210,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Tim Hortons',
@@ -303,7 +303,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 425,
     caffeineMg: 115,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Tim Hortons',
@@ -312,7 +312,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 425,
     caffeineMg: 90,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Tim Hortons',
@@ -321,7 +321,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 425,
     caffeineMg: 165,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Tim Hortons',
@@ -330,7 +330,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 425,
     caffeineMg: 150,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
 
   // -----------------------------------------------------------------------
@@ -343,7 +343,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 267,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Peet's",
@@ -352,7 +352,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 60,
     caffeineMg: 140,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Peet's",
@@ -361,7 +361,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 210,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Peet's",
@@ -370,7 +370,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 150,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: "Peet's",
@@ -379,7 +379,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 473,
     caffeineMg: 150,
     source: 'Brand published nutrition',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
 
   // -----------------------------------------------------------------------
@@ -392,7 +392,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 237,
     caffeineMg: 95,
     source: 'USDA FoodData Central (CC0)',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Generic',
@@ -401,7 +401,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 30,
     caffeineMg: 63,
     source: 'USDA FoodData Central (CC0)',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Generic',
@@ -410,7 +410,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 237,
     caffeineMg: 63,
     source: 'USDA FoodData Central (CC0)',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Generic',
@@ -419,7 +419,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 237,
     caffeineMg: 3,
     source: 'USDA FoodData Central (CC0)',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
   {
     brand: 'Generic',
@@ -428,7 +428,7 @@ const brandData: BrandDrink[] = [
     volumeMl: 237,
     caffeineMg: 100,
     source: 'USDA FoodData Central (CC0)',
-    lastUpdated: '2025-01',
+    lastUpdated: '2026-06',
   },
 ];
 

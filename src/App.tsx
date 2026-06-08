@@ -1,25 +1,20 @@
-import { useState } from 'react';
 import Header from './components/Header';
 import Calculator from './components/Calculator';
 import BrandReference from './components/BrandReference';
 import MethodologyInfo from './components/MethodologyInfo';
+import MetabolismTracker from './components/MetabolismTracker';
 import Footer from './components/Footer';
 import ThemeToggle from './components/ThemeToggle';
 import UnitToggle from './components/UnitToggle';
 import ErrorBoundary from './components/ErrorBoundary';
 import { UnitProvider, useUnits } from './hooks/useUnits';
+import { ThemeProvider } from './hooks/useTheme';
 import { CalculatorStateProvider } from './hooks/useCalculatorState';
-
-type Tab = 'calculator' | 'brands' | 'methodology';
-
-const TABS: { key: Tab; label: string; emoji: string }[] = [
-  { key: 'calculator', label: 'Calculator', emoji: '☕' },
-  { key: 'brands', label: 'Brand Reference', emoji: '🏷️' },
-  { key: 'methodology', label: 'Methodology', emoji: '📚' },
-];
+import { CaffeineLogProvider } from './hooks/useCaffeineLog';
+import { useHashTab } from './hooks/useHashTab';
 
 function AppContent() {
-  const [activeTab, setActiveTab] = useState<Tab>('calculator');
+  const { activeTab, setActiveTab, tabs } = useHashTab();
   const { unitSystem, toggle: toggleUnits } = useUnits();
 
   return (
@@ -33,11 +28,11 @@ function AppContent() {
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 sm:px-6 py-8 space-y-6">
         {/* Tab bar */}
         <nav
-          className="flex border-b border-coffee-200 dark:border-coffee-800"
+          className="grid grid-cols-2 sm:grid-cols-4 border-b border-coffee-200 dark:border-coffee-800"
           role="tablist"
           aria-label="Content sections"
         >
-          {TABS.map(({ key, label, emoji }) => {
+          {tabs.map(({ key, label, emoji }) => {
             const isActive = activeTab === key;
             return (
               <button
@@ -48,7 +43,7 @@ function AppContent() {
                 tabIndex={isActive ? 0 : -1}
                 onClick={() => setActiveTab(key)}
                 className={`
-                  flex-1 sm:flex-none px-4 sm:px-6 py-3 text-sm font-medium
+                  px-4 sm:px-6 py-3 text-sm font-medium
                   transition-colors duration-200 relative
                   focus:outline-none focus-visible:ring-2 focus-visible:ring-coffee-400
                   focus-visible:ring-inset rounded-t-lg
@@ -100,6 +95,13 @@ function AppContent() {
             </ErrorBoundary>
           </div>
         )}
+        {activeTab === 'tracker' && (
+          <div role="tabpanel" aria-label="Caffeine Tracker">
+            <ErrorBoundary>
+              <MetabolismTracker />
+            </ErrorBoundary>
+          </div>
+        )}
       </main>
 
       <Footer />
@@ -109,9 +111,13 @@ function AppContent() {
 
 function App() {
   return (
-    <UnitProvider>
-      <AppContent />
-    </UnitProvider>
+    <ThemeProvider>
+      <UnitProvider>
+        <CaffeineLogProvider>
+          <AppContent />
+        </CaffeineLogProvider>
+      </UnitProvider>
+    </ThemeProvider>
   );
 }
 

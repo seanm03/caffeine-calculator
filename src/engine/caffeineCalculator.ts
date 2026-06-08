@@ -37,6 +37,10 @@ import {
   STANDARD_CUP_CAFFEINE_MG,
   isPercolationMethod,
 } from './constants';
+import { isValidNumber } from './utils';
+
+/** Maximum plausible coffee weight in grams. */
+const MAX_PLAUSIBLE_COFFEE_WEIGHT_G = 500;
 
 // ---------------------------------------------------------------------------
 // Parameter-level lookup helpers
@@ -51,8 +55,11 @@ import {
  * @returns Caffeine content in mg/g of green coffee
  */
 export function getSpeciesCaffeine(species: Species, robustaPercent?: number): number {
+  // Input validation
+  if (!species || typeof species !== 'string') return 0;
+
   if (species === 'blend') {
-    const pct = (robustaPercent ?? 50) / 100;
+    const pct = (!isValidNumber(robustaPercent) ? 50 : Math.max(0, Math.min(100, robustaPercent))) / 100;
     return SPECIES_CAFFEINE.arabica * (1 - pct) + SPECIES_CAFFEINE.robusta * pct;
   }
   return SPECIES_CAFFEINE[species];
@@ -177,6 +184,16 @@ export function buildBreakdown(
  * @returns CaffeineResult with total mg, daily limit %, equivalent cups, and breakdown
  */
 export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
+  // Input validation
+  if (!params || typeof params !== 'object') {
+    return {
+      totalCaffeineMg: 0,
+      dailyLimitPercent: 0,
+      equivalentCups: 0,
+      breakdown: buildBreakdown(0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),
+    };
+  }
+
   const {
     brewMethod,
     coffeeWeightG,
@@ -189,8 +206,8 @@ export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
     altitude,
   } = params;
 
-  // Edge case: zero coffee weight → zero caffeine
-  if (coffeeWeightG <= 0) {
+  // Edge case: invalid or non-positive coffee weight → zero caffeine
+  if (!isValidNumber(coffeeWeightG) || coffeeWeightG <= 0 || coffeeWeightG > MAX_PLAUSIBLE_COFFEE_WEIGHT_G) {
     return {
       totalCaffeineMg: 0,
       dailyLimitPercent: 0,
@@ -230,14 +247,14 @@ export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
   const finalEff = baseEff * grindAdj * tempAdj;
 
   // --- Step 4: Caffeine in cup ---
-  const totalCaffeineMg = Math.round(groundsAdjusted * finalEff * 100) / 100;
+  const totalCaffeineMg = Math.round(groundsAdjusted * finalEff);
 
   // Derived values
   const dailyLimitPercent = Math.round((totalCaffeineMg / DAILY_SAFE_LIMIT_MG) * 100 * 10) / 10;
   const equivalentCups = Math.round((totalCaffeineMg / STANDARD_CUP_CAFFEINE_MG) * 10) / 10;
 
   const breakdown = buildBreakdown(
-    Math.round(baseCaffeineMg * 100) / 100,
+    Math.round(baseCaffeineMg),
     roastAdj,
     processingAdj,
     altitudeAdj,
@@ -247,10 +264,5 @@ export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
     Math.round(finalEff * 1000) / 1000,
   );
 
-  return {
-    totalCaffeineMg,
-    dailyLimitPercent,
-    equivalentCups,
-    breakdown,
-  };
+  return { totalCaffeineMg, dailyLimitPercent, equivalentCups, breakdown };
 }

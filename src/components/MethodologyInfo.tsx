@@ -23,6 +23,12 @@ const SCIENTIFIC_REFERENCES: { author: string; year: number; title: string; doi?
     doi: '10.1093/jat/27.7.520',
   },
   {
+    author: 'McCusker, R.R. et al.',
+    year: 2006,
+    title: 'Caffeine content of decaffeinated coffee',
+    doi: '10.1093/jat/30.8.611',
+  },
+  {
     author: 'Hečimović, I. et al.',
     year: 2011,
     title: 'Comparative study of polyphenols and caffeine in different coffee varieties affected by the degree of roasting',
@@ -32,7 +38,7 @@ const SCIENTIFIC_REFERENCES: { author: string; year: number; title: string; doi?
     author: 'Severini, C. et al.',
     year: 2017,
     title: 'The Question of Caffeine: A comprehensive review of extraction variables',
-    doi: '10.5772/intechopen.69126',
+    doi: '10.5772/intechopen.69002',
   },
   {
     author: 'Fuller, M. & Rao, N.Z.',
@@ -59,10 +65,10 @@ const SCIENTIFIC_REFERENCES: { author: string; year: number; title: string; doi?
     doi: '10.1038/s41598-024-80385-3',
   },
   {
-    author: 'Duke, K. et al.',
+    author: 'Duke, B.W. et al.',
     year: 2025,
-    title: 'Effects of roast degree on caffeine content and antioxidant activity',
-    doi: '10.1155/2025/2405668',
+    title: 'Effects of roasting degree and grinding size on caffeine content and sensorial quality of coffee',
+    doi: '10.1155/jfq/2405668',
   },
 ];
 

@@ -1,4 +1,5 @@
-import { useState, useCallback, createContext, useContext } from 'react';
+import { useState, useCallback } from 'react';
+import { createCtxWithName } from './createCtx';
 
 export type UnitSystem = 'metric' | 'imperial';
 
@@ -13,7 +14,7 @@ export interface UnitHelpers {
   fToC: (f: number) => number;
 }
 
-const UnitContext = createContext<UnitHelpers | null>(null);
+const [useUnitsCtx, UnitContextProvider] = createCtxWithName<UnitHelpers>('UnitContext');
 
 function getInitialUnits(): UnitSystem {
   const saved = localStorage.getItem('coffee-calc-units');
@@ -29,7 +30,8 @@ export function UnitProvider({ children }: { children: React.ReactNode }) {
       try {
         localStorage.setItem('coffee-calc-units', next);
       } catch {
-        // Silently fail on QuotaExceededError
+        // Silent failure is intentional: unit preference is low-impact and has
+        // a sensible default ('metric'). No user-facing notification needed.
       }
       return next;
     });
@@ -43,14 +45,10 @@ export function UnitProvider({ children }: { children: React.ReactNode }) {
   const fToC = useCallback((f: number) => Math.round(((f - 32) * 5 / 9) * 10) / 10, []);
 
   return (
-    <UnitContext.Provider value={{ unitSystem, toggle, gToOz, ozToG, mlToFlOz, flOzToMl, cToF, fToC }}>
+    <UnitContextProvider value={{ unitSystem, toggle, gToOz, ozToG, mlToFlOz, flOzToMl, cToF, fToC }}>
       {children}
-    </UnitContext.Provider>
+    </UnitContextProvider>
   );
 }
 
-export function useUnits(): UnitHelpers {
-  const ctx = useContext(UnitContext);
-  if (!ctx) throw new Error('useUnits must be used within a UnitProvider');
-  return ctx;
-}
+export const useUnits = useUnitsCtx;

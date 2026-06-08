@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import type {
   BrewingParameters,
 } from '../types';
@@ -8,6 +8,9 @@ import BrewMethodSelector from './BrewMethodSelector';
 import CoffeeInputs from './CoffeeInputs';
 import AdvancedOptions from './AdvancedOptions';
 import ResultsDisplay from './ResultsDisplay';
+import SensitivityCharts from './SensitivityCharts';
+
+type ResultView = 'result' | 'sensitivity';
 
 export default function Calculator() {
   const {
@@ -51,6 +54,7 @@ export default function Calculator() {
   );
 
   const result = useMemo(() => calculateCaffeine(params), [params]);
+  const [resultView, setResultView] = useState<ResultView>('result');
 
   return (
     <div className="card max-w-2xl mx-auto space-y-8">
@@ -86,7 +90,43 @@ export default function Calculator() {
 
       <hr className="border-coffee-200 dark:border-coffee-700" />
 
-      <ResultsDisplay result={result} coffeeWeightG={coffeeWeightG} waterVolumeMl={waterVolumeMl} />
+      {/* ── Result / Sensitivity toggle ──────────────────────────── */}
+      <div className="flex items-center gap-2 border-b border-coffee-200 dark:border-coffee-700 pb-3">
+        <button
+          type="button"
+          onClick={() => setResultView('result')}
+          className={`
+            text-sm font-medium px-4 py-1.5 rounded-full transition-colors duration-200
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-coffee-400
+            ${resultView === 'result'
+              ? 'bg-coffee-600 text-white'
+              : 'text-coffee-500 dark:text-coffee-400 hover:text-coffee-700 dark:hover:text-coffee-200'
+            }
+          `}
+        >
+          Result
+        </button>
+        <button
+          type="button"
+          onClick={() => setResultView('sensitivity')}
+          className={`
+            text-sm font-medium px-4 py-1.5 rounded-full transition-colors duration-200
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-coffee-400
+            ${resultView === 'sensitivity'
+              ? 'bg-coffee-600 text-white'
+              : 'text-coffee-500 dark:text-coffee-400 hover:text-coffee-700 dark:hover:text-coffee-200'
+            }
+          `}
+        >
+          Sensitivity
+        </button>
+      </div>
+
+      {resultView === 'result' ? (
+        <ResultsDisplay result={result} coffeeWeightG={coffeeWeightG} waterVolumeMl={waterVolumeMl} brewMethod={brewMethod} />
+      ) : (
+        <SensitivityCharts currentParams={params} />
+      )}
     </div>
   );
 }

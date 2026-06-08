@@ -1,5 +1,6 @@
 import type { Species } from '../types';
 import { useUnits } from '../hooks/useUnits';
+import SegmentedControl from './SegmentedControl';
 
 export interface CoffeeInputsProps {
   coffeeWeightG: number;
@@ -16,6 +17,7 @@ const SPECIES_OPTIONS: { value: Species; label: string }[] = [
   { value: 'arabica', label: 'Arabica' },
   { value: 'robusta', label: 'Robusta' },
   { value: 'blend', label: 'Blend' },
+  { value: 'decaf', label: 'Decaf' },
 ];
 
 function formatRatio(coffeeG: number, waterMl: number): string {
@@ -152,34 +154,12 @@ export default function CoffeeInputs({
         <legend className="block text-sm font-semibold text-coffee-800 dark:text-coffee-300 mb-2">
           Coffee Species
         </legend>
-        <div className="flex rounded-lg border border-coffee-300 dark:border-coffee-600 overflow-hidden">
-          {SPECIES_OPTIONS.map((opt, i) => {
-            const isSelected = species === opt.value;
-            return (
-              <button
-                key={opt.value}
-                type="button"
-                role="radio"
-                aria-checked={isSelected}
-                onClick={() => onSpeciesChange(opt.value)}
-                className={`
-                  flex-1 px-3 py-2.5 text-sm font-medium transition-colors duration-150
-                  min-h-[44px]
-                  focus:outline-none focus-visible:ring-2 focus-visible:ring-inset
-                  focus-visible:ring-coffee-400
-                  ${i > 0 ? 'border-l border-coffee-300 dark:border-coffee-600' : ''}
-                  ${
-                    isSelected
-                      ? 'bg-coffee-500 text-white dark:bg-coffee-400 dark:text-coffee-950'
-                      : 'bg-white dark:bg-coffee-800 text-coffee-700 dark:text-coffee-200 hover:bg-coffee-50 dark:hover:bg-coffee-700'
-                  }
-                `}
-              >
-                {opt.label}
-              </button>
-            );
-          })}
-        </div>
+        <SegmentedControl
+          options={SPECIES_OPTIONS}
+          value={species}
+          onChange={onSpeciesChange}
+          size="md"
+        />
       </fieldset>
 
       {/* Robusta % Slider (only when Blend is selected) */}
@@ -205,6 +185,18 @@ export default function CoffeeInputs({
             />
             <span className="text-xs text-coffee-500 dark:text-coffee-300">Robusta</span>
           </div>
+        </div>
+      )}
+
+      {/* Decaf brewing notes (only when Decaf is selected) */}
+      {species === 'decaf' && (
+        <div className="animate-fadeIn bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-sm leading-relaxed">
+          <p className="text-amber-800 dark:text-amber-200">
+            <strong>Decaf</strong> contains ~97% less caffeine than Arabica
+            (~0.3 mg/g vs. 12 mg/g). Actual caffeine varies widely by brand
+            (0–0.7 mg/g). For best flavor, decaf often benefits from a slightly
+            finer grind.
+          </p>
         </div>
       )}
     </div>

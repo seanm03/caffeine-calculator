@@ -10,12 +10,24 @@
   --color-coffee-cream: #f0e6d8;
   --color-coffee-espresso: #2a1a10;
   --color-coffee-amber: #c67b4b;
+
+  /* Gauge gradient colors (light mode) */
+  --color-gauge-green: #22c55e;
+  --color-gauge-yellow: #eab308;
+  --color-gauge-orange: #f97316;
+  --color-gauge-red: #ef4444;
 }
 
 .dark {
   --color-coffee-brown: #c9a87c;
   --color-coffee-cream: #3a3028;
   --color-coffee-espresso: #e8d5c4;
+
+  /* Gauge gradient colors (dark mode — muted tones) */
+  --color-gauge-green: #4ade80;
+  --color-gauge-yellow: #facc15;
+  --color-gauge-orange: #fb923c;
+  --color-gauge-red: #f87171;
 }
 
 @layer base {

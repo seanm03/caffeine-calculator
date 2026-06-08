@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect, useMemo, createContext, useContext } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { createCtxWithName } from './createCtx';
 import type {
   BrewMethod,
   Species,
@@ -48,7 +49,7 @@ interface CalculatorStateContextValue extends CalculatorState {
   setAltitude: (value: Altitude) => void;
 }
 
-const CalculatorStateContext = createContext<CalculatorStateContextValue | null>(null);
+const [useCalculatorStateCtx, CalculatorStateContextProvider] = createCtxWithName<CalculatorStateContextValue>('CalculatorStateContext');
 
 function getInitialState(): CalculatorState {
   try {
@@ -182,14 +183,10 @@ export function CalculatorStateProvider({ children }: { children: React.ReactNod
   );
 
   return (
-    <CalculatorStateContext.Provider value={value}>
+    <CalculatorStateContextProvider value={value}>
       {children}
-    </CalculatorStateContext.Provider>
+    </CalculatorStateContextProvider>
   );
 }
 
-export function useCalculatorState(): CalculatorStateContextValue {
-  const ctx = useContext(CalculatorStateContext);
-  if (!ctx) throw new Error('useCalculatorState must be used within a CalculatorStateProvider');
-  return ctx;
-}
+export const useCalculatorState = useCalculatorStateCtx;

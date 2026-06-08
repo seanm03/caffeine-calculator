@@ -16,8 +16,8 @@ export type BrewMethod =
   | 'turkish'
   | 'instant';
 
-/** Coffee species (Arabica, Robusta, or a blend of both) */
-export type Species = 'arabica' | 'robusta' | 'blend';
+/** Coffee species (Arabica, Robusta, blend, or decaf) */
+export type Species = 'arabica' | 'robusta' | 'blend' | 'decaf';
 
 /** Roast level — affects caffeine retention during roasting */
 export type RoastLevel = 'light' | 'medium' | 'dark';
@@ -115,4 +115,69 @@ export interface BrandDrink {
   source: string;
   /** ISO date when the data was last verified */
   lastUpdated: string;
+}
+
+// ---------------------------------------------------------------------------
+// Metabolism Tracker Types (v2)
+// ---------------------------------------------------------------------------
+
+/**
+ * A single logged caffeine consumption entry.
+ * Stored in localStorage under key 'coffee-calc-logs'.
+ */
+export interface CaffeineLogEntry {
+  /** Unique identifier (UUID v4) */
+  id: string;
+  /** ISO 8601 timestamp of consumption */
+  timestamp: string;
+  /** Caffeine consumed in milligrams */
+  caffeineMg: number;
+  /** Optional user label (e.g., "Morning pour-over") */
+  drinkName?: string;
+  /** Brew method used (from the calculator) */
+  brewMethod?: BrewMethod;
+  /** Dry coffee weight in grams */
+  coffeeWeightG?: number;
+  /** Water volume in milliliters */
+  waterVolumeMl?: number;
+  /** Optional free-text notes */
+  notes?: string;
+}
+
+/**
+ * User-configurable metabolism parameters.
+ */
+export interface MetabolismParams {
+  /** Caffeine half-life in hours (range 2–12, default 5) */
+  halfLifeHours: number;
+  /** Visualization window in hours (default 24) */
+  windowHours: number;
+}
+
+/**
+ * A single sampling point on the blood caffeine level curve.
+ */
+export interface BloodLevelPoint {
+  /** Absolute time of this sample */
+  time: Date;
+  /** Hours elapsed since the start of the visualization window */
+  hoursSinceStart: number;
+  /** Estimated blood caffeine level in mg at this point */
+  caffeineMg: number;
+}
+
+/**
+ * Summary statistics for the current day's caffeine consumption.
+ */
+export interface DailyCaffeineSummary {
+  /** Estimated current blood caffeine level (mg) */
+  currentLevel: number;
+  /** Total caffeine consumed today (mg) */
+  totalToday: number;
+  /** Peak blood caffeine level reached today (mg) */
+  peakLevel: number;
+  /** Time when peak level occurred */
+  peakTime: Date | null;
+  /** Number of entries logged today */
+  entryCount: number;
 }

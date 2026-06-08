@@ -1,12 +1,14 @@
-import { useRef, useState, useEffect } from 'react';
-import type { CaffeineResult } from '../types';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import type { CaffeineResult, BrewMethod } from '../types';
 import { DAILY_SAFE_LIMIT_MG, STANDARD_CUP_CAFFEINE_MG } from '../engine/constants';
 import { useUnits } from '../hooks/useUnits';
+import { useCaffeineLog } from '../hooks/useCaffeineLog';
 
 export interface ResultsDisplayProps {
   result: CaffeineResult | null;
   coffeeWeightG?: number;
   waterVolumeMl?: number;
+  brewMethod?: BrewMethod;
 }
 
 /** Return the Tailwind color class for the given percentage threshold. */
@@ -17,13 +19,17 @@ function zoneColor(percent: number): string {
   return 'text-red-600 dark:text-red-400';
 }
 
-export default function ResultsDisplay({ result, coffeeWeightG, waterVolumeMl }: ResultsDisplayProps) {
+export default function ResultsDisplay({ result, coffeeWeightG, waterVolumeMl, brewMethod }: ResultsDisplayProps) {
   const { unitSystem, gToOz, mlToFlOz } = useUnits();
+  const { addEntry } = useCaffeineLog();
 
   // ── Number change animation trigger (before early return for hooks rule) ──
   const caffeineMg = result?.totalCaffeineMg ?? 0;
   const prevRef = useRef(caffeineMg);
   const [animKey, setAnimKey] = useState(0);
+
+  // ── "Log This Drink" visual feedback ──
+  const [logFeedback, setLogFeedback] = useState(false);
 
   useEffect(() => {
     if (result && prevRef.current !== result.totalCaffeineMg) {
@@ -31,6 +37,26 @@ export default function ResultsDisplay({ result, coffeeWeightG, waterVolumeMl }:
       setAnimKey((k) => k + 1);
     }
   }, [result, result?.totalCaffeineMg]);
+
+  // Clear feedback after animation
+  useEffect(() => {
+    if (logFeedback) {
+      const timer = setTimeout(() => setLogFeedback(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [logFeedback]);
+
+  const handleLogDrink = useCallback(() => {
+    if (!result) return;
+    addEntry({
+      timestamp: new Date().toISOString(),
+      caffeineMg: Math.round(result.totalCaffeineMg),
+      brewMethod,
+      coffeeWeightG,
+      waterVolumeMl,
+    });
+    setLogFeedback(true);
+  }, [result, addEntry, brewMethod, coffeeWeightG, waterVolumeMl]);
 
   // ── Empty / zero state ───────────────────────────────────────────
   if (!result) {
@@ -89,10 +115,10 @@ export default function ResultsDisplay({ result, coffeeWeightG, waterVolumeMl }:
           {/* Gradient definition */}
           <defs>
             <linearGradient id="gauge-fill" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#22c55e" />
-              <stop offset="50%" stopColor="#eab308" />
-              <stop offset="80%" stopColor="#f97316" />
-              <stop offset="100%" stopColor="#ef4444" />
+              <stop offset="0%" stopColor="var(--color-gauge-green)" />
+              <stop offset="50%" stopColor="var(--color-gauge-yellow)" />
+              <stop offset="80%" stopColor="var(--color-gauge-orange)" />
+              <stop offset="100%" stopColor="var(--color-gauge-red)" />
             </linearGradient>
           </defs>
           {/* Background track arc */}
@@ -143,6 +169,45 @@ export default function ResultsDisplay({ result, coffeeWeightG, waterVolumeMl }:
           </span>
         </div>
       )}
+
+      {/* ── Log This Drink button ────────────────────────────────── */}
+      <div className="pt-3 border-t border-coffee-100 dark:border-coffee-800">
+        <button
+          type="button"
+          onClick={handleLogDrink}
+          className={`
+            w-full py-2.5 px-4 rounded-lg text-sm font-semibold
+            transition-all duration-300 ease-out
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-coffee-400 focus-visible:ring-offset-2
+            ${
+              logFeedback
+                ? 'bg-green-500 text-white shadow-lg scale-[1.02]'
+                : 'bg-coffee-100 dark:bg-coffee-800 text-coffee-700 dark:text-coffee-200 hover:bg-coffee-200 dark:hover:bg-coffee-700 active:scale-[0.98]'
+            }
+          `}
+        >
+          <span className="inline-flex items-center gap-2">
+            {logFeedback ? (
+              <>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                Logged!
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Log This Drink
+              </>
+            )}
+          </span>
+        </button>
+        <p className="text-xs text-coffee-400 dark:text-coffee-500 text-center mt-1.5">
+          Adds to your daily tracker (📊 Tracker tab)
+        </p>
+      </div>
     </div>
   );
 }

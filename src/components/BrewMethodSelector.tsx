@@ -32,6 +32,12 @@ export default function BrewMethodSelector({ value, onChange }: BrewMethodSelect
         const idx = BREW_VALUES.indexOf(value);
         const prevIdx = (idx - 1 + BREW_VALUES.length) % BREW_VALUES.length;
         onChange(BREW_VALUES[prevIdx]);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        onChange(BREW_VALUES[0]);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        onChange(BREW_VALUES[BREW_VALUES.length - 1]);
       }
     },
     [value, onChange],

@@ -50,6 +50,10 @@ describe('getSpeciesCaffeine', () => {
     // 12 * 0.70 + 20 * 0.30 = 8.4 + 6.0 = 14.4
     expect(getSpeciesCaffeine('blend', 30)).toBeCloseTo(14.4, 5);
   });
+
+  it('returns 0.3 for decaf', () => {
+    expect(getSpeciesCaffeine('decaf')).toBe(0.3);
+  });
 });
 
 describe('getRoastMultiplier', () => {
@@ -347,6 +351,24 @@ describe('calculateCaffeine', () => {
 
     expect(blendResult.totalCaffeineMg).toBeGreaterThan(arabicaResult.totalCaffeineMg);
     expect(blendResult.totalCaffeineMg).toBeLessThan(robustaResult.totalCaffeineMg);
+  });
+
+  // --- Decaf test ---
+
+  it('Decaf species: 18g decaf yields very low caffeine (~5 mg)', () => {
+    const params: BrewingParameters = {
+      brewMethod: 'pour-over',
+      coffeeWeightG: 18,
+      waterVolumeMl: 300,
+      species: 'decaf',
+    };
+
+    const result = calculateCaffeine(params);
+
+    // 18 * 0.3 * 0.9 = 4.86 → Math.round = 5 mg
+    expect(result.totalCaffeineMg).toBe(5);
+    expect(result.dailyLimitPercent).toBeLessThan(2);
+    expect(result.equivalentCups).toBeLessThanOrEqual(0.1);
   });
 
   // --- All 8 brew methods ---
