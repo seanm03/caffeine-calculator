@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
-import type { CaffeineResult, BrewMethod } from '@/types';
 import { DAILY_SAFE_LIMIT_MG, STANDARD_CUP_CAFFEINE_MG } from '@/engine/constants';
-import { useUnits } from '@/hooks/useUnits';
 import { useCaffeineLog } from '@/hooks/useCaffeineLog';
+import { useUnits } from '@/hooks/useUnits';
+import type { CaffeineResult, BrewMethod } from '@/types';
 
 export interface ResultsDisplayProps {
   result: CaffeineResult | null;

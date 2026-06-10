@@ -6,16 +6,16 @@
  */
 
 import { useState, memo } from 'react';
-import { useCaffeineLog } from '@/hooks/useCaffeineLog';
 import BloodLevelChart from '@/components/BloodLevelChart';
-import DrinkLogTimeline from '@/components/DrinkLogTimeline';
 import DailySummary from '@/components/DailySummary';
 import DrinkLogForm from '@/components/DrinkLogForm';
+import DrinkLogTimeline from '@/components/DrinkLogTimeline';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import HalfLifeSlider from '@/components/HalfLifeSlider';
-import StorageStatusBanner from '@/components/StorageStatusBanner';
-import type { StorageStatus } from '@/components/StorageStatusBanner';
 import { DailySummaryError, ChartError, DrinkLogError } from '@/components/MetabolismErrorFallbacks';
+import StorageStatusBanner from '@/components/StorageStatusBanner';
+import { useCaffeineLog } from '@/hooks/useCaffeineLog';
+import type { StorageStatus } from '@/components/StorageStatusBanner';
 
 const MetabolismTracker = memo(function MetabolismTracker() {
   const {

@@ -16,9 +16,8 @@ import {
   getGrindMultiplier,
   buildBreakdown,
 } from '@/engine/caffeineCalculator';
-
+import { DAILY_SAFE_LIMIT_MG, SPECIES_CAFFEINE } from '@/engine/constants';
 import type { BrewingParameters, BrewMethod } from '@/types';
-import { DAILY_SAFE_LIMIT_MG } from '@/engine/constants';
 
 // ---------------------------------------------------------------------------
 // Individual lookup function tests
@@ -51,8 +50,8 @@ describe('getSpeciesCaffeine', () => {
     expect(getSpeciesCaffeine('blend', 30)).toBeCloseTo(14.4, 5);
   });
 
-  it('returns 0.3 for decaf', () => {
-    expect(getSpeciesCaffeine('decaf')).toBe(0.3);
+  it('returns 0.3 for decaf (via SPECIES_CAFFEINE lookup)', () => {
+    expect(SPECIES_CAFFEINE.decaf).toBe(0.3);
   });
 });
 
@@ -355,12 +354,13 @@ describe('calculateCaffeine', () => {
 
   // --- Decaf test ---
 
-  it('Decaf species: 18g decaf yields very low caffeine (~5 mg)', () => {
+  it('Decaf: 18g decaf yields very low caffeine (~5 mg)', () => {
     const params: BrewingParameters = {
       brewMethod: 'pour-over',
       coffeeWeightG: 18,
       waterVolumeMl: 300,
-      species: 'decaf',
+      species: 'arabica',
+      isDecaf: true,
     };
 
     const result = calculateCaffeine(params);

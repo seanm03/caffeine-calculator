@@ -1,14 +1,14 @@
 import { useMemo, useState } from 'react';
+import AdvancedOptions from '@/components/AdvancedOptions';
+import BrewMethodSelector from '@/components/BrewMethodSelector';
+import CoffeeInputs from '@/components/CoffeeInputs';
+import ResultsDisplay from '@/components/ResultsDisplay';
+import SensitivityCharts from '@/components/SensitivityCharts';
+import { calculateCaffeine } from '@/engine/caffeineCalculator';
+import { useCalculatorState } from '@/hooks/useCalculatorState';
 import type {
   BrewingParameters,
 } from '@/types';
-import { calculateCaffeine } from '@/engine/caffeineCalculator';
-import { useCalculatorState } from '@/hooks/useCalculatorState';
-import BrewMethodSelector from '@/components/BrewMethodSelector';
-import CoffeeInputs from '@/components/CoffeeInputs';
-import AdvancedOptions from '@/components/AdvancedOptions';
-import ResultsDisplay from '@/components/ResultsDisplay';
-import SensitivityCharts from '@/components/SensitivityCharts';
 
 type ResultView = 'result' | 'sensitivity';
 
@@ -18,6 +18,7 @@ export default function Calculator() {
     coffeeWeightG, setCoffeeWeightG,
     waterVolumeMl, setWaterVolumeMl,
     species, setSpecies,
+    isDecaf, setIsDecaf,
     robustaPercent, setRobustaPercent,
     roastLevel, setRoastLevel,
     grindSize, setGrindSize,
@@ -32,6 +33,7 @@ export default function Calculator() {
       coffeeWeightG,
       waterVolumeMl,
       species,
+      isDecaf,
       robustaPercent: species === 'blend' ? robustaPercent : undefined,
       roastLevel,
       grindSize,
@@ -44,6 +46,7 @@ export default function Calculator() {
       coffeeWeightG,
       waterVolumeMl,
       species,
+      isDecaf,
       robustaPercent,
       roastLevel,
       grindSize,
@@ -69,6 +72,8 @@ export default function Calculator() {
         onWaterVolumeChange={setWaterVolumeMl}
         species={species}
         onSpeciesChange={setSpecies}
+        isDecaf={isDecaf}
+        onIsDecafChange={setIsDecaf}
         robustaPercent={robustaPercent}
         onRobustaPercentChange={setRobustaPercent}
       />

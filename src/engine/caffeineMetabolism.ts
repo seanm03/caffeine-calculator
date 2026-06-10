@@ -20,8 +20,6 @@
  * @module caffeineMetabolism
  */
 
-import type { CaffeineLogEntry, BloodLevelPoint } from '@/types';
-import { isValidNumber, isValidDate, isValidArray, clampNumber } from '@/engine/utils';
 import {
   DEFAULT_HALF_LIFE_HOURS,
   MIN_HALF_LIFE_HOURS,
@@ -31,6 +29,9 @@ import {
   SLEEP_ADVISORY_THRESHOLD_MG,
   MAX_PLAUSIBLE_DOSE_MG,
 } from '@/engine/constants';
+import { isValidNumber, isValidDate, isValidArray, clampNumber } from '@/engine/utils';
+import { CaffeineMg } from '@/types/branded';
+import type { CaffeineLogEntry, BloodLevelPoint } from '@/types';
 
 // Re-export constants consumed by other modules for backward compatibility
 export {
@@ -75,11 +76,11 @@ export function computeBloodLevel(
   doses: readonly CaffeineLogEntry[],
   targetTime: Date,
   halfLifeHours: number = DEFAULT_HALF_LIFE_HOURS,
-): number {
+): CaffeineMg {
   // Input validation
-  if (!isValidArray(doses)) return 0;
-  if (!isValidDate(targetTime)) return 0;
-  if (doses.length === 0) return 0;
+  if (!isValidArray(doses)) return CaffeineMg(0);
+  if (!isValidDate(targetTime)) return CaffeineMg(0);
+  if (doses.length === 0) return CaffeineMg(0);
 
   const validHalfLife = clampHalfLife(halfLifeHours);
   const targetMs = targetTime.getTime();
@@ -102,7 +103,7 @@ export function computeBloodLevel(
     total += remaining;
   }
 
-  return total;
+  return CaffeineMg(total);
 }
 
 /**
@@ -178,14 +179,14 @@ export function computeDailySummary(
   halfLifeHours: number = DEFAULT_HALF_LIFE_HOURS,
   now: Date = new Date(),
 ): {
-  currentLevel: number;
-  totalToday: number;
-  peakLevel: number;
+  currentLevel: CaffeineMg;
+  totalToday: CaffeineMg;
+  peakLevel: CaffeineMg;
   peakTime: Date | null;
 } {
   // Input validation
   if (!isValidArray(entries)) {
-    return { currentLevel: 0, totalToday: 0, peakLevel: 0, peakTime: null };
+    return { currentLevel: CaffeineMg(0), totalToday: CaffeineMg(0), peakLevel: CaffeineMg(0), peakTime: null };
   }
   if (!isValidDate(now)) {
     now = new Date();
@@ -226,9 +227,9 @@ export function computeDailySummary(
   }
 
   return {
-    currentLevel: Math.round(currentLevel * 100) / 100,
-    totalToday,
-    peakLevel: Math.round(peakLevel * 100) / 100,
+    currentLevel: CaffeineMg(Math.round(currentLevel * 100) / 100),
+    totalToday: CaffeineMg(totalToday),
+    peakLevel: CaffeineMg(Math.round(peakLevel * 100) / 100),
     peakTime,
   };
 }

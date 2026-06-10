@@ -1,6 +1,6 @@
-import type { Species } from '@/types';
-import { useUnits } from '@/hooks/useUnits';
 import SegmentedControl from '@/components/SegmentedControl';
+import { useUnits } from '@/hooks/useUnits';
+import type { Species } from '@/types';
 
 export interface CoffeeInputsProps {
   coffeeWeightG: number;
@@ -9,6 +9,8 @@ export interface CoffeeInputsProps {
   onWaterVolumeChange: (ml: number) => void;
   species: Species;
   onSpeciesChange: (s: Species) => void;
+  isDecaf: boolean;
+  onIsDecafChange: (v: boolean) => void;
   robustaPercent?: number;
   onRobustaPercentChange?: (p: number) => void;
 }
@@ -17,7 +19,6 @@ const SPECIES_OPTIONS: { value: Species; label: string }[] = [
   { value: 'arabica', label: 'Arabica' },
   { value: 'robusta', label: 'Robusta' },
   { value: 'blend', label: 'Blend' },
-  { value: 'decaf', label: 'Decaf' },
 ];
 
 function formatRatio(coffeeG: number, waterMl: number): string {
@@ -33,6 +34,8 @@ export default function CoffeeInputs({
   onWaterVolumeChange,
   species,
   onSpeciesChange,
+  isDecaf,
+  onIsDecafChange,
   robustaPercent = 50,
   onRobustaPercentChange,
 }: CoffeeInputsProps) {
@@ -188,8 +191,28 @@ export default function CoffeeInputs({
         </div>
       )}
 
+      {/* Decaf checkbox */}
+      <div className="flex items-center gap-3 py-2">
+        <input
+          id="is-decaf"
+          type="checkbox"
+          checked={isDecaf}
+          onChange={(e) => onIsDecafChange(e.target.checked)}
+          className="h-5 w-5 rounded border-coffee-300 dark:border-coffee-600
+                     text-coffee-600 dark:text-coffee-400
+                     focus:ring-coffee-500 dark:focus:ring-coffee-400
+                     accent-coffee-500 dark:accent-coffee-400"
+        />
+        <label
+          htmlFor="is-decaf"
+          className="text-sm font-semibold text-coffee-800 dark:text-coffee-300 cursor-pointer select-none"
+        >
+          Decaf
+        </label>
+      </div>
+
       {/* Decaf brewing notes (only when Decaf is selected) */}
-      {species === 'decaf' && (
+      {isDecaf && (
         <div className="animate-fadeIn bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-sm leading-relaxed">
           <p className="text-amber-800 dark:text-amber-200">
             <strong>Decaf</strong> contains ~97% less caffeine than Arabica

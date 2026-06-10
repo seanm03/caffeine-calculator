@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import type { ReactNode } from 'react';
 
 interface TabPanelProps {
   label: string;

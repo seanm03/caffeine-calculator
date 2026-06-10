@@ -20,11 +20,38 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: [],
-  rules: {},
+  plugins: ['import'],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: ['../*'],
+            message: 'Relative parent imports are not allowed. Use the @/ path alias instead (e.g., import { Foo } from \'@/components/Foo\').',
+          },
+        ],
+      },
+    ],
+    'import/order': [
+      'warn',
+      {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'type'],
+        'newlines-between': 'never',
+        alphabetize: { order: 'asc', caseInsensitive: true },
+      },
+    ],
+    'import/no-duplicates': 'warn',
+  },
   settings: {
     react: {
       version: 'detect',
+    },
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+        project: './tsconfig.json',
+      },
     },
   },
 }

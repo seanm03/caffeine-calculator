@@ -6,7 +6,7 @@
  * data and do not infringe on copyright.
  */
 
-import type { BrandDrink } from '../types';
+import type { BrandDrink } from '@/types';
 
 const brandData: BrandDrink[] = [
   // -----------------------------------------------------------------------

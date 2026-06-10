@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
+import { describe, it, expect } from 'vitest';
 import MetabolismTracker from '@/components/MetabolismTracker';
+import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
 
 function renderTracker() {
   return render(

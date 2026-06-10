@@ -6,10 +6,10 @@
  * Each scenario validates multiple layers (log state, computed values, rendered output).
  */
 
-import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
+import { describe, it, expect } from 'vitest';
 import MetabolismTracker from '@/components/MetabolismTracker';
+import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
 
 function renderTracker() {
   return render(

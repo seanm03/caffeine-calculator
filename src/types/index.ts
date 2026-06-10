@@ -16,8 +16,8 @@ export type BrewMethod =
   | 'turkish'
   | 'instant';
 
-/** Coffee species (Arabica, Robusta, blend, or decaf) */
-export type Species = 'arabica' | 'robusta' | 'blend' | 'decaf';
+/** Coffee species (Arabica, Robusta, or blend) */
+export type Species = 'arabica' | 'robusta' | 'blend';
 
 /** Roast level — affects caffeine retention during roasting */
 export type RoastLevel = 'light' | 'medium' | 'dark';
@@ -44,6 +44,8 @@ export interface BrewingParameters {
   waterVolumeMl: number;
   /** Coffee species (arabica, robusta, or blend) */
   species: Species;
+  /** Whether the coffee is decaffeinated. Overrides species caffeine content with decaf values (~0.3 mg/g). */
+  isDecaf?: boolean;
   /** Percentage of robusta in the blend (0–100). Only relevant when species is 'blend'. */
   robustaPercent?: number;
   /** Roast level (light, medium, dark) */
@@ -111,7 +113,6 @@ export interface BrandDrink {
   volumeMl: number;
   /** Caffeine content in milligrams */
   caffeineMg: number;
-  /** Source citation (e.g., "USDA FDC", brand website URL) */
   source: string;
   /** ISO date when the data was last verified */
   lastUpdated: string;

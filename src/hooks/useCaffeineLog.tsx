@@ -4,10 +4,10 @@ import {
   useEffect,
   useMemo,
 } from 'react';
-import { createCtxWithName } from '@/utils/createCtx';
-import type { CaffeineLogEntry, DailyCaffeineSummary } from '@/types';
-import { storageAvailable } from '@/utils/storageAvailable';
 import { computeDailySummary, DEFAULT_HALF_LIFE_HOURS } from '@/engine/caffeineMetabolism';
+import { createCtxWithName } from '@/utils/createCtx';
+import { storageAvailable } from '@/utils/storageAvailable';
+import type { CaffeineLogEntry, DailyCaffeineSummary } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Constants

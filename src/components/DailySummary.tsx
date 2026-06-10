@@ -6,8 +6,8 @@
  */
 
 import { memo, useMemo } from 'react';
-import type { DailyCaffeineSummary } from '@/types';
 import { DAILY_SAFE_LIMIT_MG } from '@/engine/caffeineMetabolism';
+import type { DailyCaffeineSummary } from '@/types';
 
 interface DailySummaryProps {
   summary: DailyCaffeineSummary;

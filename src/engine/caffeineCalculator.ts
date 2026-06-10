@@ -13,17 +13,6 @@
  * @module caffeineCalculator
  */
 
-import type {
-  BrewMethod,
-  BrewingParameters,
-  CaffeineBreakdown,
-  CaffeineResult,
-  GrindSize,
-  RoastLevel,
-  ProcessingMethod,
-  Altitude,
-  Species,
-} from '@/types';
 
 import {
   SPECIES_CAFFEINE,
@@ -38,6 +27,18 @@ import {
   isPercolationMethod,
 } from '@/engine/constants';
 import { isValidNumber } from '@/engine/utils';
+import { CaffeineMg } from '@/types/branded';
+import type {
+  BrewMethod,
+  BrewingParameters,
+  CaffeineBreakdown,
+  CaffeineResult,
+  GrindSize,
+  RoastLevel,
+  ProcessingMethod,
+  Altitude,
+  Species,
+} from '@/types';
 
 /** Maximum plausible coffee weight in grams. */
 const MAX_PLAUSIBLE_COFFEE_WEIGHT_G = 500;
@@ -54,15 +55,15 @@ const MAX_PLAUSIBLE_COFFEE_WEIGHT_G = 500;
  * @param robustaPercent - Percentage of robusta in blend (0–100), only used for 'blend'
  * @returns Caffeine content in mg/g of green coffee
  */
-export function getSpeciesCaffeine(species: Species, robustaPercent?: number): number {
+export function getSpeciesCaffeine(species: Species, robustaPercent?: number): CaffeineMg {
   // Input validation
-  if (!species || typeof species !== 'string') return 0;
+  if (!species || typeof species !== 'string') return CaffeineMg(0);
 
   if (species === 'blend') {
     const pct = (!isValidNumber(robustaPercent) ? 50 : Math.max(0, Math.min(100, robustaPercent))) / 100;
-    return SPECIES_CAFFEINE.arabica * (1 - pct) + SPECIES_CAFFEINE.robusta * pct;
+    return CaffeineMg(SPECIES_CAFFEINE.arabica * (1 - pct) + SPECIES_CAFFEINE.robusta * pct);
   }
-  return SPECIES_CAFFEINE[species];
+  return CaffeineMg(SPECIES_CAFFEINE[species]);
 }
 
 /**
@@ -198,6 +199,7 @@ export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
     brewMethod,
     coffeeWeightG,
     species,
+    isDecaf,
     robustaPercent,
     roastLevel,
     grindSize,
@@ -217,7 +219,9 @@ export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
   }
 
   // --- Step 1: Base caffeine in grounds ---
-  const speciesCaffeineMgPerG = getSpeciesCaffeine(species, robustaPercent);
+  const speciesCaffeineMgPerG = isDecaf
+    ? SPECIES_CAFFEINE.decaf
+    : getSpeciesCaffeine(species, robustaPercent);
   const baseCaffeineMg = coffeeWeightG * speciesCaffeineMgPerG;
 
   // --- Step 2a: Roast adjustment ---

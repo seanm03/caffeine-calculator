@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import type { RoastLevel, GrindSize, ProcessingMethod, Altitude } from '@/types';
-import { useUnits } from '@/hooks/useUnits';
 import SegmentedControl from '@/components/SegmentedControl';
+import { useUnits } from '@/hooks/useUnits';
+import type { RoastLevel, GrindSize, ProcessingMethod, Altitude } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Prop types

@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { DEFAULT_PARAMS } from '@/engine/constants';
+import { clampNumber } from '@/engine/utils';
 import { createCtxWithName } from '@/utils/createCtx';
 import type {
   BrewMethod,
@@ -8,8 +10,6 @@ import type {
   ProcessingMethod,
   Altitude,
 } from '@/types';
-import { DEFAULT_PARAMS } from '@/engine/constants';
-import { clampNumber } from '@/engine/utils';
 
 const STORAGE_KEY = 'coffee-calc-state';
 const STORAGE_VERSION = 1;
@@ -24,6 +24,7 @@ interface CalculatorState {
   coffeeWeightG: number;
   waterVolumeMl: number;
   species: Species;
+  isDecaf: boolean;
   robustaPercent: number;
   roastLevel: RoastLevel;
   grindSize: GrindSize;
@@ -37,6 +38,7 @@ interface CalculatorStateContextValue extends CalculatorState {
   setCoffeeWeightG: (value: number) => void;
   setWaterVolumeMl: (value: number) => void;
   setSpecies: (value: Species) => void;
+  setIsDecaf: (value: boolean) => void;
   setRobustaPercent: (value: number) => void;
   setRoastLevel: (value: RoastLevel) => void;
   setGrindSize: (value: GrindSize) => void;
@@ -62,6 +64,7 @@ function getInitialState(): CalculatorState {
         coffeeWeightG: p.coffeeWeightG ?? DEFAULT_PARAMS.coffeeWeightG,
         waterVolumeMl: p.waterVolumeMl ?? DEFAULT_PARAMS.waterVolumeMl,
         species: p.species ?? DEFAULT_PARAMS.species,
+        isDecaf: p.isDecaf ?? false,
         robustaPercent: p.robustaPercent ?? DEFAULT_PARAMS.robustaPercent,
         roastLevel: p.roastLevel ?? DEFAULT_PARAMS.roastLevel,
         grindSize: p.grindSize ?? DEFAULT_PARAMS.grindSize,
@@ -82,6 +85,7 @@ function getDefaults(): CalculatorState {
     coffeeWeightG: DEFAULT_PARAMS.coffeeWeightG,
     waterVolumeMl: DEFAULT_PARAMS.waterVolumeMl,
     species: DEFAULT_PARAMS.species,
+    isDecaf: false,
     robustaPercent: DEFAULT_PARAMS.robustaPercent,
     roastLevel: DEFAULT_PARAMS.roastLevel,
     grindSize: DEFAULT_PARAMS.grindSize,
@@ -125,6 +129,10 @@ export function CalculatorStateProvider({ children }: { children: React.ReactNod
     setState((prev) => ({ ...prev, species: value }));
   }, []);
 
+  const setIsDecaf = useCallback((value: boolean) => {
+    setState((prev) => ({ ...prev, isDecaf: value }));
+  }, []);
+
   const setRobustaPercent = useCallback((value: number) => {
     setState((prev) => ({ ...prev, robustaPercent: clampNumber(value, 0, 100, 50) }));
   }, []);
@@ -156,6 +164,7 @@ export function CalculatorStateProvider({ children }: { children: React.ReactNod
       setCoffeeWeightG,
       setWaterVolumeMl,
       setSpecies,
+      setIsDecaf,
       setRobustaPercent,
       setRoastLevel,
       setGrindSize,
@@ -169,6 +178,7 @@ export function CalculatorStateProvider({ children }: { children: React.ReactNod
       setCoffeeWeightG,
       setWaterVolumeMl,
       setSpecies,
+      setIsDecaf,
       setRobustaPercent,
       setRoastLevel,
       setGrindSize,

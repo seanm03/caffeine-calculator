@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
-import { afterEach, vi } from 'vitest';
 import React from 'react';
+import { afterEach, vi } from 'vitest';
 
 // ── localStorage cleanup ──────────────────────────────────────────
 afterEach(() => {

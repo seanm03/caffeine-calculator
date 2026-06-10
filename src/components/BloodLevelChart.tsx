@@ -20,8 +20,8 @@ import {
   ReferenceLine,
   ReferenceArea,
 } from 'recharts';
-import type { CaffeineLogEntry } from '../types';
-import { generateBloodLevelCurve, DAILY_SAFE_LIMIT_MG } from '../engine/caffeineMetabolism';
+import { generateBloodLevelCurve, DAILY_SAFE_LIMIT_MG } from '@/engine/caffeineMetabolism';
+import type { CaffeineLogEntry } from '@/types';
 
 interface BloodLevelChartProps {
   entries: CaffeineLogEntry[];

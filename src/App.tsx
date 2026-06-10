@@ -1,20 +1,20 @@
 import { type ReactNode } from 'react';
-import TabPanel from '@/components/TabPanel';
-import TabBar from '@/components/TabBar';
-import type { Tab } from '@/hooks/useHashTab';
-import Header from '@/components/Header';
-import Calculator from '@/components/Calculator';
 import BrandReference from '@/components/BrandReference';
-import MethodologyInfo from '@/components/MethodologyInfo';
-import MetabolismTracker from '@/components/MetabolismTracker';
+import Calculator from '@/components/Calculator';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import MetabolismTracker from '@/components/MetabolismTracker';
+import MethodologyInfo from '@/components/MethodologyInfo';
+import TabBar from '@/components/TabBar';
+import TabPanel from '@/components/TabPanel';
 import ThemeToggle from '@/components/ThemeToggle';
 import UnitToggle from '@/components/UnitToggle';
-import { UnitProvider, useUnits } from '@/hooks/useUnits';
-import { ThemeProvider } from '@/hooks/useTheme';
-import { CalculatorStateProvider } from '@/hooks/useCalculatorState';
 import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
+import { CalculatorStateProvider } from '@/hooks/useCalculatorState';
 import { useHashTab } from '@/hooks/useHashTab';
+import { ThemeProvider } from '@/hooks/useTheme';
+import { UnitProvider, useUnits } from '@/hooks/useUnits';
+import type { Tab } from '@/hooks/useHashTab';
 
 // ── Tab content registry ────────────────────────────────────────────────────
 

@@ -5,8 +5,8 @@
  * hashchange events, setActiveTab updates the URL hash, and cleanup behavior.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useHashTab, TABS } from '@/hooks/useHashTab';
 
 // ---------------------------------------------------------------------------
