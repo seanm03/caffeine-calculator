@@ -1,4 +1,5 @@
 import { Component, type ReactNode } from 'react';
+import { reportErrorWithComponentStack } from '@/utils/errorReporting';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -26,6 +27,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     console.error('[ErrorBoundary]', error.message, errorInfo.componentStack);
+    reportErrorWithComponentStack(error, errorInfo.componentStack ?? undefined);
   }
 
   handleReset = () => {

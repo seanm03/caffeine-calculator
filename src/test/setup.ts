@@ -1,6 +1,14 @@
 import '@testing-library/jest-dom/vitest';
+// vitest-axe/extend-expect augments Vi.Assertion with toHaveNoViolations
+import 'vitest-axe/extend-expect';
 import React from 'react';
-import { afterEach, vi } from 'vitest';
+import { afterEach, expect, vi } from 'vitest';
+
+// ── vitest-axe matchers ─────────────────────────────────────────────
+// Import toHaveNoViolations from the dist JS directly because the package's
+// root matchers.d.ts re-exports types only (export type *).
+const { toHaveNoViolations } = await import('vitest-axe/dist/matchers.js');
+expect.extend({ toHaveNoViolations });
 
 // ── localStorage cleanup ──────────────────────────────────────────
 afterEach(() => {
@@ -26,6 +34,11 @@ Object.defineProperty(window, 'matchMedia', {
 // ── Mock scrollIntoView ────────────────────────────────────────────
 // jsdom does not implement Element.prototype.scrollIntoView.
 Element.prototype.scrollIntoView = vi.fn();
+
+// ── Mock HTMLCanvasElement.getContext ──────────────────────────────
+// axe-core internally checks canvas elements for icon-ligature detection
+// (color contrast rule). jsdom does not implement getContext.
+HTMLCanvasElement.prototype.getContext = vi.fn() as typeof HTMLCanvasElement.prototype.getContext;
 
 // ── Suppress console.error for ErrorBoundary test messages ─────────
 // ErrorBoundary tests intentionally trigger render errors; this keeps

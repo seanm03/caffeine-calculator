@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import DrinkLogForm from '@/components/DrinkLogForm';
+import { assertA11y } from '@/test/axe';
 
 describe('DrinkLogForm', () => {
   it('renders form fields', () => {
@@ -34,5 +35,10 @@ describe('DrinkLogForm', () => {
     fireEvent.change(screen.getByLabelText(/^caffeine/i), { target: { value: '-5' } });
     fireEvent.click(screen.getByRole('button', { name: /log drink/i }));
     expect(onAdd).not.toHaveBeenCalled();
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<DrinkLogForm onAdd={() => {}} />);
+    await assertA11y(container);
   });
 });

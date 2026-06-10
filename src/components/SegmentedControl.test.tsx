@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import SegmentedControl from '@/components/SegmentedControl';
+import { assertA11y } from '@/test/axe';
 
 const OPTIONS: { value: string; label: string }[] = [
   { value: 'option-a', label: 'Option A' },
@@ -165,6 +166,17 @@ describe('SegmentedControl', () => {
     const radiogroup = screen.getByRole('radiogroup');
     fireEvent.keyDown(radiogroup, { key: 'Home' });
     expect(onChange).toHaveBeenCalledWith('option-a');
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(
+      <SegmentedControl
+        options={OPTIONS}
+        value="option-a"
+        onChange={() => {}}
+      />,
+    );
+    await assertA11y(container);
   });
 
   it('supports End key to jump to last option', () => {

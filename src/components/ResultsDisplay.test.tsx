@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import ResultsDisplay from '@/components/ResultsDisplay';
 import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
 import { UnitProvider } from '@/hooks/useUnits';
+import { assertA11y } from '@/test/axe';
 import type { CaffeineResult } from '@/types';
 
 const mockResult: CaffeineResult = {
@@ -78,5 +79,15 @@ describe('ResultsDisplay', () => {
     };
     renderDisplay(zeroResult);
     expect(screen.getByText('0')).toBeInTheDocument();
+  });
+
+  it('has no accessibility violations with results', async () => {
+    const { container } = renderDisplay();
+    await assertA11y(container);
+  });
+
+  it('has no accessibility violations in empty state', async () => {
+    const { container } = renderDisplay(null);
+    await assertA11y(container);
   });
 });

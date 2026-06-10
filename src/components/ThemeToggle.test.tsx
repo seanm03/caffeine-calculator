@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import ThemeToggle from '@/components/ThemeToggle';
 import { ThemeProvider } from '@/hooks/useTheme';
+import { assertA11y } from '@/test/axe';
 
 function renderToggle() {
   return render(
@@ -57,5 +58,10 @@ describe('ThemeToggle', () => {
     // After two clicks, should be different from both initial and first
     const afterTwoClicks = button.textContent;
     expect(afterTwoClicks).not.toBe(initialText);
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = renderToggle();
+    await assertA11y(container);
   });
 });

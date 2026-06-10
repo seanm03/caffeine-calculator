@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import DailySummary from '@/components/DailySummary';
+import { assertA11y } from '@/test/axe';
 import type { DailyCaffeineSummary } from '@/types';
 
 describe('DailySummary', () => {
@@ -35,5 +36,22 @@ describe('DailySummary', () => {
     render(<DailySummary summary={zeroSummary} />);
     expect(screen.getByText('Current Level')).toBeInTheDocument();
     expect(screen.getAllByText('0')).toHaveLength(3);
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<DailySummary summary={mockSummary} />);
+    await assertA11y(container);
+  });
+
+  it('has no accessibility violations with zero values', async () => {
+    const zeroSummary: DailyCaffeineSummary = {
+      currentLevel: 0,
+      totalToday: 0,
+      peakLevel: 0,
+      peakTime: null,
+      entryCount: 0,
+    };
+    const { container } = render(<DailySummary summary={zeroSummary} />);
+    await assertA11y(container);
   });
 });

@@ -41,13 +41,16 @@ const DrinkLogTimeline = memo(function DrinkLogTimeline({ entries, onRemove }: D
       aria-relevant="additions removals"
     >
       {entryCount === 0 && (
-        <p className="text-center text-sm text-coffee-400 dark:text-coffee-500 py-4">
-          No drinks logged yet
-        </p>
+        <div role="listitem">
+          <p className="text-center text-sm text-coffee-400 dark:text-coffee-500 py-4">
+            No drinks logged yet
+          </p>
+        </div>
       )}
       {entries.map((entry, index) => (
         <div
           key={entry.id}
+          role="listitem"
           className={`
             flex items-start gap-3 p-3 rounded-lg
             bg-coffee-50 dark:bg-coffee-900/50

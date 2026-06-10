@@ -197,16 +197,16 @@ export default function BrandReference() {
                     <td className="px-4 py-3 text-coffee-700 dark:text-coffee-200">
                       {d.name}
                     </td>
-                    <td className="px-4 py-3 text-coffee-600 dark:text-coffee-300">
+                    <td className="px-4 py-3 text-coffee-600 dark:text-coffee-200">
                       {d.size}
                     </td>
                     <td className="px-4 py-3 tabular-nums font-semibold text-coffee-800 dark:text-coffee-100">
                       {d.caffeineMg}
                     </td>
-                    <td className="px-4 py-3 text-coffee-600 dark:text-coffee-300">
+                    <td className="px-4 py-3 text-coffee-600 dark:text-coffee-200">
                       {d.volumeMl}
                     </td>
-                    <td className="px-4 py-3 text-xs text-coffee-500 dark:text-coffee-300 max-w-[140px] truncate" title={d.source}>
+                    <td className="px-4 py-3 text-xs text-coffee-500 dark:text-coffee-200 max-w-[140px] truncate" title={d.source}>
                       {d.source}
                     </td>
                     <td className="px-4 py-3">
@@ -240,7 +240,7 @@ export default function BrandReference() {
                     <p className="font-semibold text-coffee-800 dark:text-coffee-100">
                       {d.brand}
                     </p>
-                    <p className="text-sm text-coffee-600 dark:text-coffee-300">
+                    <p className="text-sm text-coffee-600 dark:text-coffee-200">
                       {d.name} &middot; {d.size}
                     </p>
                   </div>
@@ -258,12 +258,12 @@ export default function BrandReference() {
                   <span className="tabular-nums font-bold text-coffee-800 dark:text-coffee-100">
                     {d.caffeineMg} mg
                   </span>
-                  <span className="text-coffee-500 dark:text-coffee-300">
+                  <span className="text-coffee-500 dark:text-coffee-200">
                     {d.volumeMl} mL
                   </span>
                 </div>
 
-                <p className="text-xs text-coffee-400 dark:text-coffee-400">
+                <p className="text-xs text-coffee-400 dark:text-coffee-300">
                   Source: {d.source}
                 </p>
               </div>

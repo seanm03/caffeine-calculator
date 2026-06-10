@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import BrewMethodSelector from '@/components/BrewMethodSelector';
+import { assertA11y } from '@/test/axe';
 
 describe('BrewMethodSelector', () => {
   it('renders all 8 brew methods', () => {
@@ -13,6 +14,11 @@ describe('BrewMethodSelector', () => {
     expect(screen.getByText('Cold Brew')).toBeInTheDocument();
     expect(screen.getByText('Turkish')).toBeInTheDocument();
     expect(screen.getByText('Instant')).toBeInTheDocument();
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<BrewMethodSelector value="pour-over" onChange={() => {}} />);
+    await assertA11y(container);
   });
 
   it('renders as a radiogroup', () => {

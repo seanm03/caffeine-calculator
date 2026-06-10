@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import SensitivityCharts from '@/components/SensitivityCharts';
+import { assertA11y } from '@/test/axe';
 import type { BrewingParameters } from '@/types';
 
 describe('SensitivityCharts', () => {
@@ -19,5 +20,10 @@ describe('SensitivityCharts', () => {
   it('renders caffeine vs weight heading', () => {
     render(<SensitivityCharts currentParams={defaultParams} />);
     expect(screen.getByText(/how caffeine scales/i)).toBeInTheDocument();
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<SensitivityCharts currentParams={defaultParams} />);
+    await assertA11y(container);
   });
 });

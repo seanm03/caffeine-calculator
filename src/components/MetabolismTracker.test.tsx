@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import MetabolismTracker from '@/components/MetabolismTracker';
 import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
+import { assertA11y } from '@/test/axe';
 
 function renderTracker() {
   return render(
@@ -30,5 +31,10 @@ describe('MetabolismTracker', () => {
   it('renders the blood level chart heading', () => {
     renderTracker();
     expect(screen.getByText('24-Hour Blood Caffeine Level')).toBeInTheDocument();
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = renderTracker();
+    await assertA11y(container);
   });
 });
