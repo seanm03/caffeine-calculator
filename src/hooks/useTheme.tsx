@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { createCtxWithName } from './createCtx';
+import { createCtxWithName } from '@/utils/createCtx';
 
 export type Theme = 'light' | 'dark' | 'auto';
 

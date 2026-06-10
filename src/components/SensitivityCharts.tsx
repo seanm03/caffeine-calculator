@@ -23,8 +23,8 @@ import {
   LabelList,
   Legend,
 } from 'recharts';
-import type { BrewMethod, BrewingParameters, CaffeineResult } from '../types';
-import { calculateCaffeine } from '../engine/caffeineCalculator';
+import type { BrewMethod, BrewingParameters, CaffeineResult } from '@/types';
+import { calculateCaffeine } from '@/engine/caffeineCalculator';
 
 // ---------------------------------------------------------------------------
 // Types

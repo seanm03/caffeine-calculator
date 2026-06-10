@@ -8,7 +8,7 @@
  * @module constants
  */
 
-import type { BrewMethod } from '../types';
+import type { BrewMethod } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Species caffeine content (mg/g, green bean basis)
@@ -244,6 +244,37 @@ export const DAILY_SAFE_LIMIT_MG = 400;
  * Based on general consensus across FDA, USDA, and literature.
  */
 export const STANDARD_CUP_CAFFEINE_MG = 95;
+
+// ---------------------------------------------------------------------------
+// Metabolism / pharmacokinetic constants
+// ---------------------------------------------------------------------------
+
+/** Default caffeine half-life in hours (typical healthy adult). */
+export const DEFAULT_HALF_LIFE_HOURS = 5;
+
+/** Minimum configurable half-life in hours. */
+export const MIN_HALF_LIFE_HOURS = 2;
+
+/** Maximum configurable half-life in hours. */
+export const MAX_HALF_LIFE_HOURS = 12;
+
+/** Default visualization window in hours. */
+export const DEFAULT_WINDOW_HOURS = 24;
+
+/** Sampling interval in hours for blood level curve generation (15 minutes). */
+export const CURVE_SAMPLING_INTERVAL_H = 0.25;
+
+/** Level at which caffeine may begin to affect sleep (mg). */
+export const SLEEP_ADVISORY_THRESHOLD_MG = 50;
+
+/** Level at which caffeine poses health concern (mg). */
+export const HEALTH_ADVISORY_THRESHOLD_MG = 800;
+
+/** Maximum physiologically plausible single dose in mg. */
+export const MAX_PLAUSIBLE_DOSE_MG = 2000;
+
+/** Maximum physiologically plausible total entries in a single log. */
+export const MAX_PLAUSIBLE_ENTRIES = 200;
 
 // ---------------------------------------------------------------------------
 // Default brewing parameters

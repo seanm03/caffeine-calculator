@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import type { CaffeineLogEntry, BrewMethod } from '../types';
+import type { CaffeineLogEntry, BrewMethod } from '@/types';
 
 interface DrinkLogFormProps {
   onAdd: (entry: Omit<CaffeineLogEntry, 'id'>) => void;

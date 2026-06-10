@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { BrewMethod } from '../types';
+import type { BrewMethod } from '@/types';
 
 const BREW_METHODS: { value: BrewMethod; label: string }[] = [
   { value: 'espresso', label: 'Espresso' },

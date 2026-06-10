@@ -6,7 +6,7 @@
  */
 
 import { memo } from 'react';
-import type { CaffeineLogEntry } from '../types';
+import type { CaffeineLogEntry } from '@/types';
 
 interface DrinkLogTimelineProps {
   entries: CaffeineLogEntry[];

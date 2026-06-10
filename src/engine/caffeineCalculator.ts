@@ -23,7 +23,7 @@ import type {
   ProcessingMethod,
   Altitude,
   Species,
-} from '../types';
+} from '@/types';
 
 import {
   SPECIES_CAFFEINE,
@@ -36,8 +36,8 @@ import {
   DAILY_SAFE_LIMIT_MG,
   STANDARD_CUP_CAFFEINE_MG,
   isPercolationMethod,
-} from './constants';
-import { isValidNumber } from './utils';
+} from '@/engine/constants';
+import { isValidNumber } from '@/engine/utils';
 
 /** Maximum plausible coffee weight in grams. */
 const MAX_PLAUSIBLE_COFFEE_WEIGHT_G = 500;

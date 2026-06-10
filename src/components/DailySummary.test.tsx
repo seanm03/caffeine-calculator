@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import DailySummary from './DailySummary';
-import type { DailyCaffeineSummary } from '../types';
+import DailySummary from '@/components/DailySummary';
+import type { DailyCaffeineSummary } from '@/types';
 
 describe('DailySummary', () => {
   const mockSummary: DailyCaffeineSummary = {

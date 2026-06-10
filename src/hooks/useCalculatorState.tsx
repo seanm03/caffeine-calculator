@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { createCtxWithName } from './createCtx';
+import { createCtxWithName } from '@/utils/createCtx';
 import type {
   BrewMethod,
   Species,
@@ -7,16 +7,12 @@ import type {
   GrindSize,
   ProcessingMethod,
   Altitude,
-} from '../types';
-import { DEFAULT_PARAMS } from '../engine/constants';
+} from '@/types';
+import { DEFAULT_PARAMS } from '@/engine/constants';
+import { clampNumber } from '@/engine/utils';
 
 const STORAGE_KEY = 'coffee-calc-state';
 const STORAGE_VERSION = 1;
-
-// Clamp helpers for input validation
-function clamp(val: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, val));
-}
 
 interface PersistedPayload {
   version: number;
@@ -118,11 +114,11 @@ export function CalculatorStateProvider({ children }: { children: React.ReactNod
   }, []);
 
   const setCoffeeWeightG = useCallback((value: number) => {
-    setState((prev) => ({ ...prev, coffeeWeightG: clamp(value, 0, 500) }));
+    setState((prev) => ({ ...prev, coffeeWeightG: clampNumber(value, 0, 500, 0) }));
   }, []);
 
   const setWaterVolumeMl = useCallback((value: number) => {
-    setState((prev) => ({ ...prev, waterVolumeMl: clamp(value, 0, 5000) }));
+    setState((prev) => ({ ...prev, waterVolumeMl: clampNumber(value, 0, 5000, 0) }));
   }, []);
 
   const setSpecies = useCallback((value: Species) => {
@@ -130,7 +126,7 @@ export function CalculatorStateProvider({ children }: { children: React.ReactNod
   }, []);
 
   const setRobustaPercent = useCallback((value: number) => {
-    setState((prev) => ({ ...prev, robustaPercent: clamp(value, 0, 100) }));
+    setState((prev) => ({ ...prev, robustaPercent: clampNumber(value, 0, 100, 50) }));
   }, []);
 
   const setRoastLevel = useCallback((value: RoastLevel) => {
@@ -142,7 +138,7 @@ export function CalculatorStateProvider({ children }: { children: React.ReactNod
   }, []);
 
   const setWaterTemperatureC = useCallback((value: number) => {
-    setState((prev) => ({ ...prev, waterTemperatureC: clamp(value, 0, 150) }));
+    setState((prev) => ({ ...prev, waterTemperatureC: clampNumber(value, 0, 150, 93) }));
   }, []);
 
   const setProcessingMethod = useCallback((value: ProcessingMethod) => {

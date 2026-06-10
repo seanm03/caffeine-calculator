@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import DrinkLogTimeline from './DrinkLogTimeline';
+import DrinkLogTimeline from '@/components/DrinkLogTimeline';
 
 describe('DrinkLogTimeline', () => {
   const mockEntries = [

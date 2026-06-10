@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import brandData from '../data/brandData';
-import { DAILY_SAFE_LIMIT_MG } from '../engine/constants';
+import brandData from '@/data/brandData';
+import { DAILY_SAFE_LIMIT_MG } from '@/engine/constants';
 
 // ---------------------------------------------------------------------------
 // Types

@@ -6,42 +6,16 @@
  */
 
 import { useState, memo } from 'react';
-import { useCaffeineLog } from '../hooks/useCaffeineLog';
-import BloodLevelChart from './BloodLevelChart';
-import DrinkLogTimeline from './DrinkLogTimeline';
-import DailySummary from './DailySummary';
-import DrinkLogForm from './DrinkLogForm';
-import ErrorBoundary from './ErrorBoundary';
-import HalfLifeSlider from './HalfLifeSlider';
-import StorageStatusBanner from './StorageStatusBanner';
-import type { StorageStatus } from './StorageStatusBanner';
-
-/** Fallback UI when the daily summary section crashes. */
-function DailySummaryError() {
-  return (
-    <div className="rounded-lg border border-red-200 dark:border-red-800 p-3 text-center text-sm text-red-600 dark:text-red-400">
-      Unable to load daily summary
-    </div>
-  );
-}
-
-/** Fallback UI when the chart section crashes. */
-function ChartError() {
-  return (
-    <div className="card text-center py-8 text-sm text-coffee-400 dark:text-coffee-400">
-      Unable to load blood level chart
-    </div>
-  );
-}
-
-/** Fallback UI when the drink log section crashes. */
-function DrinkLogError() {
-  return (
-    <div className="card text-center py-8 text-sm text-coffee-400 dark:text-coffee-400">
-      Unable to load drink log
-    </div>
-  );
-}
+import { useCaffeineLog } from '@/hooks/useCaffeineLog';
+import BloodLevelChart from '@/components/BloodLevelChart';
+import DrinkLogTimeline from '@/components/DrinkLogTimeline';
+import DailySummary from '@/components/DailySummary';
+import DrinkLogForm from '@/components/DrinkLogForm';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import HalfLifeSlider from '@/components/HalfLifeSlider';
+import StorageStatusBanner from '@/components/StorageStatusBanner';
+import type { StorageStatus } from '@/components/StorageStatusBanner';
+import { DailySummaryError, ChartError, DrinkLogError } from '@/components/MetabolismErrorFallbacks';
 
 const MetabolismTracker = memo(function MetabolismTracker() {
   const {

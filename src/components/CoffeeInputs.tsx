@@ -1,6 +1,6 @@
-import type { Species } from '../types';
-import { useUnits } from '../hooks/useUnits';
-import SegmentedControl from './SegmentedControl';
+import type { Species } from '@/types';
+import { useUnits } from '@/hooks/useUnits';
+import SegmentedControl from '@/components/SegmentedControl';
 
 export interface CoffeeInputsProps {
   coffeeWeightG: number;

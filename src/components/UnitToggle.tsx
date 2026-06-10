@@ -1,4 +1,4 @@
-import type { UnitSystem } from '../hooks/useUnits';
+import type { UnitSystem } from '@/hooks/useUnits';
 
 export interface UnitToggleProps {
   unitSystem: UnitSystem;

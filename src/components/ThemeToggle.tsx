@@ -1,5 +1,5 @@
-import { useTheme } from '../hooks/useTheme';
-import type { Theme } from '../hooks/useTheme';
+import { useTheme } from '@/hooks/useTheme';
+import type { Theme } from '@/hooks/useTheme';
 
 const THEME_ICONS: Record<Theme, string> = { light: '☀️', dark: '🌙', auto: '🖥️' };
 const THEME_NEXT_LABELS: Record<Theme, string> = {

@@ -1,14 +1,14 @@
 import { useMemo, useState } from 'react';
 import type {
   BrewingParameters,
-} from '../types';
-import { calculateCaffeine } from '../engine/caffeineCalculator';
-import { useCalculatorState } from '../hooks/useCalculatorState';
-import BrewMethodSelector from './BrewMethodSelector';
-import CoffeeInputs from './CoffeeInputs';
-import AdvancedOptions from './AdvancedOptions';
-import ResultsDisplay from './ResultsDisplay';
-import SensitivityCharts from './SensitivityCharts';
+} from '@/types';
+import { calculateCaffeine } from '@/engine/caffeineCalculator';
+import { useCalculatorState } from '@/hooks/useCalculatorState';
+import BrewMethodSelector from '@/components/BrewMethodSelector';
+import CoffeeInputs from '@/components/CoffeeInputs';
+import AdvancedOptions from '@/components/AdvancedOptions';
+import ResultsDisplay from '@/components/ResultsDisplay';
+import SensitivityCharts from '@/components/SensitivityCharts';
 
 type ResultView = 'result' | 'sensitivity';
 

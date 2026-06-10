@@ -8,8 +8,8 @@
 
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { CaffeineLogProvider } from '../hooks/useCaffeineLog';
-import MetabolismTracker from './MetabolismTracker';
+import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
+import MetabolismTracker from '@/components/MetabolismTracker';
 
 function renderTracker() {
   return render(

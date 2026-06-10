@@ -7,7 +7,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { useHashTab, TABS } from './useHashTab';
+import { useHashTab, TABS } from '@/hooks/useHashTab';
 
 // ---------------------------------------------------------------------------
 // Helpers

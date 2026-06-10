@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import SensitivityCharts from './SensitivityCharts';
-import type { BrewingParameters } from '../types';
+import SensitivityCharts from '@/components/SensitivityCharts';
+import type { BrewingParameters } from '@/types';
 
 describe('SensitivityCharts', () => {
   const defaultParams: BrewingParameters = {

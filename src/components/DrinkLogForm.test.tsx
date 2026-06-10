@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import DrinkLogForm from './DrinkLogForm';
+import DrinkLogForm from '@/components/DrinkLogForm';
 
 describe('DrinkLogForm', () => {
   it('renders form fields', () => {

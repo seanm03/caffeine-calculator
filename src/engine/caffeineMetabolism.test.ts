@@ -11,8 +11,8 @@ import {
   generateBloodLevelCurve,
   computeDailySummary,
   timeUntilBelow,
-} from './caffeineMetabolism';
-import type { CaffeineLogEntry } from '../types';
+} from '@/engine/caffeineMetabolism';
+import type { CaffeineLogEntry } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Helpers

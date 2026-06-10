@@ -15,10 +15,10 @@ import {
   getBrewMethodEfficiency,
   getGrindMultiplier,
   buildBreakdown,
-} from './caffeineCalculator';
+} from '@/engine/caffeineCalculator';
 
-import type { BrewingParameters, BrewMethod } from '../types';
-import { DAILY_SAFE_LIMIT_MG } from './constants';
+import type { BrewingParameters, BrewMethod } from '@/types';
+import { DAILY_SAFE_LIMIT_MG } from '@/engine/constants';
 
 // ---------------------------------------------------------------------------
 // Individual lookup function tests
