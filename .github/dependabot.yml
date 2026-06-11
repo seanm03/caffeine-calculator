@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       day: "monday"
       time: "09:00"
       timezone: "America/Los_Angeles"
@@ -52,7 +52,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       day: "monday"
       time: "09:00"
       timezone: "America/Los_Angeles"
