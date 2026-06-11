@@ -5,6 +5,8 @@
  * These form the contract between engine outputs and rendering logic.
  */
 
+import type { CaffeineMg } from './branded';
+
 /** Supported coffee brewing methods */
 export type BrewMethod =
   | 'espresso'
@@ -66,7 +68,7 @@ export interface BrewingParameters {
  */
 export interface CaffeineBreakdown {
   /** Caffeine in grounds before adjustments: coffeeWeightG × speciesCaffeineMgPerG */
-  baseCaffeineMg: number;
+  baseCaffeineMg: CaffeineMg;
   /** Adjustment factor from roast level (light/medium/dark) */
   roastAdjustment: number;
   /** Adjustment factor from processing method (washed/honey/natural) */
@@ -89,7 +91,7 @@ export interface CaffeineBreakdown {
  */
 export interface CaffeineResult {
   /** Total estimated caffeine in the brewed cup (mg) */
-  totalCaffeineMg: number;
+  totalCaffeineMg: CaffeineMg;
   /** Percentage of the 400 mg daily safe limit */
   dailyLimitPercent: number;
   /** Equivalent number of "standard" 95 mg cups of coffee */
@@ -164,7 +166,7 @@ export interface BloodLevelPoint {
   /** Hours elapsed since the start of the visualization window */
   hoursSinceStart: number;
   /** Estimated blood caffeine level in mg at this point */
-  caffeineMg: number;
+  caffeineMg: CaffeineMg;
 }
 
 /**

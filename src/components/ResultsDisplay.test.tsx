@@ -4,14 +4,15 @@ import ResultsDisplay from '@/components/ResultsDisplay';
 import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
 import { UnitProvider } from '@/hooks/useUnits';
 import { assertA11y } from '@/test/axe';
+import { CaffeineMg } from '@/types/branded';
 import type { CaffeineResult } from '@/types';
 
 const mockResult: CaffeineResult = {
-  totalCaffeineMg: 180,
+  totalCaffeineMg: CaffeineMg(180),
   dailyLimitPercent: 45,
   equivalentCups: 1.9,
   breakdown: {
-    baseCaffeineMg: 216,
+    baseCaffeineMg: CaffeineMg(216),
     roastAdjustment: 1.0,
     processingAdjustment: 1.0,
     altitudeAdjustment: 1.0,
@@ -63,11 +64,11 @@ describe('ResultsDisplay', () => {
 
   it('renders zero caffeine correctly', () => {
     const zeroResult: CaffeineResult = {
-      totalCaffeineMg: 0,
+      totalCaffeineMg: CaffeineMg(0),
       dailyLimitPercent: 0,
       equivalentCups: 0,
       breakdown: {
-        baseCaffeineMg: 0,
+        baseCaffeineMg: CaffeineMg(0),
         roastAdjustment: 1.0,
         processingAdjustment: 1.0,
         altitudeAdjustment: 1.0,

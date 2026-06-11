@@ -146,7 +146,7 @@ export function getGrindMultiplier(grind: GrindSize | undefined, method: BrewMet
  * @returns Complete breakdown of calculation steps
  */
 export function buildBreakdown(
-  baseCaffeineMg: number,
+  baseCaffeineMg: CaffeineMg,
   roastAdj: number,
   processingAdj: number,
   altitudeAdj: number,
@@ -188,10 +188,10 @@ export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
   // Input validation
   if (!params || typeof params !== 'object') {
     return {
-      totalCaffeineMg: 0,
+      totalCaffeineMg: CaffeineMg(0),
       dailyLimitPercent: 0,
       equivalentCups: 0,
-      breakdown: buildBreakdown(0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),
+      breakdown: buildBreakdown(CaffeineMg(0), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),
     };
   }
 
@@ -211,10 +211,10 @@ export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
   // Edge case: invalid or non-positive coffee weight → zero caffeine
   if (!isValidNumber(coffeeWeightG) || coffeeWeightG <= 0 || coffeeWeightG > MAX_PLAUSIBLE_COFFEE_WEIGHT_G) {
     return {
-      totalCaffeineMg: 0,
+      totalCaffeineMg: CaffeineMg(0),
       dailyLimitPercent: 0,
       equivalentCups: 0,
-      breakdown: buildBreakdown(0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),
+      breakdown: buildBreakdown(CaffeineMg(0), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),
     };
   }
 
@@ -258,7 +258,7 @@ export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
   const equivalentCups = Math.round((totalCaffeineMg / STANDARD_CUP_CAFFEINE_MG) * 10) / 10;
 
   const breakdown = buildBreakdown(
-    Math.round(baseCaffeineMg),
+    CaffeineMg(Math.round(baseCaffeineMg)),
     roastAdj,
     processingAdj,
     altitudeAdj,
@@ -268,5 +268,5 @@ export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
     Math.round(finalEff * 1000) / 1000,
   );
 
-  return { totalCaffeineMg, dailyLimitPercent, equivalentCups, breakdown };
+  return { totalCaffeineMg: CaffeineMg(totalCaffeineMg), dailyLimitPercent, equivalentCups, breakdown };
 }

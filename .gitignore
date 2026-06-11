@@ -12,6 +12,9 @@ dist/
 # TypeScript incremental build info
 *.tsbuildinfo
 
+# ESLint cache
+.eslintcache
+
 # Logs
 *.log
 

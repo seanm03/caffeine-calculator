@@ -160,7 +160,7 @@ export function generateBloodLevelCurve(
     points.push({
       time: pointTime,
       hoursSinceStart: i * CURVE_SAMPLING_INTERVAL_H,
-      caffeineMg: Math.round(level * 100) / 100,
+      caffeineMg: CaffeineMg(Math.round(level * 100) / 100),
     });
   }
 
@@ -355,7 +355,7 @@ function generateEmptyCurve(windowHours: Hours): BloodLevelPoint[] {
     points.push({
       time: t,
       hoursSinceStart: i * CURVE_SAMPLING_INTERVAL_H,
-      caffeineMg: 0,
+      caffeineMg: CaffeineMg(0),
     });
   }
   return points;

@@ -17,6 +17,7 @@ import {
   buildBreakdown,
 } from '@/engine/caffeineCalculator';
 import { DAILY_SAFE_LIMIT_MG, SPECIES_CAFFEINE } from '@/engine/constants';
+import { CaffeineMg } from '@/types/branded';
 import type { BrewingParameters, BrewMethod } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -502,10 +503,10 @@ describe('calculateCaffeine', () => {
 
 describe('buildBreakdown', () => {
   it('returns a CaffeineBreakdown with all provided values', () => {
-    const breakdown = buildBreakdown(216, 1.0, 1.0, 1.0, 0.9, 1.0, 1.0, 0.9);
+    const breakdown = buildBreakdown(CaffeineMg(216), 1.0, 1.0, 1.0, 0.9, 1.0, 1.0, 0.9);
 
     expect(breakdown).toEqual({
-      baseCaffeineMg: 216,
+      baseCaffeineMg: CaffeineMg(216),
       roastAdjustment: 1.0,
       processingAdjustment: 1.0,
       altitudeAdjustment: 1.0,
