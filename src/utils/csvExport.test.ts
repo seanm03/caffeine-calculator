@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { entriesToCsv, downloadCsv, exportEntriesToCsv } from '@/utils/csvExport';
 import { CaffeineMg, WeightG, VolumeMl } from '@/types/branded';
+import { entriesToCsv, downloadCsv, exportEntriesToCsv } from '@/utils/csvExport';
 import type { CaffeineLogEntry } from '@/types';
 
 function makeEntry(overrides: Partial<CaffeineLogEntry> = {}): CaffeineLogEntry {

@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import brandData from '@/data/brandData';
 import { DAILY_SAFE_LIMIT_MG } from '@/engine/constants';
 import { useCaffeineLog } from '@/hooks/useCaffeineLog';
-import { CaffeineMg } from '@/types/branded';
+import { CaffeineMg, unwrapMg, unwrapVolumeMl } from '@/types/branded';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -15,8 +15,8 @@ type SortDir = 'asc' | 'desc';
 // Helpers
 // ---------------------------------------------------------------------------
 
-function pctDaily(caffeineMg: number): number {
-  return Math.round((caffeineMg / DAILY_SAFE_LIMIT_MG) * 100);
+function pctDaily(caffeineMg: CaffeineMg): number {
+  return Math.round((unwrapMg(caffeineMg) / DAILY_SAFE_LIMIT_MG) * 100);
 }
 
 // ---------------------------------------------------------------------------
@@ -79,10 +79,10 @@ export default function BrandReference() {
   const { addEntry } = useCaffeineLog();
 
   const handleQuickLog = useCallback(
-    (drinkName: string, caffeineMg: number, brand: string) => {
+    (drinkName: string, caffeineMg: CaffeineMg, brand: string) => {
       addEntry({
         timestamp: new Date().toISOString(),
-        caffeineMg: CaffeineMg(caffeineMg),
+        caffeineMg,
         drinkName: `${brand} ${drinkName}`,
       });
       setQuickLogFeedback(`${brand} ${drinkName}`);
@@ -116,8 +116,10 @@ export default function BrandReference() {
         cmp = a.brand.localeCompare(b.brand);
       } else if (sortKey === 'name') {
         cmp = a.name.localeCompare(b.name);
+      } else if (sortKey === 'caffeineMg') {
+        cmp = unwrapMg(a.caffeineMg) - unwrapMg(b.caffeineMg);
       } else {
-        cmp = a[sortKey] - b[sortKey];
+        cmp = unwrapVolumeMl(a.volumeMl) - unwrapVolumeMl(b.volumeMl);
       }
       return sortDir === 'asc' ? cmp : -cmp;
     });
@@ -220,7 +222,7 @@ export default function BrandReference() {
                     key={`${d.brand}-${d.name}-${d.size}`}
                     className={`
                       hover:bg-coffee-50 dark:hover:bg-coffee-900/40 transition-colors
-                      ${d.caffeineMg > DAILY_SAFE_LIMIT_MG ? 'bg-amber-50 dark:bg-amber-950/30' : 'bg-white dark:bg-coffee-800/50'}
+                      ${unwrapMg(d.caffeineMg) > DAILY_SAFE_LIMIT_MG ? 'bg-amber-50 dark:bg-amber-950/30' : 'bg-white dark:bg-coffee-800/50'}
                     `}
                   >
                     <td className="px-4 py-3 font-medium text-coffee-800 dark:text-coffee-100">
@@ -245,7 +247,7 @@ export default function BrandReference() {
                       <span
                         className={`
                           inline-block px-2 py-0.5 rounded-full text-xs font-medium
-                          ${d.caffeineMg > DAILY_SAFE_LIMIT_MG ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' : 'bg-coffee-100 text-coffee-700 dark:bg-coffee-800 dark:text-coffee-200'}
+                          ${unwrapMg(d.caffeineMg) > DAILY_SAFE_LIMIT_MG ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' : 'bg-coffee-100 text-coffee-700 dark:bg-coffee-800 dark:text-coffee-200'}
                         `}
                       >
                         {pctDaily(d.caffeineMg)}%
@@ -277,7 +279,7 @@ export default function BrandReference() {
                 key={`${d.brand}-${d.name}-${d.size}`}
                 className={`
                   card p-4 space-y-2
-                  ${d.caffeineMg > DAILY_SAFE_LIMIT_MG ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700' : ''}
+                  ${unwrapMg(d.caffeineMg) > DAILY_SAFE_LIMIT_MG ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700' : ''}
                 `}
               >
                 <div className="flex items-center justify-between">
@@ -292,7 +294,7 @@ export default function BrandReference() {
                   <span
                     className={`
                       inline-block px-2 py-0.5 rounded-full text-xs font-medium
-                      ${d.caffeineMg > DAILY_SAFE_LIMIT_MG ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' : 'bg-coffee-100 text-coffee-700 dark:bg-coffee-800 dark:text-coffee-200'}
+                      ${unwrapMg(d.caffeineMg) > DAILY_SAFE_LIMIT_MG ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' : 'bg-coffee-100 text-coffee-700 dark:bg-coffee-800 dark:text-coffee-200'}
                     `}
                   >
                     {pctDaily(d.caffeineMg)}%

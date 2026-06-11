@@ -112,9 +112,9 @@ export interface BrandDrink {
   /** Size label (e.g., "Grande") */
   size: string;
   /** Volume in milliliters */
-  volumeMl: number;
+  volumeMl: VolumeMl;
   /** Caffeine content in milligrams */
-  caffeineMg: number;
+  caffeineMg: CaffeineMg;
   source: string;
   /** ISO date when the data was last verified */
   lastUpdated: string;

@@ -1,10 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Coffee Caffeine Calculator - Custom Styles */
+/* Coffee Caffeine Calculator - Custom Styles (Tailwind CSS 4) */
 
-/* ── CSS Custom Properties ────────────────────────────────────────── */
+/* ── Theme Configuration ─────────────────────────────────────────── */
+@theme {
+  --color-coffee-50: #faf6f1;
+  --color-coffee-100: #f0e6d8;
+  --color-coffee-200: #e0ccb3;
+  --color-coffee-300: #c9a87c;
+  --color-coffee-400: #b8895a;
+  --color-coffee-500: #a67142;
+  --color-coffee-600: #8b5e3c;
+  --color-coffee-700: #6f4a32;
+  --color-coffee-800: #5c3d2b;
+  --color-coffee-900: #4a3224;
+  --color-coffee-950: #2a1a10;
+}
+
+/* ── Dark Mode Variant ──────────────────────────────────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── CSS Custom Properties (light mode) ─────────────────────────── */
 :root {
   --color-coffee-brown: #8b5e3c;
   --color-coffee-cream: #f0e6d8;
@@ -30,32 +46,42 @@
   --color-gauge-red: #f87171;
 }
 
+/* ── Base Styles ────────────────────────────────────────────────── */
 @layer base {
   body {
-    @apply bg-coffee-50 text-coffee-900 antialiased;
+    background-color: var(--color-coffee-50);
+    color: var(--color-coffee-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   }
 }
 
+/* ── Component Styles ───────────────────────────────────────────── */
 @layer components {
+
   .btn-coffee {
-    @apply bg-coffee-600 hover:bg-coffee-700 text-white font-semibold py-2 px-4 rounded-lg
-           transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-coffee-400
-           focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-coffee-600 text-white font-semibold px-4 py-2 rounded-lg
+           transition-colors duration-200
+           hover:bg-coffee-700
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-coffee-400
+           focus-visible:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .input-coffee {
     @apply w-full px-3 py-2 border border-coffee-300 rounded-lg
-           focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:border-coffee-500
-           bg-white text-coffee-900 placeholder-coffee-400
-           transition-shadow duration-200;
+           bg-white text-coffee-900
+           transition-shadow duration-200
+           placeholder:text-coffee-400
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-coffee-500
+           focus-visible:border-coffee-500;
   }
 
   .card {
     @apply bg-white rounded-xl shadow-md border border-coffee-200 p-6
            transition-shadow duration-300;
   }
-
   .card:hover {
     box-shadow: 0 4px 20px rgba(139, 94, 60, 0.1);
   }
@@ -66,13 +92,14 @@
   }
 }
 
+/* ── Utility Styles ─────────────────────────────────────────────── */
 @layer utilities {
   .text-balance {
-    text-wrap: balance;
+    @apply [text-wrap:balance];
   }
 }
 
-/* ── Animations ──────────────────────────────────────────────────── */
+/* ── Animations ─────────────────────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }

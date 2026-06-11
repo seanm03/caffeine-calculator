@@ -1,8 +1,8 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SLEEP_ADVISORY_THRESHOLD_MG, DAILY_SAFE_LIMIT_MG, DEFAULT_HALF_LIFE_HOURS } from '@/engine/caffeineMetabolism';
-import { CaffeineMg, Hours } from '@/types/branded';
 import { useCaffeineLog, CaffeineLogProvider } from '@/hooks/useCaffeineLog';
+import { CaffeineMg, Hours } from '@/types/branded';
 
 function wrapper({ children }: { children: React.ReactNode }) {
   return <CaffeineLogProvider>{children}</CaffeineLogProvider>;

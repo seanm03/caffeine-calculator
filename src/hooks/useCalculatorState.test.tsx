@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { WeightG, VolumeMl, TemperatureC } from '@/types/branded';
 import { useCalculatorState, CalculatorStateProvider } from '@/hooks/useCalculatorState';
+import { WeightG, VolumeMl, TemperatureC } from '@/types/branded';
 
 function wrapper({ children }: { children: React.ReactNode }) {
   return <CalculatorStateProvider>{children}</CalculatorStateProvider>;
