@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SLEEP_ADVISORY_THRESHOLD_MG, DAILY_SAFE_LIMIT_MG, DEFAULT_HALF_LIFE_HOURS } from '@/engine/caffeineMetabolism';
+import { CaffeineMg, Hours } from '@/types/branded';
 import { useCaffeineLog, CaffeineLogProvider } from '@/hooks/useCaffeineLog';
 
 function wrapper({ children }: { children: React.ReactNode }) {
@@ -37,7 +38,7 @@ describe('useCaffeineLog', () => {
   it('persists halfLifeHours to localStorage', () => {
     const { result } = renderHook(() => useCaffeineLog(), { wrapper });
     act(() => {
-      result.current.setHalfLifeHours(8);
+      result.current.setHalfLifeHours(Hours(8));
     });
     expect(result.current.halfLifeHours).toBe(8);
 
@@ -48,7 +49,7 @@ describe('useCaffeineLog', () => {
   it('persists customSafeLimitMg to localStorage', () => {
     const { result } = renderHook(() => useCaffeineLog(), { wrapper });
     act(() => {
-      result.current.setCustomSafeLimitMg(300);
+      result.current.setCustomSafeLimitMg(CaffeineMg(300));
     });
     expect(result.current.customSafeLimitMg).toBe(300);
 
@@ -70,7 +71,7 @@ describe('useCaffeineLog', () => {
   it('persists customSleepThresholdMg to localStorage', () => {
     const { result } = renderHook(() => useCaffeineLog(), { wrapper });
     act(() => {
-      result.current.setCustomSleepThresholdMg(75);
+      result.current.setCustomSleepThresholdMg(CaffeineMg(75));
     });
     expect(result.current.customSleepThresholdMg).toBe(75);
 
@@ -82,12 +83,12 @@ describe('useCaffeineLog', () => {
   it('clamps halfLifeHours to [2, 12]', () => {
     const { result } = renderHook(() => useCaffeineLog(), { wrapper });
     act(() => {
-      result.current.setHalfLifeHours(1);
+      result.current.setHalfLifeHours(Hours(1));
     });
     expect(result.current.halfLifeHours).toBe(2);
 
     act(() => {
-      result.current.setHalfLifeHours(15);
+      result.current.setHalfLifeHours(Hours(15));
     });
     expect(result.current.halfLifeHours).toBe(12);
   });
@@ -95,12 +96,12 @@ describe('useCaffeineLog', () => {
   it('clamps customSafeLimitMg to [50, 1000]', () => {
     const { result } = renderHook(() => useCaffeineLog(), { wrapper });
     act(() => {
-      result.current.setCustomSafeLimitMg(30);
+      result.current.setCustomSafeLimitMg(CaffeineMg(30));
     });
     expect(result.current.customSafeLimitMg).toBe(50);
 
     act(() => {
-      result.current.setCustomSafeLimitMg(1200);
+      result.current.setCustomSafeLimitMg(CaffeineMg(1200));
     });
     expect(result.current.customSafeLimitMg).toBe(1000);
   });
@@ -121,12 +122,12 @@ describe('useCaffeineLog', () => {
   it('clamps customSleepThresholdMg to [10, 200]', () => {
     const { result } = renderHook(() => useCaffeineLog(), { wrapper });
     act(() => {
-      result.current.setCustomSleepThresholdMg(5);
+      result.current.setCustomSleepThresholdMg(CaffeineMg(5));
     });
     expect(result.current.customSleepThresholdMg).toBe(10);
 
     act(() => {
-      result.current.setCustomSleepThresholdMg(300);
+      result.current.setCustomSleepThresholdMg(CaffeineMg(300));
     });
     expect(result.current.customSleepThresholdMg).toBe(200);
   });

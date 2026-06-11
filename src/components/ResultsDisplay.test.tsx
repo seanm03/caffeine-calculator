@@ -4,7 +4,7 @@ import ResultsDisplay from '@/components/ResultsDisplay';
 import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
 import { UnitProvider } from '@/hooks/useUnits';
 import { assertA11y } from '@/test/axe';
-import { CaffeineMg } from '@/types/branded';
+import { CaffeineMg, WeightG, VolumeMl } from '@/types/branded';
 import type { CaffeineResult } from '@/types';
 
 const mockResult: CaffeineResult = {
@@ -27,7 +27,7 @@ function renderDisplay(result: CaffeineResult | null = mockResult) {
   return render(
     <UnitProvider>
       <CaffeineLogProvider>
-        <ResultsDisplay result={result} coffeeWeightG={18} waterVolumeMl={300} brewMethod="pour-over" />
+        <ResultsDisplay result={result} coffeeWeightG={WeightG(18)} waterVolumeMl={VolumeMl(300)} brewMethod="pour-over" />
       </CaffeineLogProvider>
     </UnitProvider>,
   );

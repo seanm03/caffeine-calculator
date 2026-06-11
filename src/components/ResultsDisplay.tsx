@@ -2,12 +2,13 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { DAILY_SAFE_LIMIT_MG, STANDARD_CUP_CAFFEINE_MG } from '@/engine/constants';
 import { useCaffeineLog } from '@/hooks/useCaffeineLog';
 import { useUnits } from '@/hooks/useUnits';
+import { WeightG, VolumeMl } from '@/types/branded';
 import type { CaffeineResult, BrewMethod } from '@/types';
 
 export interface ResultsDisplayProps {
   result: CaffeineResult | null;
-  coffeeWeightG?: number;
-  waterVolumeMl?: number;
+  coffeeWeightG?: WeightG;
+  waterVolumeMl?: VolumeMl;
   brewMethod?: BrewMethod;
 }
 

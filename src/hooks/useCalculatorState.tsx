@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { DEFAULT_PARAMS } from '@/engine/constants';
 import { clampNumber } from '@/engine/utils';
+import { WeightG, VolumeMl, TemperatureC } from '@/types/branded';
 import { createCtxWithName } from '@/utils/createCtx';
 import type {
   BrewMethod,
@@ -21,28 +22,28 @@ interface PersistedPayload {
 
 interface CalculatorState {
   brewMethod: BrewMethod;
-  coffeeWeightG: number;
-  waterVolumeMl: number;
+  coffeeWeightG: WeightG;
+  waterVolumeMl: VolumeMl;
   species: Species;
   isDecaf: boolean;
   robustaPercent: number;
   roastLevel: RoastLevel;
   grindSize: GrindSize;
-  waterTemperatureC: number;
+  waterTemperatureC: TemperatureC;
   processingMethod: ProcessingMethod;
   altitude: Altitude;
 }
 
 interface CalculatorStateContextValue extends CalculatorState {
   setBrewMethod: (value: BrewMethod) => void;
-  setCoffeeWeightG: (value: number) => void;
-  setWaterVolumeMl: (value: number) => void;
+  setCoffeeWeightG: (value: WeightG) => void;
+  setWaterVolumeMl: (value: VolumeMl) => void;
   setSpecies: (value: Species) => void;
   setIsDecaf: (value: boolean) => void;
   setRobustaPercent: (value: number) => void;
   setRoastLevel: (value: RoastLevel) => void;
   setGrindSize: (value: GrindSize) => void;
-  setWaterTemperatureC: (value: number) => void;
+  setWaterTemperatureC: (value: TemperatureC) => void;
   setProcessingMethod: (value: ProcessingMethod) => void;
   setAltitude: (value: Altitude) => void;
 }
@@ -61,14 +62,14 @@ function getInitialState(): CalculatorState {
       const p = payload.state;
       return {
         brewMethod: p.brewMethod ?? DEFAULT_PARAMS.brewMethod,
-        coffeeWeightG: p.coffeeWeightG ?? DEFAULT_PARAMS.coffeeWeightG,
-        waterVolumeMl: p.waterVolumeMl ?? DEFAULT_PARAMS.waterVolumeMl,
+        coffeeWeightG: WeightG(p.coffeeWeightG ?? DEFAULT_PARAMS.coffeeWeightG),
+        waterVolumeMl: VolumeMl(p.waterVolumeMl ?? DEFAULT_PARAMS.waterVolumeMl),
         species: p.species ?? DEFAULT_PARAMS.species,
         isDecaf: p.isDecaf ?? false,
         robustaPercent: p.robustaPercent ?? DEFAULT_PARAMS.robustaPercent,
         roastLevel: p.roastLevel ?? DEFAULT_PARAMS.roastLevel,
         grindSize: p.grindSize ?? DEFAULT_PARAMS.grindSize,
-        waterTemperatureC: p.waterTemperatureC ?? DEFAULT_PARAMS.waterTemperatureC,
+        waterTemperatureC: TemperatureC(p.waterTemperatureC ?? DEFAULT_PARAMS.waterTemperatureC),
         processingMethod: p.processingMethod ?? DEFAULT_PARAMS.processingMethod,
         altitude: p.altitude ?? DEFAULT_PARAMS.altitude,
       };
@@ -82,14 +83,14 @@ function getInitialState(): CalculatorState {
 function getDefaults(): CalculatorState {
   return {
     brewMethod: DEFAULT_PARAMS.brewMethod,
-    coffeeWeightG: DEFAULT_PARAMS.coffeeWeightG,
-    waterVolumeMl: DEFAULT_PARAMS.waterVolumeMl,
+    coffeeWeightG: WeightG(DEFAULT_PARAMS.coffeeWeightG),
+    waterVolumeMl: VolumeMl(DEFAULT_PARAMS.waterVolumeMl),
     species: DEFAULT_PARAMS.species,
     isDecaf: false,
     robustaPercent: DEFAULT_PARAMS.robustaPercent,
     roastLevel: DEFAULT_PARAMS.roastLevel,
     grindSize: DEFAULT_PARAMS.grindSize,
-    waterTemperatureC: DEFAULT_PARAMS.waterTemperatureC,
+    waterTemperatureC: TemperatureC(DEFAULT_PARAMS.waterTemperatureC),
     processingMethod: DEFAULT_PARAMS.processingMethod,
     altitude: DEFAULT_PARAMS.altitude,
   };
@@ -117,12 +118,12 @@ export function CalculatorStateProvider({ children }: { children: React.ReactNod
     setState((prev) => ({ ...prev, brewMethod: value }));
   }, []);
 
-  const setCoffeeWeightG = useCallback((value: number) => {
-    setState((prev) => ({ ...prev, coffeeWeightG: clampNumber(value, 0, 500, 0) }));
+  const setCoffeeWeightG = useCallback((value: WeightG) => {
+    setState((prev) => ({ ...prev, coffeeWeightG: WeightG(clampNumber(value, 0, 500, 0)) }));
   }, []);
 
-  const setWaterVolumeMl = useCallback((value: number) => {
-    setState((prev) => ({ ...prev, waterVolumeMl: clampNumber(value, 0, 5000, 0) }));
+  const setWaterVolumeMl = useCallback((value: VolumeMl) => {
+    setState((prev) => ({ ...prev, waterVolumeMl: VolumeMl(clampNumber(value, 0, 5000, 0)) }));
   }, []);
 
   const setSpecies = useCallback((value: Species) => {
@@ -145,8 +146,8 @@ export function CalculatorStateProvider({ children }: { children: React.ReactNod
     setState((prev) => ({ ...prev, grindSize: value }));
   }, []);
 
-  const setWaterTemperatureC = useCallback((value: number) => {
-    setState((prev) => ({ ...prev, waterTemperatureC: clampNumber(value, 0, 150, 93) }));
+  const setWaterTemperatureC = useCallback((value: TemperatureC) => {
+    setState((prev) => ({ ...prev, waterTemperatureC: TemperatureC(clampNumber(value, 0, 150, 93)) }));
   }, []);
 
   const setProcessingMethod = useCallback((value: ProcessingMethod) => {

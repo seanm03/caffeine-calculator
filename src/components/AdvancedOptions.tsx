@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import SegmentedControl from '@/components/SegmentedControl';
 import { useUnits } from '@/hooks/useUnits';
+import { TemperatureC } from '@/types/branded';
 import type { RoastLevel, GrindSize, ProcessingMethod, Altitude } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -12,8 +13,8 @@ export interface AdvancedOptionsProps {
   onRoastLevelChange: (r: RoastLevel) => void;
   grindSize: GrindSize;
   onGrindSizeChange: (g: GrindSize) => void;
-  waterTemperatureC: number;
-  onWaterTemperatureChange: (t: number) => void;
+  waterTemperatureC: TemperatureC;
+  onWaterTemperatureChange: (t: TemperatureC) => void;
   processingMethod: ProcessingMethod;
   onProcessingMethodChange: (p: ProcessingMethod) => void;
   altitude: Altitude;
@@ -174,10 +175,10 @@ export default function AdvancedOptions({
                   if (!isNaN(v)) {
                     const celsius = unitSystem === 'metric' ? v : Math.round(((v - 32) * 5 / 9) * 10) / 10;
                     if (celsius >= 70 && celsius <= 100) {
-                      onWaterTemperatureChange(celsius);
+                      onWaterTemperatureChange(TemperatureC(celsius));
                     }
                   } else if (e.target.value === '') {
-                    onWaterTemperatureChange(93);
+                    onWaterTemperatureChange(TemperatureC(93));
                   }
                 }}
                 className="w-20 px-2 py-1.5 text-center text-sm border border-coffee-300

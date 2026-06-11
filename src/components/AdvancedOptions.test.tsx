@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import AdvancedOptions from '@/components/AdvancedOptions';
 import { UnitProvider } from '@/hooks/useUnits';
 import { assertA11y } from '@/test/axe';
+import { TemperatureC } from '@/types/branded';
 
 function renderOptions() {
   return render(
@@ -12,7 +13,7 @@ function renderOptions() {
         onRoastLevelChange={() => {}}
         grindSize="medium"
         onGrindSizeChange={() => {}}
-        waterTemperatureC={93}
+        waterTemperatureC={TemperatureC(93)}
         onWaterTemperatureChange={() => {}}
         processingMethod="washed"
         onProcessingMethodChange={() => {}}

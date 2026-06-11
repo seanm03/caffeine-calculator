@@ -2,20 +2,21 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import HalfLifeSlider from '@/components/HalfLifeSlider';
 import { assertA11y } from '@/test/axe';
+import { Hours } from '@/types/branded';
 
 describe('HalfLifeSlider', () => {
   it('renders the half-life heading', () => {
-    render(<HalfLifeSlider halfLifeHours={5} onChange={() => {}} />);
+    render(<HalfLifeSlider halfLifeHours={Hours(5)} onChange={() => {}} />);
     expect(screen.getByText('Caffeine Half-Life')).toBeInTheDocument();
   });
 
   it('displays the current value', () => {
-    render(<HalfLifeSlider halfLifeHours={5} onChange={() => {}} />);
+    render(<HalfLifeSlider halfLifeHours={Hours(5)} onChange={() => {}} />);
     expect(screen.getByText('5h')).toBeInTheDocument();
   });
 
   it('renders a range input with accessible label', () => {
-    render(<HalfLifeSlider halfLifeHours={5} onChange={() => {}} />);
+    render(<HalfLifeSlider halfLifeHours={Hours(5)} onChange={() => {}} />);
     const slider = screen.getByRole('slider');
     expect(slider).toBeInTheDocument();
     expect(slider).toHaveAttribute('aria-label', 'Caffeine half-life: 5 hours');
@@ -23,7 +24,7 @@ describe('HalfLifeSlider', () => {
 
   it('calls onChange when slider value changes', () => {
     const onChange = vi.fn();
-    render(<HalfLifeSlider halfLifeHours={5} onChange={onChange} />);
+    render(<HalfLifeSlider halfLifeHours={Hours(5)} onChange={onChange} />);
     const slider = screen.getByRole('slider');
     // Simulate a change event rather than a browser-native input event
     // jsdom fires `change` on programmatic value change + dispatchEvent
@@ -33,7 +34,7 @@ describe('HalfLifeSlider', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = render(<HalfLifeSlider halfLifeHours={5} onChange={() => {}} />);
+    const { container } = render(<HalfLifeSlider halfLifeHours={Hours(5)} onChange={() => {}} />);
     await assertA11y(container);
   });
 });

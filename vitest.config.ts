@@ -18,8 +18,8 @@ export default defineConfig({
       reporter: ['text', 'lcov', 'html'],
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/**/*.test.*', 'src/test/**', 'src/vite-env.d.ts', 'src/main.tsx'],
-      // Stage 1/5: Set to pass-current levels. Staged trajectory to 75/65/80/75 pre-v1.0
-      thresholds: { statements: 25, branches: 25, functions: 45, lines: 25 },
+      // Stage 2/5: Bump from pass-current to next milestone. Staged trajectory to 75/65/80/75 pre-v1.0
+      thresholds: { statements: 40, branches: 35, functions: 55, lines: 40 },
     },
   },
 });

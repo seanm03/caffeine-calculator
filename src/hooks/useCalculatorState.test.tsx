@@ -1,5 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
+import { WeightG, VolumeMl, TemperatureC } from '@/types/branded';
 import { useCalculatorState, CalculatorStateProvider } from '@/hooks/useCalculatorState';
 
 function wrapper({ children }: { children: React.ReactNode }) {
@@ -94,7 +95,7 @@ describe('useCalculatorState', () => {
   it('changes coffee weight via setCoffeeWeightG', () => {
     const { result } = renderHook(() => useCalculatorState(), { wrapper });
     act(() => {
-      result.current.setCoffeeWeightG(30);
+      result.current.setCoffeeWeightG(WeightG(30));
     });
     expect(result.current.coffeeWeightG).toBe(30);
   });
@@ -102,7 +103,7 @@ describe('useCalculatorState', () => {
   it('clamps out-of-range coffee weight to 0', () => {
     const { result } = renderHook(() => useCalculatorState(), { wrapper });
     act(() => {
-      result.current.setCoffeeWeightG(-10);
+      result.current.setCoffeeWeightG(WeightG(-10));
     });
     expect(result.current.coffeeWeightG).toBe(0);
   });
@@ -110,7 +111,7 @@ describe('useCalculatorState', () => {
   it('clamps coffee weight above 500 to 500', () => {
     const { result } = renderHook(() => useCalculatorState(), { wrapper });
     act(() => {
-      result.current.setCoffeeWeightG(999);
+      result.current.setCoffeeWeightG(WeightG(999));
     });
     expect(result.current.coffeeWeightG).toBe(500);
   });
@@ -118,7 +119,7 @@ describe('useCalculatorState', () => {
   it('changes water volume via setWaterVolumeMl', () => {
     const { result } = renderHook(() => useCalculatorState(), { wrapper });
     act(() => {
-      result.current.setWaterVolumeMl(500);
+      result.current.setWaterVolumeMl(VolumeMl(500));
     });
     expect(result.current.waterVolumeMl).toBe(500);
   });
@@ -146,7 +147,7 @@ describe('useCalculatorState', () => {
   it('changes water temperature via setWaterTemperatureC', () => {
     const { result } = renderHook(() => useCalculatorState(), { wrapper });
     act(() => {
-      result.current.setWaterTemperatureC(85);
+      result.current.setWaterTemperatureC(TemperatureC(85));
     });
     expect(result.current.waterTemperatureC).toBe(85);
   });

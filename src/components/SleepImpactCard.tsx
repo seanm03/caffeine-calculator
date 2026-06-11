@@ -18,11 +18,11 @@ export interface SleepImpactCardProps {
   /** Today's entries in chronological order. */
   entries: readonly CaffeineLogEntry[];
   /** Caffeine half-life in hours. */
-  halfLifeHours: number;
+  halfLifeHours: Hours;
   /** Bedtime hour (0–23). */
   bedtimeHour: number;
   /** Sleep advisory threshold in mg (default 50). */
-  sleepThresholdMg?: number;
+  sleepThresholdMg?: CaffeineMg;
 }
 
 // ---------------------------------------------------------------------------
@@ -53,7 +53,7 @@ const SleepImpactCard = memo(function SleepImpactCard({
   sleepThresholdMg = SLEEP_ADVISORY_THRESHOLD_MG,
 }: SleepImpactCardProps) {
   const impact = useMemo(
-    () => assessSleepImpact(entries, Hours(halfLifeHours), bedtimeHour, 0, CaffeineMg(sleepThresholdMg)),
+    () => assessSleepImpact(entries, halfLifeHours, bedtimeHour, 0, sleepThresholdMg),
     [entries, halfLifeHours, bedtimeHour, sleepThresholdMg],
   );
 

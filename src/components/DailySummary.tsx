@@ -6,12 +6,13 @@
  */
 
 import { memo, useMemo } from 'react';
+import { CaffeineMg } from '@/types/branded';
 import type { DailyCaffeineSummary } from '@/types';
 
 interface DailySummaryProps {
   summary: DailyCaffeineSummary;
   /** Custom daily safe limit in mg. Defaults to 400 if not provided. */
-  safeLimitMg?: number;
+  safeLimitMg?: CaffeineMg;
 }
 
 function zoneBg(percent: number): string {
@@ -28,7 +29,7 @@ function zoneText(percent: number): string {
   return 'text-red-700 dark:text-red-400';
 }
 
-const DailySummary = memo(function DailySummary({ summary, safeLimitMg = 400 }: DailySummaryProps) {
+const DailySummary = memo(function DailySummary({ summary, safeLimitMg = CaffeineMg(400) }: DailySummaryProps) {
   const { currentLevel, totalToday, peakLevel, peakTime, entryCount } = summary;
 
   const dailyPercent = useMemo(

@@ -15,6 +15,7 @@ import { DailySummaryError, ChartError, DrinkLogError } from '@/components/Metab
 import SleepImpactCard from '@/components/SleepImpactCard';
 import StorageStatusBanner from '@/components/StorageStatusBanner';
 import { useCaffeineLog } from '@/hooks/useCaffeineLog';
+import { CaffeineMg } from '@/types/branded';
 import { exportEntriesToCsv } from '@/utils/csvExport';
 import type { StorageStatus } from '@/components/StorageStatusBanner';
 const BloodLevelChart = lazy(() => import('@/components/BloodLevelChart'));
@@ -75,7 +76,7 @@ const MetabolismTracker = memo(function MetabolismTracker() {
             value={customSafeLimitMg}
             onChange={(e) => {
               const v = parseInt(e.target.value, 10);
-              if (!isNaN(v)) setCustomSafeLimitMg(v);
+              if (!isNaN(v)) setCustomSafeLimitMg(CaffeineMg(v));
             }}
             className="input-coffee text-sm w-28"
             aria-label="Custom daily safe caffeine limit in milligrams"
@@ -124,7 +125,7 @@ const MetabolismTracker = memo(function MetabolismTracker() {
             value={customSleepThresholdMg}
             onChange={(e) => {
               const v = parseInt(e.target.value, 10);
-              if (!isNaN(v)) setCustomSleepThresholdMg(v);
+              if (!isNaN(v)) setCustomSleepThresholdMg(CaffeineMg(v));
             }}
             className="input-coffee text-sm w-28"
             aria-label="Custom sleep advisory caffeine threshold in milligrams"

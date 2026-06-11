@@ -1,12 +1,13 @@
 import SegmentedControl from '@/components/SegmentedControl';
 import { useUnits } from '@/hooks/useUnits';
+import { WeightG, VolumeMl } from '@/types/branded';
 import type { Species } from '@/types';
 
 export interface CoffeeInputsProps {
-  coffeeWeightG: number;
-  onCoffeeWeightChange: (g: number) => void;
-  waterVolumeMl: number;
-  onWaterVolumeChange: (ml: number) => void;
+  coffeeWeightG: WeightG;
+  onCoffeeWeightChange: (g: WeightG) => void;
+  waterVolumeMl: VolumeMl;
+  onWaterVolumeChange: (ml: VolumeMl) => void;
   species: Species;
   onSpeciesChange: (s: Species) => void;
   isDecaf: boolean;
@@ -70,7 +71,7 @@ export default function CoffeeInputs({
             value={unitSystem === 'metric' ? coffeeWeightG : imperialWeight}
             onChange={(e) => {
               const v = parseFloat(e.target.value) || 0;
-              onCoffeeWeightChange(unitSystem === 'metric' ? v : Math.round((v / 0.035274) * 10) / 10);
+              onCoffeeWeightChange(WeightG(unitSystem === 'metric' ? v : Math.round((v / 0.035274) * 10) / 10));
             }}
             className={`input-coffee dark:bg-coffee-800 dark:border-coffee-700 dark:text-coffee-100
               dark:placeholder-coffee-500 min-h-[44px] text-base
@@ -113,7 +114,7 @@ export default function CoffeeInputs({
             value={unitSystem === 'metric' ? waterVolumeMl : imperialVolume}
             onChange={(e) => {
               const v = parseFloat(e.target.value) || 0;
-              onWaterVolumeChange(unitSystem === 'metric' ? v : Math.round((v / 0.033814) * 10) / 10);
+              onWaterVolumeChange(VolumeMl(unitSystem === 'metric' ? v : Math.round((v / 0.033814) * 10) / 10));
             }}
             className={`input-coffee dark:bg-coffee-800 dark:border-coffee-700 dark:text-coffee-100
               dark:placeholder-coffee-500 min-h-[44px] text-base

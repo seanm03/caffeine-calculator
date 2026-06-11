@@ -3,14 +3,15 @@ import { describe, it, expect } from 'vitest';
 import CoffeeInputs from '@/components/CoffeeInputs';
 import { UnitProvider } from '@/hooks/useUnits';
 import { assertA11y } from '@/test/axe';
+import { WeightG, VolumeMl } from '@/types/branded';
 
 function renderInputs() {
   return render(
     <UnitProvider>
       <CoffeeInputs
-        coffeeWeightG={18}
+        coffeeWeightG={WeightG(18)}
         onCoffeeWeightChange={() => {}}
-        waterVolumeMl={300}
+        waterVolumeMl={VolumeMl(300)}
         onWaterVolumeChange={() => {}}
         species="arabica"
         onSpeciesChange={() => {}}

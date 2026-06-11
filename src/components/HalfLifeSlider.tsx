@@ -8,10 +8,11 @@
 
 import { memo } from 'react';
 import { MIN_HALF_LIFE_HOURS, MAX_HALF_LIFE_HOURS } from '@/engine/caffeineMetabolism';
+import { Hours } from '@/types/branded';
 
 interface HalfLifeSliderProps {
-  halfLifeHours: number;
-  onChange: (hours: number) => void;
+  halfLifeHours: Hours;
+  onChange: (hours: Hours) => void;
 }
 
 const HalfLifeSlider = memo(function HalfLifeSlider({
@@ -39,7 +40,7 @@ const HalfLifeSlider = memo(function HalfLifeSlider({
             max={MAX_HALF_LIFE_HOURS}
             step={0.5}
             value={halfLifeHours}
-            onChange={(e) => onChange(parseFloat(e.target.value))}
+            onChange={(e) => onChange(Hours(parseFloat(e.target.value)))}
             className="flex-1 h-2 bg-coffee-200 dark:bg-coffee-700 rounded-lg appearance-none cursor-pointer
                        accent-coffee-600 dark:accent-coffee-400"
             aria-label={`Caffeine half-life: ${halfLifeHours} hours`}
