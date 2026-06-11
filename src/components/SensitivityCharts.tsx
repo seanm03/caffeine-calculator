@@ -1,12 +1,11 @@
 /**
- * SensitivityCharts — WI-12: Caffeine visualization charts using Recharts.
+ * SensitivityCharts — Caffeine visualization charts using Recharts.
  *
- * Provides two analysis views:
+ * Provides four analysis views:
  * 1. Bar chart comparing caffeine across all 8 brew methods at current parameters
  * 2. Line chart showing caffeine vs. coffee weight (1–100g range)
- *
- * Both charts use useMemo for computed data and ResponsiveContainer
- * for responsive rendering across all screen sizes.
+ * 3. Radar chart showing parameter contribution multipliers
+ * 4. Heatmap for grind × temperature interactions
  */
 
 import { memo, useMemo } from 'react';
@@ -16,6 +15,11 @@ import {
   Bar,
   LineChart,
   Line,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
   XAxis,
   YAxis,
   Tooltip,
@@ -24,7 +28,7 @@ import {
   Legend,
 } from 'recharts';
 import { calculateCaffeine } from '@/engine/caffeineCalculator';
-import type { BrewMethod, BrewingParameters, CaffeineResult } from '@/types';
+import type { BrewMethod, BrewingParameters, CaffeineResult, GrindSize } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -68,6 +72,24 @@ const COFFEE_WEIGHT_RANGE = {
   max: 100,
   step: 2,
 };
+
+const ALL_GRIND_SIZES: GrindSize[] = [
+  'extra-fine',
+  'fine',
+  'medium',
+  'coarse',
+  'extra-coarse',
+];
+
+const GRIND_LABELS: Record<GrindSize, string> = {
+  'extra-fine': 'Extra Fine',
+  fine: 'Fine',
+  medium: 'Medium',
+  coarse: 'Coarse',
+  'extra-coarse': 'Extra Coarse',
+};
+
+const HEATMAP_TEMPS = [70, 75, 80, 85, 90, 95, 100];
 
 // ---------------------------------------------------------------------------
 // Custom Tooltip
@@ -136,6 +158,60 @@ const SensitivityCharts = memo(function SensitivityCharts({ currentParams, compa
     () => Math.max(...brewMethodData.map((d) => d.caffeineMg), 1),
     [brewMethodData],
   );
+
+  // ── Radar chart: parameter contribution data ───────────────────
+  const radarData = useMemo(() => {
+    const result: CaffeineResult = calculateCaffeine(currentParams);
+    const { breakdown } = result;
+    return [
+      { param: 'Roast', value: Math.round(breakdown.roastAdjustment * 100), fullMark: 120 },
+      { param: 'Processing', value: Math.round(breakdown.processingAdjustment * 100), fullMark: 120 },
+      { param: 'Altitude', value: Math.round(breakdown.altitudeAdjustment * 100), fullMark: 120 },
+      { param: 'Grind', value: Math.round(breakdown.grindAdjustment * 100), fullMark: 120 },
+      { param: 'Temperature', value: Math.round(breakdown.temperatureAdjustment * 100), fullMark: 120 },
+      { param: 'Base Efficiency', value: Math.round(breakdown.baseEfficiency * 100), fullMark: 120 },
+    ];
+  }, [currentParams]);
+
+  // ── Heatmap: grind × temperature data ──────────────────────────
+  const heatmapData = useMemo(() => {
+    const grid: Array<{ grind: string; temp: number; caffeineMg: number }> = [];
+    for (const grind of ALL_GRIND_SIZES) {
+      for (const temp of HEATMAP_TEMPS) {
+        const params: BrewingParameters = {
+          ...currentParams,
+          grindSize: grind,
+          waterTemperatureC: temp,
+        };
+        const result: CaffeineResult = calculateCaffeine(params);
+        grid.push({
+          grind: GRIND_LABELS[grind],
+          temp,
+          caffeineMg: Math.round(result.totalCaffeineMg),
+        });
+      }
+    }
+    return grid;
+  }, [currentParams]);
+
+  const heatmapMin = useMemo(
+    () => Math.min(...heatmapData.map((d) => d.caffeineMg)),
+    [heatmapData],
+  );
+  const heatmapMax = useMemo(
+    () => Math.max(...heatmapData.map((d) => d.caffeineMg)),
+    [heatmapData],
+  );
+
+  function heatmapColor(caffeineMg: number): string {
+    if (heatmapMax === heatmapMin) return 'rgb(198, 123, 75)';
+    const t = (caffeineMg - heatmapMin) / (heatmapMax - heatmapMin);
+    // Interpolate from light cream to dark coffee
+    const r = Math.round(255 - t * 105);
+    const g = Math.round(235 - t * 160);
+    const b = Math.round(210 - t * 135);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
 
   return (
     <div className="space-y-6">
@@ -253,6 +329,113 @@ const SensitivityCharts = memo(function SensitivityCharts({ currentParams, compa
               />
             </LineChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* ── Radar chart: parameter contributions ────────────────── */}
+      <div className={compact ? '' : 'card'}>
+        <h4 className="text-sm font-semibold text-coffee-800 dark:text-coffee-300 mb-3">
+          Parameter Contribution Weights
+        </h4>
+        <p className="text-xs text-coffee-500 dark:text-coffee-400 mb-4">
+          How each parameter multiplier affects the total caffeine (100% = no adjustment)
+        </p>
+        <div className="w-full h-72 sm:h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
+              <PolarGrid stroke="#8b7355" strokeOpacity={0.3} />
+              <PolarAngleAxis
+                dataKey="param"
+                tick={{ fontSize: 11, fill: '#8b7355' }}
+              />
+              <PolarRadiusAxis
+                angle={30}
+                domain={[60, 120]}
+                tick={{ fontSize: 10, fill: '#8b7355' }}
+                tickFormatter={(v: number) => `${v}%`}
+              />
+              <Radar
+                name="Multiplier %"
+                dataKey="value"
+                stroke="#c67b4b"
+                fill="#c67b4b"
+                fillOpacity={0.3}
+                strokeWidth={2}
+              />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* ── Heatmap: grind × temperature ────────────────────────── */}
+      <div className={compact ? '' : 'card'}>
+        <h4 className="text-sm font-semibold text-coffee-800 dark:text-coffee-300 mb-3">
+          Grind × Temperature Interaction
+        </h4>
+        <p className="text-xs text-coffee-500 dark:text-coffee-400 mb-4">
+          Caffeine (mg) across all grind size and water temperature combinations
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs border-collapse" aria-label="Grind size and temperature interaction heatmap">
+            <thead>
+              <tr>
+                <th className="p-2 text-left text-coffee-500 dark:text-coffee-400 font-medium">
+                  Grind ↓ / Temp →
+                </th>
+                {HEATMAP_TEMPS.map((t) => (
+                  <th
+                    key={t}
+                    className="p-2 text-center text-coffee-500 dark:text-coffee-400 font-medium"
+                  >
+                    {t}°C
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {ALL_GRIND_SIZES.map((grind) => (
+                <tr key={grind}>
+                  <td className="p-2 text-left font-medium text-coffee-600 dark:text-coffee-300">
+                    {GRIND_LABELS[grind]}
+                  </td>
+                  {HEATMAP_TEMPS.map((temp) => {
+                    const cell = heatmapData.find(
+                      (d) => d.grind === GRIND_LABELS[grind] && d.temp === temp,
+                    );
+                    const mg = cell?.caffeineMg ?? 0;
+                    const isLight = mg > (heatmapMin + heatmapMax) / 2;
+                    return (
+                      <td
+                        key={temp}
+                        className="p-2 text-center tabular-nums rounded"
+                        style={{
+                          backgroundColor: heatmapColor(mg),
+                          color: isLight ? '#fff' : '#3b2f2f',
+                        }}
+                        title={`${GRIND_LABELS[grind]} at ${temp}°C: ${mg} mg`}
+                      >
+                        {mg}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex items-center justify-end gap-2 mt-3">
+          <span className="text-xs text-coffee-400 dark:text-coffee-500">
+            {heatmapMin} mg
+          </span>
+          <div
+            className="h-3 w-32 rounded"
+            style={{
+              background: `linear-gradient(to right, ${heatmapColor(heatmapMin)}, ${heatmapColor(heatmapMax)})`,
+            }}
+          />
+          <span className="text-xs text-coffee-400 dark:text-coffee-500">
+            {heatmapMax} mg
+          </span>
         </div>
       </div>
     </div>

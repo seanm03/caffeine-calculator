@@ -30,7 +30,7 @@ import {
   MAX_PLAUSIBLE_DOSE_MG,
 } from '@/engine/constants';
 import { isValidNumber, isValidDate, isValidArray, clampNumber } from '@/engine/utils';
-import { CaffeineMg } from '@/types/branded';
+import { CaffeineMg, Hours } from '@/types/branded';
 import type { CaffeineLogEntry, BloodLevelPoint } from '@/types';
 
 // Re-export constants consumed by other modules for backward compatibility
@@ -45,6 +45,7 @@ export {
   MAX_PLAUSIBLE_DOSE_MG,
   MAX_PLAUSIBLE_ENTRIES,
   DAILY_SAFE_LIMIT_MG,
+  STANDARD_CUP_CAFFEINE_MG,
 } from '@/engine/constants';
 
 /** Validate a single log entry has plausible values. */
@@ -75,7 +76,7 @@ function isValidLogEntry(entry: CaffeineLogEntry): boolean {
 export function computeBloodLevel(
   doses: readonly CaffeineLogEntry[],
   targetTime: Date,
-  halfLifeHours: number = DEFAULT_HALF_LIFE_HOURS,
+  halfLifeHours: Hours = DEFAULT_HALF_LIFE_HOURS,
 ): CaffeineMg {
   // Input validation
   if (!isValidArray(doses)) return CaffeineMg(0);
@@ -120,8 +121,8 @@ export function computeBloodLevel(
  */
 export function generateBloodLevelCurve(
   doses: readonly CaffeineLogEntry[],
-  halfLifeHours: number = DEFAULT_HALF_LIFE_HOURS,
-  windowHours: number = DEFAULT_WINDOW_HOURS,
+  halfLifeHours: Hours = DEFAULT_HALF_LIFE_HOURS,
+  windowHours: Hours = DEFAULT_WINDOW_HOURS,
 ): BloodLevelPoint[] {
   // Input validation
   if (!isValidArray(doses)) {
@@ -176,7 +177,7 @@ export function generateBloodLevelCurve(
  */
 export function computeDailySummary(
   entries: readonly CaffeineLogEntry[],
-  halfLifeHours: number = DEFAULT_HALF_LIFE_HOURS,
+  halfLifeHours: Hours = DEFAULT_HALF_LIFE_HOURS,
   now: Date = new Date(),
 ): {
   currentLevel: CaffeineMg;
@@ -248,8 +249,8 @@ export function computeDailySummary(
  */
 export function timeUntilBelow(
   entries: readonly CaffeineLogEntry[],
-  halfLifeHours: number = DEFAULT_HALF_LIFE_HOURS,
-  thresholdMg: number = SLEEP_ADVISORY_THRESHOLD_MG,
+  halfLifeHours: Hours = DEFAULT_HALF_LIFE_HOURS,
+  thresholdMg: CaffeineMg = SLEEP_ADVISORY_THRESHOLD_MG,
   now: Date = new Date(),
 ): Date | null {
   // Input validation
@@ -280,6 +281,63 @@ export function timeUntilBelow(
   return new Date(now.getTime() + high * 3600000);
 }
 
+/**
+ * Compute estimated blood caffeine level at a user-specified bedtime.
+ *
+ * @param entries - Today's caffeine log entries
+ * @param halfLifeHours - Caffeine half-life in hours
+ * @param bedtimeHour - Bedtime hour (0–23)
+ * @param bedtimeMinute - Bedtime minute (0–59)
+ * @param now - Current time reference
+ * @returns Estimated blood caffeine level at bedtime in mg
+ */
+export function computeBedtimeLevel(
+  entries: readonly CaffeineLogEntry[],
+  halfLifeHours: Hours = DEFAULT_HALF_LIFE_HOURS,
+  bedtimeHour: number = 22,
+  bedtimeMinute: number = 0,
+  now: Date = new Date(),
+): CaffeineMg {
+  if (!isValidArray(entries) || entries.length === 0) return CaffeineMg(0);
+
+  // Build bedtime Date — if already past today, project to tomorrow
+  const bedtime = new Date(now);
+  bedtime.setHours(bedtimeHour, bedtimeMinute, 0, 0);
+  if (bedtime <= now) {
+    bedtime.setDate(bedtime.getDate() + 1);
+  }
+
+  return computeBloodLevel(entries, bedtime, halfLifeHours);
+}
+
+/**
+ * Comprehensive sleep impact assessment.
+ *
+ * @returns Object with bedtime level, hours until safe, and sleep safety status
+ */
+export function assessSleepImpact(
+  entries: readonly CaffeineLogEntry[],
+  halfLifeHours: Hours,
+  bedtimeHour: number,
+  bedtimeMinute: number,
+  sleepThresholdMg: CaffeineMg = SLEEP_ADVISORY_THRESHOLD_MG,
+  now: Date = new Date(),
+): {
+  bedtimeLevel: CaffeineMg;
+  safeTime: Date | null;
+  isSafe: boolean;
+  hoursUntilSafe: number | null;
+} {
+  const bedtimeLevel = computeBedtimeLevel(entries, halfLifeHours, bedtimeHour, bedtimeMinute, now);
+  const isSafe = bedtimeLevel <= sleepThresholdMg;
+  const safeTime = isSafe ? null : timeUntilBelow(entries, halfLifeHours, sleepThresholdMg, now);
+  const hoursUntilSafe = safeTime
+    ? Math.max(0, (safeTime.getTime() - now.getTime()) / 3600000)
+    : null;
+
+  return { bedtimeLevel, safeTime, isSafe, hoursUntilSafe };
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -288,7 +346,7 @@ export function timeUntilBelow(
  * Generate a zero-level curve over a time window.
  * Used when there are no entries or when inputs are invalid.
  */
-function generateEmptyCurve(windowHours: number): BloodLevelPoint[] {
+function generateEmptyCurve(windowHours: Hours): BloodLevelPoint[] {
   const now = new Date();
   const points: BloodLevelPoint[] = [];
   const steps = Math.ceil(windowHours / CURVE_SAMPLING_INTERVAL_H);
@@ -307,7 +365,7 @@ function generateEmptyCurve(windowHours: number): BloodLevelPoint[] {
  * Clamp half-life to valid range [2, 12].
  * Handles NaN, Infinity, zero, and negative by returning the default.
  */
-function clampHalfLife(hours: number): number {
+function clampHalfLife(hours: Hours): Hours {
   if (!isValidNumber(hours) || hours <= 0) return DEFAULT_HALF_LIFE_HOURS;
-  return clampNumber(hours, MIN_HALF_LIFE_HOURS, MAX_HALF_LIFE_HOURS, DEFAULT_HALF_LIFE_HOURS);
+  return Hours(clampNumber(hours, MIN_HALF_LIFE_HOURS, MAX_HALF_LIFE_HOURS, DEFAULT_HALF_LIFE_HOURS));
 }

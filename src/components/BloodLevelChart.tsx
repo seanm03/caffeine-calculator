@@ -21,6 +21,7 @@ import {
   ReferenceArea,
 } from 'recharts';
 import { generateBloodLevelCurve, DAILY_SAFE_LIMIT_MG } from '@/engine/caffeineMetabolism';
+import { Hours } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
 
 interface BloodLevelChartProps {
@@ -73,7 +74,7 @@ const BloodLevelChart = memo(function BloodLevelChart({ entries, halfLifeHours }
     const sorted = [...entries].sort(
       (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     );
-    const curve = generateBloodLevelCurve(sorted, halfLifeHours, 24);
+    const curve = generateBloodLevelCurve(sorted, Hours(halfLifeHours), Hours(24));
 
     // For the chart, use hoursSinceStart as x-axis and caffeineMg as y-axis
     return curve.map((point) => ({

@@ -2,21 +2,37 @@
  * DrinkLogTimeline — Chronological list of today's caffeine entries.
  *
  * Shows each logged drink with time, amount, and optional details.
- * Allows deleting individual entries.
+ * Allows editing entry time and deleting individual entries.
  */
 
-import { memo } from 'react';
+import { useState, useCallback, memo } from 'react';
 import type { CaffeineLogEntry } from '@/types';
 
 interface DrinkLogTimelineProps {
   entries: CaffeineLogEntry[];
   onRemove: (id: string) => void;
+  /** Called when an entry's timestamp is updated. */
+  onUpdate: (id: string, updates: Partial<Omit<CaffeineLogEntry, 'id'>>) => void;
 }
 
 /** Format an ISO 8601 timestamp to a readable time string. */
 function formatTime(isoTimestamp: string): string {
   const d = new Date(isoTimestamp);
   return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+/** Extract HH:MM from an ISO timestamp for input[type=time] value. */
+function isoToTimeValue(isoTimestamp: string): string {
+  const d = new Date(isoTimestamp);
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+
+/** Replace the time portion of an ISO timestamp while preserving the date. */
+function timeToISO(isoTimestamp: string, timeValue: string): string {
+  const d = new Date(isoTimestamp);
+  const [h, m] = timeValue.split(':').map(Number);
+  d.setHours(h, m, 0, 0);
+  return d.toISOString();
 }
 
 /** Format the brew method label for display. */
@@ -28,8 +44,23 @@ function formatBrewMethod(method?: string): string {
     .join(' ');
 }
 
-const DrinkLogTimeline = memo(function DrinkLogTimeline({ entries, onRemove }: DrinkLogTimelineProps) {
+const DrinkLogTimeline = memo(function DrinkLogTimeline({ entries, onRemove, onUpdate }: DrinkLogTimelineProps) {
+  const [editingId, setEditingId] = useState<string | null>(null);
   const entryCount = entries.length;
+
+  const handleTimeChange = useCallback(
+    (id: string, timeValue: string) => {
+      const entry = entries.find((e) => e.id === id);
+      if (entry) {
+        onUpdate(id, { timestamp: timeToISO(entry.timestamp, timeValue) });
+      }
+    },
+    [entries, onUpdate],
+  );
+
+  const handleTimeBlur = useCallback(() => {
+    setEditingId(null);
+  }, []);
 
   return (
     <div
@@ -60,11 +91,34 @@ const DrinkLogTimeline = memo(function DrinkLogTimeline({ entries, onRemove }: D
           `}
           style={{ animationDelay: `${index * 50}ms` }}
         >
-          {/* Time badge */}
+          {/* Time badge — click to edit */}
           <div className="flex-shrink-0 w-14 text-center">
-            <span className="text-xs font-semibold text-coffee-600 dark:text-coffee-300">
-              {formatTime(entry.timestamp)}
-            </span>
+            {editingId === entry.id ? (
+              <input
+                type="time"
+                defaultValue={isoToTimeValue(entry.timestamp)}
+                onChange={(e) => handleTimeChange(entry.id, e.target.value)}
+                onBlur={handleTimeBlur}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleTimeBlur();
+                }}
+                className="input-coffee text-xs w-full py-0.5 px-1"
+                aria-label="Edit drink time"
+                autoFocus
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setEditingId(entry.id)}
+                className="text-xs font-semibold text-coffee-600 dark:text-coffee-300
+                           hover:text-coffee-800 dark:hover:text-coffee-100
+                           hover:underline underline-offset-2 transition-colors cursor-pointer"
+                title="Click to edit time"
+                aria-label={`Edit time for ${entry.drinkName ?? 'entry'}`}
+              >
+                {formatTime(entry.timestamp)}
+              </button>
+            )}
           </div>
 
           {/* Entry details */}

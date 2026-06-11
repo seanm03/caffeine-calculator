@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import brandData from '@/data/brandData';
 import { DAILY_SAFE_LIMIT_MG } from '@/engine/constants';
+import { useCaffeineLog } from '@/hooks/useCaffeineLog';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -72,6 +73,22 @@ export default function BrandReference() {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('caffeineMg');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [quickLogFeedback, setQuickLogFeedback] = useState<string | null>(null);
+
+  const { addEntry } = useCaffeineLog();
+
+  const handleQuickLog = useCallback(
+    (drinkName: string, caffeineMg: number, brand: string) => {
+      addEntry({
+        timestamp: new Date().toISOString(),
+        caffeineMg,
+        drinkName: `${brand} ${drinkName}`,
+      });
+      setQuickLogFeedback(`${brand} ${drinkName}`);
+      setTimeout(() => setQuickLogFeedback(null), 2000);
+    },
+    [addEntry],
+  );
 
   // Debounce search (300ms)
   useEffect(() => {
@@ -148,6 +165,13 @@ export default function BrandReference() {
         </div>
       )}
 
+      {/* Quick-log feedback */}
+      {quickLogFeedback && (
+        <div className="text-center text-xs text-green-600 dark:text-green-400 animate-fadeIn">
+          ✓ Logged: {quickLogFeedback}
+        </div>
+      )}
+
       {/* Desktop table (md+) */}
       {filtered.length > 0 && (
         <>
@@ -179,6 +203,13 @@ export default function BrandReference() {
                                dark:text-coffee-200 uppercase tracking-wider"
                   >
                     % Daily
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-center text-xs font-semibold text-coffee-600
+                               dark:text-coffee-200 uppercase tracking-wider"
+                  >
+                    Log
                   </th>
                 </tr>
               </thead>
@@ -218,6 +249,19 @@ export default function BrandReference() {
                       >
                         {pctDaily(d.caffeineMg)}%
                       </span>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        type="button"
+                        onClick={() => handleQuickLog(d.name, d.caffeineMg, d.brand)}
+                        className="text-xs px-2 py-1 rounded bg-coffee-100 dark:bg-coffee-800
+                                   text-coffee-600 dark:text-coffee-300
+                                   hover:bg-coffee-200 dark:hover:bg-coffee-700
+                                   transition-colors"
+                        title={`Log ${d.brand} ${d.name} (${d.size})`}
+                      >
+                        + Log
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -263,9 +307,22 @@ export default function BrandReference() {
                   </span>
                 </div>
 
-                <p className="text-xs text-coffee-400 dark:text-coffee-300">
-                  Source: {d.source}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-coffee-400 dark:text-coffee-300">
+                    Source: {d.source}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickLog(d.name, d.caffeineMg, d.brand)}
+                    className="text-xs px-2 py-1 rounded bg-coffee-100 dark:bg-coffee-800
+                               text-coffee-600 dark:text-coffee-300
+                               hover:bg-coffee-200 dark:hover:bg-coffee-700
+                               transition-colors"
+                    title={`Log ${d.brand} ${d.name} (${d.size})`}
+                  >
+                    + Log
+                  </button>
+                </div>
               </div>
             ))}
           </div>

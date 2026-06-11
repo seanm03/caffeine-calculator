@@ -4,7 +4,8 @@ import {
   useEffect,
   useMemo,
 } from 'react';
-import { computeDailySummary, DEFAULT_HALF_LIFE_HOURS } from '@/engine/caffeineMetabolism';
+import { computeDailySummary, DEFAULT_HALF_LIFE_HOURS, DAILY_SAFE_LIMIT_MG, SLEEP_ADVISORY_THRESHOLD_MG } from '@/engine/caffeineMetabolism';
+import { Hours } from '@/types/branded';
 import { createCtxWithName } from '@/utils/createCtx';
 import { storageAvailable } from '@/utils/storageAvailable';
 import type { CaffeineLogEntry, DailyCaffeineSummary } from '@/types';
@@ -14,7 +15,9 @@ import type { CaffeineLogEntry, DailyCaffeineSummary } from '@/types';
 // ---------------------------------------------------------------------------
 
 const STORAGE_KEY = 'coffee-calc-logs';
+const SETTINGS_KEY = 'coffee-calc-settings';
 const STORAGE_VERSION = 1;
+const SETTINGS_VERSION = 1;
 
 // ---------------------------------------------------------------------------
 // Types
@@ -23,6 +26,14 @@ const STORAGE_VERSION = 1;
 interface PersistedPayload {
   version: number;
   entries: CaffeineLogEntry[];
+}
+
+interface SettingsPayload {
+  version: number;
+  safeLimitMg: number;
+  halfLifeHours: number;
+  bedtimeHour: number;
+  sleepThresholdMg: number;
 }
 
 /** Structured error info for localStorage failures. */
@@ -38,6 +49,8 @@ export interface CaffeineLogHelpers {
   todayEntries: CaffeineLogEntry[];
   /** Add a new caffeine log entry (id generated if missing). */
   addEntry: (entry: Omit<CaffeineLogEntry, 'id'> & { id?: string }) => void;
+  /** Update an existing entry by id. */
+  updateEntry: (id: string, updates: Partial<Omit<CaffeineLogEntry, 'id'>>) => void;
   /** Remove an entry by id. */
   removeEntry: (id: string) => void;
   /** Clear all of today's entries. */
@@ -48,6 +61,18 @@ export interface CaffeineLogHelpers {
   halfLifeHours: number;
   /** Set the half-life in hours (clamped 2–12). */
   setHalfLifeHours: (h: number) => void;
+  /** User-customized daily safe caffeine limit in mg (default 400). */
+  customSafeLimitMg: number;
+  /** Set the custom daily safe limit in mg (clamped 50–1000). */
+  setCustomSafeLimitMg: (mg: number) => void;
+  /** User-configured bedtime hour (0–23). */
+  bedtimeHour: number;
+  /** Set the bedtime hour (clamped 0–23). */
+  setBedtimeHour: (h: number) => void;
+  /** User-configured sleep advisory threshold in mg (default 50). */
+  customSleepThresholdMg: number;
+  /** Set the sleep advisory threshold in mg (clamped 10–200). */
+  setCustomSleepThresholdMg: (mg: number) => void;
   /** Structured load error from localStorage, or null if healthy. */
   loadError: LoadError;
   /** Dismiss the current load error (clears transient errors only). */
@@ -128,20 +153,66 @@ function persistEntries(entries: CaffeineLogEntry[]): void {
   }
 }
 
+function loadSettings(): SettingsPayload {
+  try {
+    const saved = localStorage.getItem(SETTINGS_KEY);
+    if (saved) {
+      const payload = JSON.parse(saved) as SettingsPayload;
+      if (payload.version === SETTINGS_VERSION) {
+        return {
+          version: SETTINGS_VERSION,
+          safeLimitMg: typeof payload.safeLimitMg === 'number' && payload.safeLimitMg >= 50 && payload.safeLimitMg <= 1000
+            ? payload.safeLimitMg
+            : DAILY_SAFE_LIMIT_MG,
+          halfLifeHours: typeof payload.halfLifeHours === 'number' && payload.halfLifeHours >= 2 && payload.halfLifeHours <= 12
+            ? payload.halfLifeHours
+            : DEFAULT_HALF_LIFE_HOURS,
+          bedtimeHour: typeof payload.bedtimeHour === 'number' && payload.bedtimeHour >= 0 && payload.bedtimeHour <= 23
+            ? payload.bedtimeHour
+            : 22,
+      sleepThresholdMg: typeof payload.sleepThresholdMg === 'number' && payload.sleepThresholdMg >= 10 && payload.sleepThresholdMg <= 200
+        ? payload.sleepThresholdMg
+        : SLEEP_ADVISORY_THRESHOLD_MG,
+        };
+      }
+    }
+  } catch {
+    // Silently return defaults on parse error
+  }
+  return { version: SETTINGS_VERSION, safeLimitMg: DAILY_SAFE_LIMIT_MG, halfLifeHours: DEFAULT_HALF_LIFE_HOURS, bedtimeHour: 22, sleepThresholdMg: SLEEP_ADVISORY_THRESHOLD_MG };
+}
+
+function persistSettings(settings: SettingsPayload): void {
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  } catch {
+    // Silently fail on QuotaExceededError
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Provider
 // ---------------------------------------------------------------------------
 
 export function CaffeineLogProvider({ children }: { children: React.ReactNode }) {
   const { entries: initialEntries, error: initialError } = loadEntries();
+  const initialSettings = loadSettings();
   const [entries, setEntries] = useState<CaffeineLogEntry[]>(initialEntries);
   const [loadError, setLoadError] = useState<LoadError>(initialError);
-  const [halfLifeHours, setHalfLifeHoursState] = useState<number>(DEFAULT_HALF_LIFE_HOURS);
+  const [halfLifeHours, setHalfLifeHoursState] = useState<number>(initialSettings.halfLifeHours);
+  const [customSafeLimitMg, setCustomSafeLimitMgState] = useState<number>(initialSettings.safeLimitMg);
+  const [bedtimeHour, setBedtimeHourState] = useState<number>(initialSettings.bedtimeHour);
+  const [customSleepThresholdMg, setCustomSleepThresholdMgState] = useState<number>(initialSettings.sleepThresholdMg);
 
-  // Persist to localStorage on every entries change
+  // Persist entries to localStorage on every entries change
   useEffect(() => {
     persistEntries(entries);
   }, [entries]);
+
+  // Persist settings to localStorage on change
+  useEffect(() => {
+    persistSettings({ version: SETTINGS_VERSION, safeLimitMg: customSafeLimitMg, halfLifeHours, bedtimeHour, sleepThresholdMg: customSleepThresholdMg });
+  }, [customSafeLimitMg, halfLifeHours, bedtimeHour, customSleepThresholdMg]);
 
   // Today's entries (sorted newest first)
   const todayEntries = useMemo(
@@ -161,7 +232,7 @@ export function CaffeineLogProvider({ children }: { children: React.ReactNode })
 
   // Computed daily summary
   const todaySummary = useMemo<DailyCaffeineSummary>(() => {
-    const summary = computeDailySummary(todayChronological, halfLifeHours);
+    const summary = computeDailySummary(todayChronological, Hours(halfLifeHours));
     return {
       ...summary,
       entryCount: todayChronological.length,
@@ -180,6 +251,10 @@ export function CaffeineLogProvider({ children }: { children: React.ReactNode })
     [],
   );
 
+  const updateEntry = useCallback((id: string, updates: Partial<Omit<CaffeineLogEntry, 'id'>>) => {
+    setEntries((prev) => prev.map((e) => (e.id === id ? { ...e, ...updates } : e)));
+  }, []);
+
   const removeEntry = useCallback((id: string) => {
     setEntries((prev) => prev.filter((e) => e.id !== id));
   }, []);
@@ -192,6 +267,18 @@ export function CaffeineLogProvider({ children }: { children: React.ReactNode })
     setHalfLifeHoursState(Math.max(2, Math.min(12, h)));
   }, []);
 
+  const setCustomSafeLimitMg = useCallback((mg: number) => {
+    setCustomSafeLimitMgState(Math.max(50, Math.min(1000, Math.round(mg))));
+  }, []);
+
+  const setBedtimeHour = useCallback((h: number) => {
+    setBedtimeHourState(Math.max(0, Math.min(23, Math.round(h))));
+  }, []);
+
+  const setCustomSleepThresholdMg = useCallback((mg: number) => {
+    setCustomSleepThresholdMgState(Math.max(10, Math.min(200, Math.round(mg))));
+  }, []);
+
   const dismissLoadError = useCallback(() => {
     setLoadError(null);
   }, []);
@@ -201,15 +288,22 @@ export function CaffeineLogProvider({ children }: { children: React.ReactNode })
       entries,
       todayEntries,
       addEntry,
+      updateEntry,
       removeEntry,
       clearToday,
       todaySummary,
       halfLifeHours,
       setHalfLifeHours,
+      customSafeLimitMg,
+      setCustomSafeLimitMg,
+      bedtimeHour,
+      setBedtimeHour,
+      customSleepThresholdMg,
+      setCustomSleepThresholdMg,
       loadError,
       dismissLoadError,
     }),
-    [entries, todayEntries, addEntry, removeEntry, clearToday, todaySummary, halfLifeHours, setHalfLifeHours, loadError, dismissLoadError],
+    [entries, todayEntries, addEntry, updateEntry, removeEntry, clearToday, todaySummary, halfLifeHours, setHalfLifeHours, customSafeLimitMg, setCustomSafeLimitMg, bedtimeHour, setBedtimeHour, customSleepThresholdMg, setCustomSleepThresholdMg, loadError, dismissLoadError],
   );
 
   return (

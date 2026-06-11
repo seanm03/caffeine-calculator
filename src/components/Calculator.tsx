@@ -1,14 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, lazy, Suspense } from 'react';
 import AdvancedOptions from '@/components/AdvancedOptions';
 import BrewMethodSelector from '@/components/BrewMethodSelector';
 import CoffeeInputs from '@/components/CoffeeInputs';
 import ResultsDisplay from '@/components/ResultsDisplay';
-import SensitivityCharts from '@/components/SensitivityCharts';
 import { calculateCaffeine } from '@/engine/caffeineCalculator';
 import { useCalculatorState } from '@/hooks/useCalculatorState';
 import type {
   BrewingParameters,
 } from '@/types';
+
+const SensitivityCharts = lazy(() => import('@/components/SensitivityCharts'));
 
 type ResultView = 'result' | 'sensitivity';
 
@@ -130,7 +131,9 @@ export default function Calculator() {
       {resultView === 'result' ? (
         <ResultsDisplay result={result} coffeeWeightG={coffeeWeightG} waterVolumeMl={waterVolumeMl} brewMethod={brewMethod} />
       ) : (
-        <SensitivityCharts currentParams={params} />
+        <Suspense fallback={<div className="flex items-center justify-center py-16 text-coffee-400 dark:text-coffee-400 text-sm">Loading charts...</div>}>
+          <SensitivityCharts currentParams={params} />
+        </Suspense>
       )}
     </div>
   );

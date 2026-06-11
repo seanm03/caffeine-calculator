@@ -6,11 +6,12 @@
  */
 
 import { memo, useMemo } from 'react';
-import { DAILY_SAFE_LIMIT_MG } from '@/engine/caffeineMetabolism';
 import type { DailyCaffeineSummary } from '@/types';
 
 interface DailySummaryProps {
   summary: DailyCaffeineSummary;
+  /** Custom daily safe limit in mg. Defaults to 400 if not provided. */
+  safeLimitMg?: number;
 }
 
 function zoneBg(percent: number): string {
@@ -27,12 +28,17 @@ function zoneText(percent: number): string {
   return 'text-red-700 dark:text-red-400';
 }
 
-const DailySummary = memo(function DailySummary({ summary }: DailySummaryProps) {
+const DailySummary = memo(function DailySummary({ summary, safeLimitMg = 400 }: DailySummaryProps) {
   const { currentLevel, totalToday, peakLevel, peakTime, entryCount } = summary;
 
   const dailyPercent = useMemo(
-    () => Math.round((currentLevel / DAILY_SAFE_LIMIT_MG) * 100),
-    [currentLevel],
+    () => Math.round((currentLevel / safeLimitMg) * 100),
+    [currentLevel, safeLimitMg],
+  );
+
+  const totalPercent = useMemo(
+    () => Math.round((totalToday / safeLimitMg) * 100),
+    [totalToday, safeLimitMg],
   );
 
   const formatPeakTime = peakTime
@@ -51,13 +57,13 @@ const DailySummary = memo(function DailySummary({ summary }: DailySummaryProps) 
       </div>
 
       {/* Total today */}
-      <div className="rounded-lg border p-3 text-center bg-coffee-50 dark:bg-coffee-900/30 border-coffee-200 dark:border-coffee-700">
+      <div className={`rounded-lg border p-3 text-center ${zoneBg(totalPercent)}`}>
         <p className="text-xs text-coffee-500 dark:text-coffee-400 mb-1">Total Today</p>
-        <p className="text-2xl font-extrabold text-coffee-700 dark:text-coffee-200">
+        <p className={`text-2xl font-extrabold ${zoneText(totalPercent)}`}>
           {Math.round(totalToday)}
         </p>
         <p className="text-xs text-coffee-400 dark:text-coffee-500">
-          mg / {DAILY_SAFE_LIMIT_MG} mg limit
+          mg / {safeLimitMg} mg limit
         </p>
       </div>
 

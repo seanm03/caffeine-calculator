@@ -12,6 +12,7 @@ import {
   computeDailySummary,
   timeUntilBelow,
 } from '@/engine/caffeineMetabolism';
+import { CaffeineMg, Hours } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -75,7 +76,7 @@ describe('computeBloodLevel', () => {
   it('handles custom half-life (2 hours)', () => {
     const doseTime = hoursAgo(2);
     const doses = [makeEntry('1', doseTime, 100)];
-    const level = computeBloodLevel(doses, new Date(), 2);
+    const level = computeBloodLevel(doses, new Date(), Hours(2));
     // After exactly one half-life with halfLife=2h: factor = 2^(-2/2) = 0.5
     expect(level).toBeCloseTo(50, 0);
   });
@@ -83,7 +84,7 @@ describe('computeBloodLevel', () => {
   it('handles custom half-life (10 hours)', () => {
     const doseTime = hoursAgo(5);
     const doses = [makeEntry('1', doseTime, 100)];
-    const level = computeBloodLevel(doses, new Date(), 10);
+    const level = computeBloodLevel(doses, new Date(), Hours(10));
     // After 5h with 10h half-life: factor = 2^(-5/10) = 2^-0.5 ≈ 0.707
     expect(level).toBeCloseTo(70.71, 0);
   });
@@ -91,14 +92,14 @@ describe('computeBloodLevel', () => {
   it('clamps half-life to min 2h', () => {
     const doseTime = hoursAgo(2);
     const doses = [makeEntry('1', doseTime, 100)];
-    const level = computeBloodLevel(doses, new Date(), 0.5); // below min
+    const level = computeBloodLevel(doses, new Date(), Hours(0.5)); // below min
     expect(level).toBeCloseTo(50, 0); // clamped to 2h, 2^(-2/2)=0.5
   });
 
   it('clamps half-life to max 12h', () => {
     const doseTime = hoursAgo(6);
     const doses = [makeEntry('1', doseTime, 100)];
-    const level = computeBloodLevel(doses, new Date(), 24); // above max
+    const level = computeBloodLevel(doses, new Date(), Hours(24)); // above max
     // clamped to 12h: factor = 2^(-6/12) = 2^-0.5 ≈ 0.707
     expect(level).toBeCloseTo(70.71, 0);
   });
@@ -182,8 +183,8 @@ describe('generateBloodLevelCurve', () => {
 
   it('respects custom half-life in curve generation', () => {
     const dose = makeEntry('1', hoursAgo(3), 100);
-    const curveFast = generateBloodLevelCurve([dose], 3); // fast metabolism
-    const curveSlow = generateBloodLevelCurve([dose], 10); // slow metabolism
+    const curveFast = generateBloodLevelCurve([dose], Hours(3)); // fast metabolism
+    const curveSlow = generateBloodLevelCurve([dose], Hours(10)); // slow metabolism
 
     // Find a point ~6h after the dose for both curves
     const idx = curveFast.findIndex(
@@ -255,10 +256,10 @@ describe('timeUntilBelow', () => {
   it('respects custom threshold', () => {
     const dose = makeEntry('1', hoursAgo(1), 100);
     // Currently ~87mg, should drop below 50mg eventually
-    const below50 = timeUntilBelow([dose], 5, 50);
+    const below50 = timeUntilBelow([dose], Hours(5), CaffeineMg(50));
     expect(below50).not.toBeNull();
     // Should already be below 200mg
-    const below200 = timeUntilBelow([dose], 5, 200);
+    const below200 = timeUntilBelow([dose], Hours(5), CaffeineMg(200));
     expect(below200).toBeNull();
   });
 });
@@ -270,28 +271,28 @@ describe('timeUntilBelow', () => {
 describe('computeBloodLevel — edge cases', () => {
   it('handles NaN halfLife by falling back to default', () => {
     const dose = makeEntry('1', hoursAgo(5), 100);
-    const level = computeBloodLevel([dose], new Date(), NaN);
+    const level = computeBloodLevel([dose], new Date(), Hours(NaN));
     // Should clamp to default 5h: 100 * 2^(-5/5) = 50
     expect(level).toBeCloseTo(50, 0);
   });
 
   it('handles Infinity halfLife by falling back to default', () => {
     const dose = makeEntry('1', hoursAgo(5), 100);
-    const level = computeBloodLevel([dose], new Date(), Infinity);
+    const level = computeBloodLevel([dose], new Date(), Hours(Infinity));
     // Should clamp to default 5h
     expect(level).toBeCloseTo(50, 0);
   });
 
   it('handles negative halfLife by falling back to default', () => {
     const dose = makeEntry('1', hoursAgo(5), 100);
-    const level = computeBloodLevel([dose], new Date(), -1);
+    const level = computeBloodLevel([dose], new Date(), Hours(-1));
     // Should clamp to default 5h
     expect(level).toBeCloseTo(50, 0);
   });
 
   it('handles zero halfLife by falling back to default', () => {
     const dose = makeEntry('1', hoursAgo(5), 100);
-    const level = computeBloodLevel([dose], new Date(), 0);
+    const level = computeBloodLevel([dose], new Date(), Hours(0));
     // Should clamp to default 5h
     expect(level).toBeCloseTo(50, 0);
   });
@@ -389,7 +390,7 @@ describe('generateBloodLevelCurve — edge cases', () => {
 
   it('handles NaN halfLife by clamping to default', () => {
     const dose = makeEntry('1', hoursAgo(2), 100);
-    const curve = generateBloodLevelCurve([dose], NaN);
+    const curve = generateBloodLevelCurve([dose], Hours(NaN));
     expect(curve.length).toBeGreaterThan(0);
     // Should still have meaningful values
     expect(curve.some((p) => p.caffeineMg > 0)).toBe(true);
@@ -397,20 +398,20 @@ describe('generateBloodLevelCurve — edge cases', () => {
 
   it('handles negative windowHours by using default', () => {
     const dose = makeEntry('1', hoursAgo(2), 100);
-    const curve = generateBloodLevelCurve([dose], 5, -1);
+    const curve = generateBloodLevelCurve([dose], Hours(5), Hours(-1));
     // Should still return a curve of default length
     expect(curve.length).toBeGreaterThan(0);
   });
 
   it('handles NaN windowHours by using default', () => {
     const dose = makeEntry('1', hoursAgo(2), 100);
-    const curve = generateBloodLevelCurve([dose], 5, NaN);
+    const curve = generateBloodLevelCurve([dose], Hours(5), Hours(NaN));
     expect(curve.length).toBeGreaterThan(0);
   });
 
   it('caps windowHours at 168 (1 week)', () => {
     const dose = makeEntry('1', hoursAgo(2), 100);
-    const curve = generateBloodLevelCurve([dose], 5, 336); // 2 weeks
+    const curve = generateBloodLevelCurve([dose], Hours(5), Hours(336)); // 2 weeks
     // Should be capped to 168h: 168 / 0.25 + 1 ≈ 673 points
     expect(curve.length).toBeLessThanOrEqual(700);
   });
@@ -448,13 +449,13 @@ describe('computeDailySummary — edge cases', () => {
 
   it('handles NaN halfLife', () => {
     const dose = makeEntry('1', hoursAgo(5), 100);
-    const summary = computeDailySummary([dose], NaN);
+    const summary = computeDailySummary([dose], Hours(NaN));
     expect(summary.currentLevel).toBeCloseTo(50, 0);
   });
 
   it('handles invalid now date by defaulting to new Date()', () => {
     const dose = makeEntry('1', hoursAgo(5), 100);
-    const summary = computeDailySummary([dose], 5, new Date('invalid'));
+    const summary = computeDailySummary([dose], Hours(5), new Date('invalid'));
     expect(summary.totalToday).toBe(100);
   });
 
@@ -473,7 +474,7 @@ describe('computeDailySummary — edge cases', () => {
     const now = new Date();
     const dose1 = makeEntry('1', now, 100);
     const dose2 = makeEntry('2', now, 200);
-    const summary = computeDailySummary([dose1, dose2], 5, now);
+    const summary = computeDailySummary([dose1, dose2], Hours(5), now);
     expect(summary.totalToday).toBe(300);
     expect(summary.peakLevel).toBeGreaterThanOrEqual(300);
   });
@@ -486,22 +487,22 @@ describe('timeUntilBelow — edge cases', () => {
 
   it('handles NaN threshold by returning null', () => {
     const dose = makeEntry('1', hoursAgo(1), 100);
-    expect(timeUntilBelow([dose], 5, NaN)).toBeNull();
+    expect(timeUntilBelow([dose], Hours(5), CaffeineMg(NaN))).toBeNull();
   });
 
   it('handles negative threshold by returning null', () => {
     const dose = makeEntry('1', hoursAgo(1), 100);
-    expect(timeUntilBelow([dose], 5, -1)).toBeNull();
+    expect(timeUntilBelow([dose], Hours(5), CaffeineMg(-1))).toBeNull();
   });
 
   it('handles invalid now date by returning null', () => {
     const dose = makeEntry('1', hoursAgo(1), 100);
-    expect(timeUntilBelow([dose], 5, 50, new Date('invalid'))).toBeNull();
+    expect(timeUntilBelow([dose], Hours(5), CaffeineMg(50), new Date('invalid'))).toBeNull();
   });
 
   it('handles extreme dose for timeUntilBelow projection', () => {
     const dose = makeEntry('1', hoursAgo(0), 2000);
-    const result = timeUntilBelow([dose], 5, 50);
+    const result = timeUntilBelow([dose], Hours(5), CaffeineMg(50));
     expect(result).not.toBeNull();
     // Should take multiple half-lives to drop from 2000 to 50
     // 2000 * 2^(-t/5) = 50 → 2^(-t/5) = 0.025 → -t/5 = log2(0.025) → t ≈ 28.3h
