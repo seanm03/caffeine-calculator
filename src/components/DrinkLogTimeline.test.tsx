@@ -2,11 +2,13 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import DrinkLogTimeline from '@/components/DrinkLogTimeline';
 import { assertA11y } from '@/test/axe';
+import { CaffeineMg } from '@/types/branded';
+import type { CaffeineLogEntry } from '@/types';
 
 describe('DrinkLogTimeline', () => {
-  const mockEntries = [
-    { id: '1', timestamp: new Date().toISOString(), caffeineMg: 100, drinkName: 'Morning Coffee' },
-    { id: '2', timestamp: new Date().toISOString(), caffeineMg: 50, drinkName: 'Afternoon Espresso' },
+  const mockEntries: CaffeineLogEntry[] = [
+    { id: '1', timestamp: new Date().toISOString(), caffeineMg: CaffeineMg(100), drinkName: 'Morning Coffee' },
+    { id: '2', timestamp: new Date().toISOString(), caffeineMg: CaffeineMg(50), drinkName: 'Afternoon Espresso' },
   ];
 
   const defaultProps = {

@@ -2,12 +2,13 @@ import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import BloodLevelChart from '@/components/BloodLevelChart';
 import { assertA11y } from '@/test/axe';
-import { Hours } from '@/types/branded';
+import { Hours, CaffeineMg } from '@/types/branded';
+import type { CaffeineLogEntry } from '@/types';
 
 describe('BloodLevelChart', () => {
   it('renders chart with entries', () => {
-    const entries = [
-      { id: '1', timestamp: new Date().toISOString(), caffeineMg: 100 },
+    const entries: CaffeineLogEntry[] = [
+      { id: '1', timestamp: new Date().toISOString(), caffeineMg: CaffeineMg(100) },
     ];
     const { container } = render(
       <BloodLevelChart entries={entries} halfLifeHours={Hours(5)} />
@@ -23,8 +24,8 @@ describe('BloodLevelChart', () => {
   });
 
   it('has no accessibility violations with entries', async () => {
-    const entries = [
-      { id: '1', timestamp: new Date().toISOString(), caffeineMg: 100 },
+    const entries: CaffeineLogEntry[] = [
+      { id: '1', timestamp: new Date().toISOString(), caffeineMg: CaffeineMg(100) },
     ];
     const { container } = render(
       <BloodLevelChart entries={entries} halfLifeHours={Hours(5)} />

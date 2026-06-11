@@ -27,7 +27,7 @@ function makeEntry(
   return {
     id,
     timestamp: timestamp.toISOString(),
-    caffeineMg,
+    caffeineMg: CaffeineMg(caffeineMg),
   };
 }
 
@@ -301,7 +301,7 @@ describe('computeBloodLevel — edge cases', () => {
     const entry: CaffeineLogEntry = {
       id: '1',
       timestamp: hoursAgo(5).toISOString(),
-      caffeineMg: NaN,
+      caffeineMg: CaffeineMg(NaN),
     };
     const level = computeBloodLevel([entry], new Date());
     expect(level).toBe(0);
@@ -317,7 +317,7 @@ describe('computeBloodLevel — edge cases', () => {
     const entry: CaffeineLogEntry = {
       id: '1',
       timestamp: hoursAgo(5).toISOString(),
-      caffeineMg: Infinity,
+      caffeineMg: CaffeineMg(Infinity),
     };
     const level = computeBloodLevel([entry], new Date());
     expect(level).toBe(0);
@@ -327,7 +327,7 @@ describe('computeBloodLevel — edge cases', () => {
     const entry: CaffeineLogEntry = {
       id: '1',
       timestamp: 'not-a-date',
-      caffeineMg: 100,
+      caffeineMg: CaffeineMg(100),
     };
     const level = computeBloodLevel([entry], new Date());
     expect(level).toBe(0);
@@ -429,7 +429,7 @@ describe('generateBloodLevelCurve — edge cases', () => {
     const invalid: CaffeineLogEntry = {
       id: '2',
       timestamp: 'bad-date',
-      caffeineMg: 200,
+      caffeineMg: CaffeineMg(200),
     };
     const curve = generateBloodLevelCurve([valid, invalid]);
     expect(curve.length).toBeGreaterThan(0);
@@ -464,7 +464,7 @@ describe('computeDailySummary — edge cases', () => {
     const invalid: CaffeineLogEntry = {
       id: '2',
       timestamp: hoursAgo(1).toISOString(),
-      caffeineMg: NaN,
+      caffeineMg: CaffeineMg(NaN),
     };
     const summary = computeDailySummary([valid, invalid]);
     expect(summary.totalToday).toBe(100);

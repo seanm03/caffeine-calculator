@@ -2,13 +2,14 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import DailySummary from '@/components/DailySummary';
 import { assertA11y } from '@/test/axe';
+import { CaffeineMg } from '@/types/branded';
 import type { DailyCaffeineSummary } from '@/types';
 
 describe('DailySummary', () => {
   const mockSummary: DailyCaffeineSummary = {
-    currentLevel: 150,
-    totalToday: 300,
-    peakLevel: 200,
+    currentLevel: CaffeineMg(150),
+    totalToday: CaffeineMg(300),
+    peakLevel: CaffeineMg(200),
     peakTime: new Date(),
     entryCount: 3,
   };
@@ -27,9 +28,9 @@ describe('DailySummary', () => {
 
   it('handles zero values gracefully', () => {
     const zeroSummary: DailyCaffeineSummary = {
-      currentLevel: 0,
-      totalToday: 0,
-      peakLevel: 0,
+      currentLevel: CaffeineMg(0),
+      totalToday: CaffeineMg(0),
+      peakLevel: CaffeineMg(0),
       peakTime: null,
       entryCount: 0,
     };
@@ -45,9 +46,9 @@ describe('DailySummary', () => {
 
   it('has no accessibility violations with zero values', async () => {
     const zeroSummary: DailyCaffeineSummary = {
-      currentLevel: 0,
-      totalToday: 0,
-      peakLevel: 0,
+      currentLevel: CaffeineMg(0),
+      totalToday: CaffeineMg(0),
+      peakLevel: CaffeineMg(0),
       peakTime: null,
       entryCount: 0,
     };

@@ -9,7 +9,7 @@ function makeEntry(overrides: Partial<CaffeineLogEntry> = {}): CaffeineLogEntry 
   return {
     id: crypto.randomUUID(),
     timestamp: new Date().toISOString(),
-    caffeineMg: 100,
+    caffeineMg: CaffeineMg(100),
     drinkName: 'Test Drink',
     ...overrides,
   };
@@ -45,7 +45,7 @@ describe('SleepImpactCard', () => {
     const eightHoursAgo = new Date(Date.now() - 8 * 3600000).toISOString();
     render(
       <SleepImpactCard
-        entries={[makeEntry({ caffeineMg: 50, timestamp: eightHoursAgo })]}
+        entries={[makeEntry({ caffeineMg: CaffeineMg(50), timestamp: eightHoursAgo })]}
         halfLifeHours={Hours(5)}
         bedtimeHour={22}
       />,
@@ -59,7 +59,7 @@ describe('SleepImpactCard', () => {
     const oneHourAgo = new Date(Date.now() - 1 * 3600000).toISOString();
     render(
       <SleepImpactCard
-        entries={[makeEntry({ caffeineMg: 200, timestamp: oneHourAgo })]}
+        entries={[makeEntry({ caffeineMg: CaffeineMg(200), timestamp: oneHourAgo })]}
         halfLifeHours={Hours(5)}
         bedtimeHour={new Date().getHours() + 1} // bedtime in 1 hour from now
       />,
@@ -74,7 +74,7 @@ describe('SleepImpactCard', () => {
     const oneHourAgo = new Date(Date.now() - 1 * 3600000).toISOString();
     render(
       <SleepImpactCard
-        entries={[makeEntry({ caffeineMg: 150, timestamp: oneHourAgo })]}
+        entries={[makeEntry({ caffeineMg: CaffeineMg(150), timestamp: oneHourAgo })]}
         halfLifeHours={Hours(5)}
         bedtimeHour={new Date().getHours() + 1}
         sleepThresholdMg={CaffeineMg(100)}
@@ -89,7 +89,7 @@ describe('SleepImpactCard', () => {
     const oneHourAgo = new Date(Date.now() - 1 * 3600000).toISOString();
     render(
       <SleepImpactCard
-        entries={[makeEntry({ caffeineMg: 100, timestamp: oneHourAgo })]}
+        entries={[makeEntry({ caffeineMg: CaffeineMg(100), timestamp: oneHourAgo })]}
         halfLifeHours={Hours(5)}
         bedtimeHour={22}
       />,
@@ -103,7 +103,7 @@ describe('SleepImpactCard', () => {
     // 300mg just now — should be above threshold
     render(
       <SleepImpactCard
-        entries={[makeEntry({ caffeineMg: 300 })]}
+        entries={[makeEntry({ caffeineMg: CaffeineMg(300) })]}
         halfLifeHours={Hours(5)}
         bedtimeHour={new Date().getHours() + 1}
       />,

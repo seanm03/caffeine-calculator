@@ -191,13 +191,13 @@ describe('useCaffeineLog', () => {
     act(() => {
       result.current.addEntry({
         timestamp: new Date().toISOString(),
-        caffeineMg: 100,
+        caffeineMg: CaffeineMg(100),
         drinkName: 'Test',
       });
     });
     expect(result.current.entries).toHaveLength(1);
     expect(result.current.todayEntries).toHaveLength(1);
-    expect(result.current.entries[0].caffeineMg).toBe(100);
+    expect(result.current.entries[0].caffeineMg).toBe(CaffeineMg(100));
   });
 
   it('generates an id for entries without one', () => {
@@ -205,7 +205,7 @@ describe('useCaffeineLog', () => {
     act(() => {
       result.current.addEntry({
         timestamp: new Date().toISOString(),
-        caffeineMg: 100,
+        caffeineMg: CaffeineMg(100),
       });
     });
     expect(result.current.entries[0].id).toBeDefined();
@@ -218,7 +218,7 @@ describe('useCaffeineLog', () => {
     act(() => {
       result.current.addEntry({
         timestamp: new Date().toISOString(),
-        caffeineMg: 100,
+        caffeineMg: CaffeineMg(100),
       });
     });
     const id = result.current.entries[0].id;
@@ -233,7 +233,7 @@ describe('useCaffeineLog', () => {
     act(() => {
       result.current.addEntry({
         timestamp: new Date().toISOString(),
-        caffeineMg: 100,
+        caffeineMg: CaffeineMg(100),
       });
     });
     expect(result.current.todayEntries).toHaveLength(1);
@@ -248,7 +248,7 @@ describe('useCaffeineLog', () => {
     act(() => {
       result.current.addEntry({
         timestamp: new Date().toISOString(),
-        caffeineMg: 100,
+        caffeineMg: CaffeineMg(100),
         drinkName: 'Morning coffee',
       });
     });

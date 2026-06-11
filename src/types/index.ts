@@ -5,7 +5,7 @@
  * These form the contract between engine outputs and rendering logic.
  */
 
-import type { CaffeineMg } from './branded';
+import type { CaffeineMg, WeightG, VolumeMl, TemperatureC } from './branded';
 
 /** Supported coffee brewing methods */
 export type BrewMethod =
@@ -41,9 +41,9 @@ export interface BrewingParameters {
   /** Brew method (espresso, pour-over, etc.) */
   brewMethod: BrewMethod;
   /** Dry coffee weight in grams */
-  coffeeWeightG: number;
+  coffeeWeightG: WeightG;
   /** Water volume in milliliters */
-  waterVolumeMl: number;
+  waterVolumeMl: VolumeMl;
   /** Coffee species (arabica, robusta, or blend) */
   species: Species;
   /** Whether the coffee is decaffeinated. Overrides species caffeine content with decaf values (~0.3 mg/g). */
@@ -55,7 +55,7 @@ export interface BrewingParameters {
   /** Grind size (extra-fine through extra-coarse) */
   grindSize?: GrindSize;
   /** Water temperature in °C */
-  waterTemperatureC?: number;
+  waterTemperatureC?: TemperatureC;
   /** Post-harvest processing method */
   processingMethod?: ProcessingMethod;
   /** Growing altitude category */
@@ -134,15 +134,15 @@ export interface CaffeineLogEntry {
   /** ISO 8601 timestamp of consumption */
   timestamp: string;
   /** Caffeine consumed in milligrams */
-  caffeineMg: number;
+  caffeineMg: CaffeineMg;
   /** Optional user label (e.g., "Morning pour-over") */
   drinkName?: string;
   /** Brew method used (from the calculator) */
   brewMethod?: BrewMethod;
   /** Dry coffee weight in grams */
-  coffeeWeightG?: number;
+  coffeeWeightG?: WeightG;
   /** Water volume in milliliters */
-  waterVolumeMl?: number;
+  waterVolumeMl?: VolumeMl;
   /** Optional free-text notes */
   notes?: string;
 }
@@ -174,11 +174,11 @@ export interface BloodLevelPoint {
  */
 export interface DailyCaffeineSummary {
   /** Estimated current blood caffeine level (mg) */
-  currentLevel: number;
+  currentLevel: CaffeineMg;
   /** Total caffeine consumed today (mg) */
-  totalToday: number;
+  totalToday: CaffeineMg;
   /** Peak blood caffeine level reached today (mg) */
-  peakLevel: number;
+  peakLevel: CaffeineMg;
   /** Time when peak level occurred */
   peakTime: Date | null;
   /** Number of entries logged today */

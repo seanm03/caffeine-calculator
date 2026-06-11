@@ -28,6 +28,7 @@ import {
   Legend,
 } from 'recharts';
 import { calculateCaffeine } from '@/engine/caffeineCalculator';
+import { WeightG, TemperatureC } from '@/types/branded';
 import type { BrewMethod, BrewingParameters, CaffeineResult, GrindSize } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -144,7 +145,7 @@ const SensitivityCharts = memo(function SensitivityCharts({ currentParams, compa
       w <= COFFEE_WEIGHT_RANGE.max;
       w += COFFEE_WEIGHT_RANGE.step
     ) {
-      const params: BrewingParameters = { ...currentParams, coffeeWeightG: w };
+      const params: BrewingParameters = { ...currentParams, coffeeWeightG: WeightG(w) };
       const result: CaffeineResult = calculateCaffeine(params);
       points.push({
         weightG: w,
@@ -181,7 +182,7 @@ const SensitivityCharts = memo(function SensitivityCharts({ currentParams, compa
         const params: BrewingParameters = {
           ...currentParams,
           grindSize: grind,
-          waterTemperatureC: temp,
+          waterTemperatureC: TemperatureC(temp),
         };
         const result: CaffeineResult = calculateCaffeine(params);
         grid.push({

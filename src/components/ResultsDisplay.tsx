@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { DAILY_SAFE_LIMIT_MG, STANDARD_CUP_CAFFEINE_MG } from '@/engine/constants';
 import { useCaffeineLog } from '@/hooks/useCaffeineLog';
 import { useUnits } from '@/hooks/useUnits';
-import { WeightG, VolumeMl } from '@/types/branded';
+import { CaffeineMg, WeightG, VolumeMl } from '@/types/branded';
 import type { CaffeineResult, BrewMethod } from '@/types';
 
 export interface ResultsDisplayProps {
@@ -51,7 +51,7 @@ export default function ResultsDisplay({ result, coffeeWeightG, waterVolumeMl, b
     if (!result) return;
     addEntry({
       timestamp: new Date().toISOString(),
-      caffeineMg: Math.round(result.totalCaffeineMg),
+      caffeineMg: CaffeineMg(Math.round(result.totalCaffeineMg)),
       brewMethod,
       coffeeWeightG,
       waterVolumeMl,

@@ -17,7 +17,7 @@ import {
   buildBreakdown,
 } from '@/engine/caffeineCalculator';
 import { DAILY_SAFE_LIMIT_MG, SPECIES_CAFFEINE } from '@/engine/constants';
-import { CaffeineMg } from '@/types/branded';
+import { CaffeineMg, WeightG, VolumeMl, TemperatureC } from '@/types/branded';
 import type { BrewingParameters, BrewMethod } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -180,12 +180,12 @@ describe('calculateCaffeine', () => {
   it('Example 1: Standard pour-over ~194 mg (±5%)', () => {
     const params: BrewingParameters = {
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
       roastLevel: 'medium',
       grindSize: 'medium',
-      waterTemperatureC: 93,
+      waterTemperatureC: TemperatureC(93),
       processingMethod: 'washed',
       altitude: 'medium',
     };
@@ -217,12 +217,12 @@ describe('calculateCaffeine', () => {
   it('Example 2: Double espresso ~156 mg (±5%)', () => {
     const params: BrewingParameters = {
       brewMethod: 'espresso',
-      coffeeWeightG: 18,
-      waterVolumeMl: 36,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(36),
       species: 'arabica',
       roastLevel: 'dark',
       grindSize: 'fine',
-      waterTemperatureC: 93,
+      waterTemperatureC: TemperatureC(93),
       processingMethod: 'washed',
       altitude: 'medium',
     };
@@ -252,12 +252,12 @@ describe('calculateCaffeine', () => {
   it('Example 3: French Press Robusta ~540 mg (±5%)', () => {
     const params: BrewingParameters = {
       brewMethod: 'french-press',
-      coffeeWeightG: 30,
-      waterVolumeMl: 500,
+      coffeeWeightG: WeightG(30),
+      waterVolumeMl: VolumeMl(500),
       species: 'robusta',
       roastLevel: 'medium',
       grindSize: 'coarse',
-      waterTemperatureC: 93,
+      waterTemperatureC: TemperatureC(93),
       processingMethod: 'natural',
       altitude: 'medium',
     };
@@ -285,8 +285,8 @@ describe('calculateCaffeine', () => {
   it('Edge case: zero coffee weight → 0 mg', () => {
     const params: BrewingParameters = {
       brewMethod: 'pour-over',
-      coffeeWeightG: 0,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(0),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
     };
 
@@ -302,8 +302,8 @@ describe('calculateCaffeine', () => {
   it('Edge case: negative coffee weight → 0 mg', () => {
     const params: BrewingParameters = {
       brewMethod: 'pour-over',
-      coffeeWeightG: -5,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(-5),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
     };
 
@@ -315,8 +315,8 @@ describe('calculateCaffeine', () => {
   it('Edge case: missing optional params → uses defaults correctly, no NaN', () => {
     const params: BrewingParameters = {
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
       // No roast, grind, temp, processing, altitude
     };
@@ -341,8 +341,8 @@ describe('calculateCaffeine', () => {
   it('Robusta blend 50%: caffeine between pure Arabica and pure Robusta', () => {
     const baseParams: Omit<BrewingParameters, 'species' | 'robustaPercent'> = {
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
     };
 
     const arabicaResult = calculateCaffeine({ ...baseParams, species: 'arabica' });
@@ -358,8 +358,8 @@ describe('calculateCaffeine', () => {
   it('Decaf: 18g decaf yields very low caffeine (~5 mg)', () => {
     const params: BrewingParameters = {
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
       isDecaf: true,
     };
@@ -389,8 +389,8 @@ describe('calculateCaffeine', () => {
     for (const method of brewMethods) {
       const params: BrewingParameters = {
         brewMethod: method,
-        coffeeWeightG: 18,
-        waterVolumeMl: 300,
+        coffeeWeightG: WeightG(18),
+        waterVolumeMl: VolumeMl(300),
         species: 'arabica',
       };
 
@@ -413,8 +413,8 @@ describe('calculateCaffeine', () => {
   it('Daily limit percent = totalCaffeineMg / 400 * 100', () => {
     const params: BrewingParameters = {
       brewMethod: 'instant',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
     };
 
@@ -429,8 +429,8 @@ describe('calculateCaffeine', () => {
   it('Equivalent cups = totalCaffeineMg / 95 (rounded to 1 decimal)', () => {
     const params: BrewingParameters = {
       brewMethod: 'instant',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
     };
 
@@ -445,8 +445,8 @@ describe('calculateCaffeine', () => {
   it('High altitude + natural processing applies both adjustments', () => {
     const params: BrewingParameters = {
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
       processingMethod: 'natural',
       altitude: 'high',
@@ -469,10 +469,10 @@ describe('calculateCaffeine', () => {
   it('Medium-low temperature (80-84°C) reduces extraction', () => {
     const params: BrewingParameters = {
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
-      waterTemperatureC: 80,
+      waterTemperatureC: TemperatureC(80),
     };
 
     const result = calculateCaffeine(params);
@@ -484,10 +484,10 @@ describe('calculateCaffeine', () => {
   it('Boiling temperature (>96°C) slightly increases extraction', () => {
     const params: BrewingParameters = {
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
-      waterTemperatureC: 98,
+      waterTemperatureC: TemperatureC(98),
     };
 
     const result = calculateCaffeine(params);
@@ -561,10 +561,10 @@ describe('temperature boundary values', () => {
   it('handles 70–79°C tier (70°C → 0.88)', () => {
     const result = calculateCaffeine({
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
-      waterTemperatureC: 70,
+      waterTemperatureC: TemperatureC(70),
     });
     expect(result.breakdown.temperatureAdjustment).toBe(0.88);
   });
@@ -572,10 +572,10 @@ describe('temperature boundary values', () => {
   it('handles maximum temperature (100°C → 1.02) correctly', () => {
     const result = calculateCaffeine({
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
-      waterTemperatureC: 100,
+      waterTemperatureC: TemperatureC(100),
     });
     expect(result.breakdown.temperatureAdjustment).toBe(1.02);
   });
@@ -583,10 +583,10 @@ describe('temperature boundary values', () => {
   it('handles below-minimum temperature (<70°C → 0.85) gracefully', () => {
     const result = calculateCaffeine({
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
-      waterTemperatureC: 69,
+      waterTemperatureC: TemperatureC(69),
     });
     expect(result.breakdown.temperatureAdjustment).toBe(0.85);
     expect(result.totalCaffeineMg).toBeGreaterThan(0);
@@ -595,10 +595,10 @@ describe('temperature boundary values', () => {
   it('handles above-maximum temperature (>96°C → 1.02) gracefully', () => {
     const result = calculateCaffeine({
       brewMethod: 'pour-over',
-      coffeeWeightG: 18,
-      waterVolumeMl: 300,
+      coffeeWeightG: WeightG(18),
+      waterVolumeMl: VolumeMl(300),
       species: 'arabica',
-      waterTemperatureC: 110,
+      waterTemperatureC: TemperatureC(110),
     });
     expect(result.breakdown.temperatureAdjustment).toBe(1.02);
     expect(result.totalCaffeineMg).toBeGreaterThan(0);

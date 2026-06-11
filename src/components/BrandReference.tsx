@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import brandData from '@/data/brandData';
 import { DAILY_SAFE_LIMIT_MG } from '@/engine/constants';
 import { useCaffeineLog } from '@/hooks/useCaffeineLog';
+import { CaffeineMg } from '@/types/branded';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -81,7 +82,7 @@ export default function BrandReference() {
     (drinkName: string, caffeineMg: number, brand: string) => {
       addEntry({
         timestamp: new Date().toISOString(),
-        caffeineMg,
+        caffeineMg: CaffeineMg(caffeineMg),
         drinkName: `${brand} ${drinkName}`,
       });
       setQuickLogFeedback(`${brand} ${drinkName}`);

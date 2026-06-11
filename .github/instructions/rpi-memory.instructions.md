@@ -1,9 +1,10 @@
 ---
+title: "RPI Agent - Cycle Memory Persistence"
 description: "Persist session memory at the end of every RPI Agent cycle and after individual agent completions"
 applyTo: "**"
 ---
 
-# RPI Agent — Cycle Memory Persistence
+## Cycle Memory Persistence
 
 After every complete RPI Agent cycle (passing through Phase 5: Discover), and after any individual agent invocation (Phase Implementor, Researcher Subagent, Implementation Validator, RPI Validator, Task Reviewer), persist a session memory summary.
 

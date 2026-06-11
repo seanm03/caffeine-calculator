@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { CaffeineMg, WeightG, VolumeMl } from '@/types/branded';
 import type { CaffeineLogEntry, BrewMethod } from '@/types';
 
 interface DrinkLogFormProps {
@@ -41,11 +42,11 @@ export default function DrinkLogForm({ onAdd }: DrinkLogFormProps) {
 
       onAdd({
         timestamp: new Date().toISOString(),
-        caffeineMg: mg,
+        caffeineMg: CaffeineMg(mg),
         drinkName: drinkName.trim() || undefined,
         brewMethod: brewMethod || undefined,
-        coffeeWeightG: coffeeWeightG ? parseFloat(coffeeWeightG) : undefined,
-        waterVolumeMl: waterVolumeMl ? parseFloat(waterVolumeMl) : undefined,
+        coffeeWeightG: coffeeWeightG ? WeightG(parseFloat(coffeeWeightG)) : undefined,
+        waterVolumeMl: waterVolumeMl ? VolumeMl(parseFloat(waterVolumeMl)) : undefined,
         notes: notes.trim() || undefined,
       });
 

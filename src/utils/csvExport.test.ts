@@ -1,12 +1,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { entriesToCsv, downloadCsv, exportEntriesToCsv } from '@/utils/csvExport';
+import { CaffeineMg, WeightG, VolumeMl } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
 
 function makeEntry(overrides: Partial<CaffeineLogEntry> = {}): CaffeineLogEntry {
   return {
     id: crypto.randomUUID(),
     timestamp: '2026-06-10T08:00:00.000Z',
-    caffeineMg: 100,
+    caffeineMg: CaffeineMg(100),
     drinkName: 'Pour-Over',
     ...overrides,
   };
@@ -33,7 +34,7 @@ describe('entriesToCsv', () => {
   it('converts a single entry to CSV row', () => {
     const entry = makeEntry({
       timestamp: '2026-06-10T08:00:00.000Z',
-      caffeineMg: 150,
+      caffeineMg: CaffeineMg(150),
       drinkName: 'Latte',
     });
     const csv = entriesToCsv([entry]);
@@ -45,8 +46,8 @@ describe('entriesToCsv', () => {
 
   it('converts multiple entries to CSV rows', () => {
     const entries: CaffeineLogEntry[] = [
-      makeEntry({ caffeineMg: 100, drinkName: 'Coffee A' }),
-      makeEntry({ caffeineMg: 200, drinkName: 'Coffee B' }),
+      makeEntry({ caffeineMg: CaffeineMg(100), drinkName: 'Coffee A' }),
+      makeEntry({ caffeineMg: CaffeineMg(200), drinkName: 'Coffee B' }),
     ];
     const csv = entriesToCsv(entries);
     const lines = csv.split('\n');
@@ -74,13 +75,13 @@ describe('entriesToCsv', () => {
   });
 
   it('includes coffee weight when present', () => {
-    const entry = makeEntry({ coffeeWeightG: 18 });
+    const entry = makeEntry({ coffeeWeightG: WeightG(18) });
     const csv = entriesToCsv([entry]);
     expect(csv).toContain('18');
   });
 
   it('includes water volume when present', () => {
-    const entry = makeEntry({ waterVolumeMl: 300 });
+    const entry = makeEntry({ waterVolumeMl: VolumeMl(300) });
     const csv = entriesToCsv([entry]);
     expect(csv).toContain('300');
   });

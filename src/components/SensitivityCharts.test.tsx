@@ -2,13 +2,14 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import SensitivityCharts from '@/components/SensitivityCharts';
 import { assertA11y } from '@/test/axe';
+import { WeightG, VolumeMl } from '@/types/branded';
 import type { BrewingParameters } from '@/types';
 
 describe('SensitivityCharts', () => {
   const defaultParams: BrewingParameters = {
     brewMethod: 'pour-over',
-    coffeeWeightG: 18,
-    waterVolumeMl: 300,
+    coffeeWeightG: WeightG(18),
+    waterVolumeMl: VolumeMl(300),
     species: 'arabica',
   };
 
