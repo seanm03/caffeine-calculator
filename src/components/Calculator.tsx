@@ -82,6 +82,7 @@ export default function Calculator() {
       <hr className="border-coffee-200 dark:border-coffee-700" />
 
       <AdvancedOptions
+        brewMethod={brewMethod}
         roastLevel={roastLevel}
         onRoastLevelChange={setRoastLevel}
         grindSize={grindSize}

@@ -6,7 +6,7 @@
  * data and do not infringe on copyright.
  */
 
-import { VolumeMl, CaffeineMg } from '@/types/branded';
+import { VolumeMl, CaffeineMg, BrandName, DrinkName } from '@/types/branded';
 import type { BrandDrink } from '@/types';
 
 const brandData: BrandDrink[] = [
@@ -14,8 +14,8 @@ const brandData: BrandDrink[] = [
   // Starbucks — Coffee
   // -----------------------------------------------------------------------
   {
-    brand: 'Starbucks',
-    name: 'Pike Place Roast',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Pike Place Roast'),
     size: 'Tall',
     volumeMl: VolumeMl(354),
     caffeineMg: CaffeineMg(235),
@@ -23,8 +23,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Pike Place Roast',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Pike Place Roast'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(310),
@@ -32,8 +32,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Pike Place Roast',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Pike Place Roast'),
     size: 'Venti',
     volumeMl: VolumeMl(591),
     caffeineMg: CaffeineMg(410),
@@ -41,8 +41,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Blonde Roast',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Blonde Roast'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(360),
@@ -50,8 +50,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Dark Roast',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Dark Roast'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(265),
@@ -59,8 +59,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Caffè Americano',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Caffè Americano'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(225),
@@ -68,8 +68,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Caffè Latte',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Caffè Latte'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(150),
@@ -77,8 +77,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Cappuccino',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Cappuccino'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(150),
@@ -86,8 +86,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Espresso',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Espresso'),
     size: 'Doppio',
     volumeMl: VolumeMl(60),
     caffeineMg: CaffeineMg(150),
@@ -95,8 +95,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Cold Brew',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Cold Brew'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(200),
@@ -106,8 +106,8 @@ const brandData: BrandDrink[] = [
 
   // Starbucks — Additional drinks
   {
-    brand: 'Starbucks',
-    name: 'Caramel Macchiato',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Caramel Macchiato'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(150),
@@ -115,8 +115,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Flat White',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Flat White'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(195),
@@ -124,8 +124,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Caffè Mocha',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Caffè Mocha'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(175),
@@ -133,8 +133,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Starbucks',
-    name: 'Iced Coffee',
+    brand: BrandName('Starbucks'),
+    name: DrinkName('Iced Coffee'),
     size: 'Grande',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(165),
@@ -146,8 +146,8 @@ const brandData: BrandDrink[] = [
   // Dunkin' — Coffee
   // -----------------------------------------------------------------------
   {
-    brand: "Dunkin'",
-    name: 'Original Blend',
+    brand: BrandName("Dunkin'"),
+    name: DrinkName('Original Blend'),
     size: 'Small',
     volumeMl: VolumeMl(296),
     caffeineMg: CaffeineMg(180),
@@ -155,8 +155,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Dunkin'",
-    name: 'Original Blend',
+    brand: BrandName("Dunkin'"),
+    name: DrinkName('Original Blend'),
     size: 'Medium',
     volumeMl: VolumeMl(414),
     caffeineMg: CaffeineMg(210),
@@ -164,8 +164,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Dunkin'",
-    name: 'Original Blend',
+    brand: BrandName("Dunkin'"),
+    name: DrinkName('Original Blend'),
     size: 'Large',
     volumeMl: VolumeMl(591),
     caffeineMg: CaffeineMg(270),
@@ -173,8 +173,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Dunkin'",
-    name: 'Cold Brew',
+    brand: BrandName("Dunkin'"),
+    name: DrinkName('Cold Brew'),
     size: 'Medium',
     volumeMl: VolumeMl(414),
     caffeineMg: CaffeineMg(260),
@@ -182,8 +182,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Dunkin'",
-    name: 'Latte',
+    brand: BrandName("Dunkin'"),
+    name: DrinkName('Latte'),
     size: 'Medium',
     volumeMl: VolumeMl(414),
     caffeineMg: CaffeineMg(118),
@@ -191,8 +191,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Dunkin'",
-    name: 'Cappuccino',
+    brand: BrandName("Dunkin'"),
+    name: DrinkName('Cappuccino'),
     size: 'Medium',
     volumeMl: VolumeMl(414),
     caffeineMg: CaffeineMg(118),
@@ -200,8 +200,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Dunkin'",
-    name: 'Iced Coffee',
+    brand: BrandName("Dunkin'"),
+    name: DrinkName('Iced Coffee'),
     size: 'Medium',
     volumeMl: VolumeMl(414),
     caffeineMg: CaffeineMg(175),
@@ -209,8 +209,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Dunkin'",
-    name: 'Americano',
+    brand: BrandName("Dunkin'"),
+    name: DrinkName('Americano'),
     size: 'Medium',
     volumeMl: VolumeMl(414),
     caffeineMg: CaffeineMg(237),
@@ -222,8 +222,8 @@ const brandData: BrandDrink[] = [
   // McDonald's — McCafé
   // -----------------------------------------------------------------------
   {
-    brand: "McDonald's",
-    name: 'McCafé Coffee',
+    brand: BrandName("McDonald's"),
+    name: DrinkName('McCafé Coffee'),
     size: 'Small',
     volumeMl: VolumeMl(355),
     caffeineMg: CaffeineMg(109),
@@ -231,8 +231,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "McDonald's",
-    name: 'McCafé Coffee',
+    brand: BrandName("McDonald's"),
+    name: DrinkName('McCafé Coffee'),
     size: 'Medium',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(145),
@@ -240,8 +240,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "McDonald's",
-    name: 'McCafé Coffee',
+    brand: BrandName("McDonald's"),
+    name: DrinkName('McCafé Coffee'),
     size: 'Large',
     volumeMl: VolumeMl(621),
     caffeineMg: CaffeineMg(180),
@@ -249,8 +249,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "McDonald's",
-    name: 'McCafé Latte',
+    brand: BrandName("McDonald's"),
+    name: DrinkName('McCafé Latte'),
     size: 'Medium',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(142),
@@ -258,8 +258,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "McDonald's",
-    name: 'McCafé Mocha',
+    brand: BrandName("McDonald's"),
+    name: DrinkName('McCafé Mocha'),
     size: 'Medium',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(110),
@@ -267,8 +267,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "McDonald's",
-    name: 'McCafé Iced Coffee',
+    brand: BrandName("McDonald's"),
+    name: DrinkName('McCafé Iced Coffee'),
     size: 'Medium',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(200),
@@ -280,8 +280,8 @@ const brandData: BrandDrink[] = [
   // Tim Hortons
   // -----------------------------------------------------------------------
   {
-    brand: 'Tim Hortons',
-    name: 'Original Blend',
+    brand: BrandName('Tim Hortons'),
+    name: DrinkName('Original Blend'),
     size: 'Medium',
     volumeMl: VolumeMl(425),
     caffeineMg: CaffeineMg(205),
@@ -289,8 +289,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Tim Hortons',
-    name: 'Dark Roast',
+    brand: BrandName('Tim Hortons'),
+    name: DrinkName('Dark Roast'),
     size: 'Medium',
     volumeMl: VolumeMl(425),
     caffeineMg: CaffeineMg(210),
@@ -298,8 +298,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Tim Hortons',
-    name: 'Latte',
+    brand: BrandName('Tim Hortons'),
+    name: DrinkName('Latte'),
     size: 'Medium',
     volumeMl: VolumeMl(425),
     caffeineMg: CaffeineMg(115),
@@ -307,8 +307,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Tim Hortons',
-    name: 'Iced Capp',
+    brand: BrandName('Tim Hortons'),
+    name: DrinkName('Iced Capp'),
     size: 'Medium',
     volumeMl: VolumeMl(425),
     caffeineMg: CaffeineMg(90),
@@ -316,8 +316,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Tim Hortons',
-    name: 'Iced Coffee',
+    brand: BrandName('Tim Hortons'),
+    name: DrinkName('Iced Coffee'),
     size: 'Medium',
     volumeMl: VolumeMl(425),
     caffeineMg: CaffeineMg(165),
@@ -325,8 +325,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Tim Hortons',
-    name: 'Americano',
+    brand: BrandName('Tim Hortons'),
+    name: DrinkName('Americano'),
     size: 'Medium',
     volumeMl: VolumeMl(425),
     caffeineMg: CaffeineMg(150),
@@ -338,8 +338,8 @@ const brandData: BrandDrink[] = [
   // Peet's Coffee
   // -----------------------------------------------------------------------
   {
-    brand: "Peet's",
-    name: "Major Dickason's Blend",
+    brand: BrandName("Peet's"),
+    name: DrinkName("`Major Dickason's Blend"),
     size: 'Medium',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(267),
@@ -347,8 +347,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Peet's",
-    name: 'Espresso',
+    brand: BrandName("Peet's"),
+    name: DrinkName('Espresso'),
     size: 'Double',
     volumeMl: VolumeMl(60),
     caffeineMg: CaffeineMg(140),
@@ -356,8 +356,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Peet's",
-    name: 'Cold Brew',
+    brand: BrandName("Peet's"),
+    name: DrinkName('Cold Brew'),
     size: 'Medium',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(210),
@@ -365,8 +365,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Peet's",
-    name: 'Latte',
+    brand: BrandName("Peet's"),
+    name: DrinkName('Latte'),
     size: 'Medium',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(150),
@@ -374,8 +374,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: "Peet's",
-    name: 'Cappuccino',
+    brand: BrandName("Peet's"),
+    name: DrinkName('Cappuccino'),
     size: 'Medium',
     volumeMl: VolumeMl(473),
     caffeineMg: CaffeineMg(150),
@@ -387,8 +387,8 @@ const brandData: BrandDrink[] = [
   // Generic References — USDA FoodData Central (CC0)
   // -----------------------------------------------------------------------
   {
-    brand: 'Generic',
-    name: 'Drip Coffee',
+    brand: BrandName('Generic'),
+    name: DrinkName('Drip Coffee'),
     size: '8 oz',
     volumeMl: VolumeMl(237),
     caffeineMg: CaffeineMg(95),
@@ -396,8 +396,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Generic',
-    name: 'Espresso',
+    brand: BrandName('Generic'),
+    name: DrinkName('Espresso'),
     size: '1 oz shot',
     volumeMl: VolumeMl(30),
     caffeineMg: CaffeineMg(63),
@@ -405,8 +405,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Generic',
-    name: 'Instant Coffee',
+    brand: BrandName('Generic'),
+    name: DrinkName('Instant Coffee'),
     size: '8 oz',
     volumeMl: VolumeMl(237),
     caffeineMg: CaffeineMg(63),
@@ -414,8 +414,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Generic',
-    name: 'Decaf Coffee',
+    brand: BrandName('Generic'),
+    name: DrinkName('Decaf Coffee'),
     size: '8 oz',
     volumeMl: VolumeMl(237),
     caffeineMg: CaffeineMg(3),
@@ -423,8 +423,8 @@ const brandData: BrandDrink[] = [
     lastUpdated: '2026-06',
   },
   {
-    brand: 'Generic',
-    name: 'Cold Brew',
+    brand: BrandName('Generic'),
+    name: DrinkName('Cold Brew'),
     size: '8 oz',
     volumeMl: VolumeMl(237),
     caffeineMg: CaffeineMg(100),

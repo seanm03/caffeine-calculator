@@ -58,7 +58,7 @@ function AppContent() {
 
       <Header />
 
-      <main className="flex-1 max-w-2xl mx-auto w-full px-4 sm:px-6 py-8 space-y-6">
+      <main className="flex-1 max-w-2xl lg:max-w-5xl mx-auto w-full px-4 sm:px-6 py-8 space-y-6">
         <TabBar tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
         {TAB_CONTENT[activeTab]}
       </main>

@@ -9,6 +9,7 @@ function renderOptions() {
   return render(
     <UnitProvider>
       <AdvancedOptions
+        brewMethod="pour-over"
         roastLevel="medium"
         onRoastLevelChange={() => {}}
         grindSize="medium"

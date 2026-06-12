@@ -372,9 +372,9 @@ describe('calculateCaffeine', () => {
     expect(result.equivalentCups).toBeLessThanOrEqual(0.1);
   });
 
-  // --- All 8 brew methods ---
+  // --- All 9 brew methods ---
 
-  it('All 8 brew methods produce results > 0 and < 1000 for 18g Arabica', () => {
+  it('All 9 brew methods produce results > 0 and < 1000 for 18g Arabica', () => {
     const brewMethods: BrewMethod[] = [
       'espresso',
       'pour-over',
@@ -384,6 +384,7 @@ describe('calculateCaffeine', () => {
       'cold-brew',
       'turkish',
       'instant',
+      'paper-filtered-immersion',
     ];
 
     for (const method of brewMethods) {

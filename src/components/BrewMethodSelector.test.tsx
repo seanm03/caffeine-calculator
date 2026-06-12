@@ -4,7 +4,7 @@ import BrewMethodSelector from '@/components/BrewMethodSelector';
 import { assertA11y } from '@/test/axe';
 
 describe('BrewMethodSelector', () => {
-  it('renders all 8 brew methods', () => {
+  it('renders all 9 brew methods', () => {
     render(<BrewMethodSelector value="pour-over" onChange={() => {}} />);
     expect(screen.getByText('Espresso')).toBeInTheDocument();
     expect(screen.getByText('Pour Over')).toBeInTheDocument();
@@ -14,6 +14,7 @@ describe('BrewMethodSelector', () => {
     expect(screen.getByText('Cold Brew')).toBeInTheDocument();
     expect(screen.getByText('Turkish')).toBeInTheDocument();
     expect(screen.getByText('Instant')).toBeInTheDocument();
+    expect(screen.getByText('Filter Immersion')).toBeInTheDocument();
   });
 
   it('has no accessibility violations', async () => {
@@ -26,9 +27,9 @@ describe('BrewMethodSelector', () => {
     expect(screen.getByRole('radiogroup')).toBeInTheDocument();
   });
 
-  it('renders 8 radio buttons', () => {
+  it('renders 9 radio buttons', () => {
     render(<BrewMethodSelector value="pour-over" onChange={() => {}} />);
-    expect(screen.getAllByRole('radio')).toHaveLength(8);
+    expect(screen.getAllByRole('radio')).toHaveLength(9);
   });
 
   it('marks the selected brew method as checked', () => {
@@ -76,7 +77,7 @@ describe('BrewMethodSelector', () => {
     const onChange = vi.fn();
     render(<BrewMethodSelector value="espresso" onChange={onChange} />);
     fireEvent.keyDown(screen.getByRole('radiogroup'), { key: 'End' });
-    expect(onChange).toHaveBeenCalledWith('instant');
+    expect(onChange).toHaveBeenCalledWith('paper-filtered-immersion');
   });
 
   it('renders with aria-label on radiogroup', () => {

@@ -55,6 +55,7 @@ const ALL_BREW_METHODS: BrewMethod[] = [
   'cold-brew',
   'turkish',
   'instant',
+  'paper-filtered-immersion',
 ];
 
 const BREW_METHOD_LABELS: Record<BrewMethod, string> = {
@@ -66,6 +67,7 @@ const BREW_METHOD_LABELS: Record<BrewMethod, string> = {
   'cold-brew': 'Cold Brew',
   turkish: 'Turkish',
   instant: 'Instant',
+  'paper-filtered-immersion': 'Filter Immersion',
 };
 
 const COFFEE_WEIGHT_RANGE = {

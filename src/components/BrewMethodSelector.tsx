@@ -10,6 +10,7 @@ const BREW_METHODS: { value: BrewMethod; label: string }[] = [
   { value: 'cold-brew', label: 'Cold Brew' },
   { value: 'turkish', label: 'Turkish' },
   { value: 'instant', label: 'Instant' },
+  { value: 'paper-filtered-immersion', label: 'Filter Immersion' },
 ];
 
 const BREW_VALUES = BREW_METHODS.map((m) => m.value);
@@ -49,7 +50,7 @@ export default function BrewMethodSelector({ value, onChange }: BrewMethodSelect
         Brew Method
       </legend>
       <div
-        className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2"
+        className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-3 gap-2"
         role="radiogroup"
         aria-label="Brew Method"
         onKeyDown={handleKeyDown}

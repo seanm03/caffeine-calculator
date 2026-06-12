@@ -41,6 +41,7 @@ export const BREW_METHOD_EFFICIENCY: Record<string, number> = {
   'cold-brew': 0.9,
   turkish: 0.92,
   instant: 1.0,
+  'paper-filtered-immersion': 0.91,
 };
 
 // ---------------------------------------------------------------------------
@@ -75,6 +76,35 @@ export const GRIND_MULTIPLIERS: Record<string, [number, number]> = {
   medium: [0.9, 1.0],
   coarse: [0.8, 0.95],
   'extra-coarse': [0.75, 0.9],
+};
+
+// ---------------------------------------------------------------------------
+// Grind size micron ranges
+// ---------------------------------------------------------------------------
+
+/**
+ * Typical particle size ranges for each grind size category.
+ *
+ * Ranges derived from Bell et al. (1996), which reports fine grind at
+ * ~0.59 mm (590 μm) and coarse at ~1.19 mm (1,190 μm), cross-referenced
+ * with specialty coffee industry standards (SCA cupping protocol at
+ * 850 μm target) and Duke et al. (2025) grind size categorizations.
+ *
+ *   - Extra fine:  200–400 μm (Turkish, very fine espresso)
+ *   - Fine:        400–600 μm (espresso, moka pot)
+ *   - Medium:      600–800 μm (pour-over, drip, Aeropress)
+ *   - Coarse:      800–1,000 μm (French press, cupping)
+ *   - Extra coarse: 1,000–1,400 μm (cold brew, cowboy coffee)
+ *
+ * @see Bell et al. (1996), Food Research International, 29:785-789
+ * @see Duke et al. (2025), Journal of Food Quality, 2405668
+ */
+export const GRIND_MICRON_RANGES: Record<string, string> = {
+  'extra-fine': '200–400 μm',
+  fine: '400–600 μm',
+  medium: '600–800 μm',
+  coarse: '800–1,000 μm',
+  'extra-coarse': '1,000–1,400 μm',
 };
 
 // ---------------------------------------------------------------------------
@@ -205,7 +235,8 @@ export const ROAST_MULTIPLIERS: Record<string, number> = {
  * rather than immersion (steeping).
  *
  * Percolation methods: espresso, moka pot
- * Immersion methods: pour-over, french-press, aeropress, cold-brew, turkish, instant
+ * Immersion methods: pour-over, french-press, aeropress, cold-brew, turkish,
+ *   instant, paper-filtered-immersion
  *
  * This determines which grind multiplier column to use (index 0 vs 1).
  */

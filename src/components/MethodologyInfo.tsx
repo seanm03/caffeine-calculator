@@ -159,7 +159,95 @@ export default function MethodologyInfo() {
         </div>
       </section>
 
-      {/* Section 3: Scientific References */}
+      {/* Section 3: Brew Methods &amp; Extraction Efficiency */}
+      <section>
+        <h2 className="text-xl font-bold text-coffee-800 dark:text-coffee-300 mb-3">
+          ☕ Brew Methods &amp; Extraction Efficiency
+        </h2>
+        <div className="bg-coffee-50 dark:bg-coffee-800 border border-coffee-200 dark:border-coffee-700 rounded-xl p-5 space-y-3 text-sm leading-relaxed">
+          <p className="text-coffee-700 dark:text-coffee-100">
+            Each brew method has a different base extraction efficiency (η) based on
+            how water interacts with coffee grounds. These values represent the
+            fraction of available caffeine extracted into the cup under standard
+            conditions.
+          </p>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm" aria-label="Brew method efficiencies">
+              <thead>
+                <tr className="border-b border-coffee-200 dark:border-coffee-700">
+                  <th scope="col" className="text-left py-2 pr-4 font-semibold text-coffee-800 dark:text-coffee-200">Method</th>
+                  <th scope="col" className="text-left py-2 pr-4 font-semibold text-coffee-800 dark:text-coffee-200">Type</th>
+                  <th scope="col" className="text-right py-2 font-semibold text-coffee-800 dark:text-coffee-200">Efficiency (η)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-coffee-100 dark:divide-coffee-800">
+                <tr>
+                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Espresso</td>
+                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Percolation (pressure)</td>
+                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.80</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Pour-Over</td>
+                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Percolation</td>
+                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.90</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">French Press</td>
+                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Immersion</td>
+                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.92</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">AeroPress</td>
+                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Immersion (pressure-assisted)</td>
+                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.87</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Moka Pot</td>
+                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Percolation (steam pressure)</td>
+                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.85</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Cold Brew</td>
+                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Immersion (cold)</td>
+                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.90</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Turkish</td>
+                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Immersion (boiled)</td>
+                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.92</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Instant</td>
+                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Dissolution</td>
+                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">1.00</td>
+                </tr>
+                <tr className="bg-coffee-100/50 dark:bg-coffee-700/50">
+                  <td className="py-2 pr-4 font-medium text-coffee-800 dark:text-coffee-100">Filter Immersion</td>
+                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Immersion + paper filtration</td>
+                  <td className="py-2 text-right tabular-nums font-medium text-coffee-800 dark:text-coffee-100">0.91</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="border-l-4 border-coffee-400 dark:border-coffee-500 pl-4 py-2 bg-white dark:bg-coffee-800/50 rounded-r-lg">
+            <p className="font-semibold text-coffee-800 dark:text-coffee-100">
+              🆕 Paper-Filtered Immersion (Filter Immersion)
+            </p>
+            <p className="text-coffee-700 dark:text-coffee-100">
+              This method combines <strong>full immersion steeping</strong> (like French press)
+              with <strong>paper filtration</strong> (like pour-over). The coffee grounds steep
+              fully immersed in water for high extraction efficiency, then pass through a paper
+              filter that removes fine sediment and oils. The result is a clean, sediment-free
+              cup with the high extraction yield of immersion brewing — placing its efficiency
+              (0.91) between French press (0.92) and pour-over (0.90).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 4: Scientific References */}
       <section>
         <h2 className="text-xl font-bold text-coffee-800 dark:text-coffee-300 mb-3">
           📚 Scientific References
@@ -204,7 +292,7 @@ export default function MethodologyInfo() {
         </div>
       </section>
 
-      {/* Section 4: Accuracy */}
+      {/* Section 5: Accuracy */}
       <section>
         <h2 className="text-xl font-bold text-coffee-800 dark:text-coffee-300 mb-3">
           🎯 Accuracy
@@ -223,7 +311,7 @@ export default function MethodologyInfo() {
         </div>
       </section>
 
-      {/* Section 5: Caveats & Limitations */}
+      {/* Section 6: Caveats & Limitations */}
       <section>
         <h2 className="text-xl font-bold text-coffee-800 dark:text-coffee-300 mb-3">
           ⚠️ Caveats &amp; Limitations

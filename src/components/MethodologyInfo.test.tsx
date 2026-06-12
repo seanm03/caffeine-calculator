@@ -15,6 +15,13 @@ describe('MethodologyInfo', () => {
     expect(screen.getByText(/spiro/i)).toBeInTheDocument();
   });
 
+  it('renders the brew method efficiencies table', () => {
+    render(<MethodologyInfo />);
+    expect(screen.getByText(/brew methods & extraction efficiency/i)).toBeInTheDocument();
+    expect(screen.getByText('Filter Immersion')).toBeInTheDocument();
+    expect(screen.getByText(/paper-filtered immersion/i)).toBeInTheDocument();
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<MethodologyInfo />);
     await assertA11y(container);

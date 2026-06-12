@@ -41,3 +41,15 @@ export const unwrapVolumeMl = (ml: VolumeMl): number => ml;
 export type TemperatureC = Branded<number, 'TemperatureC'>;
 export const TemperatureC = (value: number): TemperatureC => value as TemperatureC;
 export const unwrapTemperatureC = (c: TemperatureC): number => c;
+
+// ---------------------------------------------------------------------------
+// String branded types
+// ---------------------------------------------------------------------------
+
+/** Commercial brand name (e.g., "Starbucks"). */
+export type BrandName = Branded<string, 'BrandName'>;
+export const BrandName = (value: string): BrandName => value as BrandName;
+
+/** Drink product name (e.g., "Pike Place Roast"). */
+export type DrinkName = Branded<string, 'DrinkName'>;
+export const DrinkName = (value: string): DrinkName => value as DrinkName;

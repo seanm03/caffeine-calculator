@@ -5,7 +5,7 @@
  * These form the contract between engine outputs and rendering logic.
  */
 
-import type { CaffeineMg, WeightG, VolumeMl, TemperatureC } from './branded';
+import type { CaffeineMg, WeightG, VolumeMl, TemperatureC, BrandName, DrinkName } from './branded';
 
 /** Supported coffee brewing methods */
 export type BrewMethod =
@@ -16,7 +16,8 @@ export type BrewMethod =
   | 'moka-pot'
   | 'cold-brew'
   | 'turkish'
-  | 'instant';
+  | 'instant'
+  | 'paper-filtered-immersion';
 
 /** Coffee species (Arabica, Robusta, or blend) */
 export type Species = 'arabica' | 'robusta' | 'blend';
@@ -106,9 +107,9 @@ export interface CaffeineResult {
  */
 export interface BrandDrink {
   /** Brand name (e.g., "Starbucks") */
-  brand: string;
+  brand: BrandName;
   /** Drink name (e.g., "Caffè Americano") */
-  name: string;
+  name: DrinkName;
   /** Size label (e.g., "Grande") */
   size: string;
   /** Volume in milliliters */

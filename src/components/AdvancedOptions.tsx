@@ -1,14 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import SegmentedControl from '@/components/SegmentedControl';
+import { GRIND_MICRON_RANGES } from '@/engine/brew';
 import { useUnits } from '@/hooks/useUnits';
 import { TemperatureC } from '@/types/branded';
-import type { RoastLevel, GrindSize, ProcessingMethod, Altitude } from '@/types';
+import type { BrewMethod, RoastLevel, GrindSize, ProcessingMethod, Altitude } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Prop types
 // ---------------------------------------------------------------------------
 
 export interface AdvancedOptionsProps {
+  brewMethod: BrewMethod;
   roastLevel: RoastLevel;
   onRoastLevelChange: (r: RoastLevel) => void;
   grindSize: GrindSize;
@@ -68,6 +70,7 @@ const EFFECT_MAGNITUDE: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 export default function AdvancedOptions({
+  brewMethod,
   roastLevel,
   onRoastLevelChange,
   grindSize,
@@ -155,6 +158,15 @@ export default function AdvancedOptions({
             <p className="text-xs text-coffee-500 dark:text-coffee-300 mt-1">
               {EFFECT_MAGNITUDE.grind}
             </p>
+            <p className="text-xs text-coffee-400 dark:text-coffee-300 mt-0.5">
+              Particle size: {GRIND_MICRON_RANGES[grindSize]}
+            </p>
+            {brewMethod === 'cold-brew' && grindSize !== 'extra-coarse' && (
+              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1" role="alert">
+                ⚠️ Cold brew is typically made with extra-coarse grinds. Using a finer grind
+                may result in over-extraction and a gritty cup.
+              </p>
+            )}
           </fieldset>
 
           {/* Water Temperature */}
