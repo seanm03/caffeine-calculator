@@ -72,4 +72,47 @@ describe('BrandReference', () => {
     renderWithProviders(<BrandReference />);
     expect(screen.getByText(/showing \d+ of \d+ drinks/i)).toBeInTheDocument();
   });
+
+  // ── Sort interaction coverage ─────────────────────────────
+  it('sorts by brand when column header is clicked', () => {
+    renderWithProviders(<BrandReference />);
+    const brandHeader = screen.getByText('Brand');
+    fireEvent.click(brandHeader);
+    // After sorting by brand, the header should have aria-sort set
+    expect(brandHeader.closest('th')).toHaveAttribute('aria-sort', 'ascending');
+  });
+
+  // ── Branded-type search regression ────────────────────────
+  it('searches correctly with branded string types (Source, BrandName, ServingSize)', async () => {
+    renderWithProviders(<BrandReference />);
+    const searchInput = screen.getByPlaceholderText(/search/i);
+
+    // Search by branded BrandName — verifies .toLowerCase() works on branded strings
+    fireEvent.change(searchInput, { target: { value: 'Starbucks' } });
+    await waitFor(
+      () => {
+        expect(screen.getAllByText('Starbucks').length).toBeGreaterThan(0);
+      },
+      { timeout: 500 },
+    );
+
+    // Search by branded ServingSize — verifies .toLowerCase() works on branded strings
+    fireEvent.change(searchInput, { target: { value: 'Grande' } });
+    await waitFor(
+      () => {
+        expect(screen.getAllByText('Grande').length).toBeGreaterThan(0);
+      },
+      { timeout: 500 },
+    );
+
+    // Search by branded Source text — verifies no TypeScript narrowing issues
+    fireEvent.change(searchInput, { target: { value: 'Brand published' } });
+    await waitFor(
+      () => {
+        // Source text appears in table rows; verify results are non-empty
+        expect(screen.queryByText(/no drinks match/i)).not.toBeInTheDocument();
+      },
+      { timeout: 500 },
+    );
+  });
 });

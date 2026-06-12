@@ -61,7 +61,7 @@ export default function Calculator() {
   const [resultView, setResultView] = useState<ResultView>('result');
 
   return (
-    <div className="card max-w-2xl mx-auto space-y-8">
+    <div className="card mx-auto space-y-8">
       <BrewMethodSelector value={brewMethod} onChange={setBrewMethod} />
 
       <hr className="border-coffee-200 dark:border-coffee-700" />

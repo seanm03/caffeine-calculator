@@ -74,7 +74,7 @@ const SCIENTIFIC_REFERENCES: { author: string; year: number; title: string; doi?
 
 export default function MethodologyInfo() {
   return (
-    <div className="space-y-8 max-w-none md:max-w-prose">
+    <div className="space-y-8 max-w-none">
       {/* Section 1: How We Calculate Caffeine */}
       <section>
         <h2 className="text-xl font-bold text-coffee-800 dark:text-coffee-300 mb-3">
@@ -297,14 +297,14 @@ export default function MethodologyInfo() {
         <h2 className="text-xl font-bold text-coffee-800 dark:text-coffee-300 mb-3">
           🎯 Accuracy
         </h2>
-        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-5 text-sm leading-relaxed">
-          <p className="text-amber-800 dark:text-amber-200">
+        <div className="bg-coffee-50 dark:bg-coffee-800 border border-coffee-200 dark:border-coffee-700 rounded-xl p-5 text-sm leading-relaxed">
+          <p className="text-coffee-700 dark:text-coffee-100">
             Our estimates aim for <strong>±20% accuracy</strong> based on the
             variability found in specialty coffee by McCusker et al. (2003).
             Actual caffeine content depends on many variables including specific
             coffee origin, exact brewing technique, and individual bean characteristics.
           </p>
-          <p className="text-amber-700 dark:text-amber-300 mt-2">
+          <p className="text-coffee-700 dark:text-coffee-100 mt-2">
             This calculator is an <strong>estimation tool</strong>, not a medical
             device. For precise caffeine measurement, laboratory analysis is required.
           </p>

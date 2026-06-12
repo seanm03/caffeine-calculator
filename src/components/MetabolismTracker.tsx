@@ -82,10 +82,10 @@ const MetabolismTracker = memo(function MetabolismTracker() {
             aria-label="Custom daily safe caffeine limit in milligrams"
           />
         </div>
-        <div className="flex-1 min-w-[200px]">
+        <div className="flex-1 min-w-[200px] flex flex-col items-center">
           <label
             htmlFor="bedtime-hour"
-            className="block text-xs font-medium text-coffee-700 dark:text-coffee-200 mb-1"
+            className="block text-xs font-medium text-coffee-700 dark:text-coffee-200 mb-1 text-center"
           >
             Bedtime
           </label>
@@ -108,10 +108,10 @@ const MetabolismTracker = memo(function MetabolismTracker() {
             })}
           </select>
         </div>
-        <div className="flex-1 min-w-[200px]">
+        <div className="flex-1 min-w-[200px] flex flex-col items-end">
           <label
             htmlFor="sleep-threshold-mg"
-            className="block text-xs font-medium text-coffee-700 dark:text-coffee-200 mb-1"
+            className="block text-xs font-medium text-coffee-700 dark:text-coffee-200 mb-1 text-right"
           >
             Sleep Advisory Threshold (mg)
           </label>

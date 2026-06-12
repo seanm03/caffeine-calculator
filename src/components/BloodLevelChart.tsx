@@ -36,14 +36,15 @@ interface ChartDataPoint {
   time: Date;
 }
 
-/** Format hours as readable time of day. */
-function formatHour(hoursSinceStart: number, startTime: Date): string {
+/** Format hours as readable time of day.
+ *  Exported for testing — used internally as Recharts tickFormatter. */
+export function formatHour(hoursSinceStart: number, startTime: Date): string {
   const d = new Date(startTime.getTime() + hoursSinceStart * 3600000);
   return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 }
 
-/** Custom tooltip for chart data points. */
-function CustomTooltip({
+/** Custom tooltip for chart data points. Exported for testing. */
+export function CustomTooltip({
   active,
   payload,
   label,
@@ -106,7 +107,7 @@ const BloodLevelChart = memo(function BloodLevelChart({ entries, halfLifeHours }
 
   return (
     <div
-      className="w-full h-64 sm:h-72"
+      className="w-full h-64 sm:h-72 min-w-[200px] min-h-[100px]"
       role="img"
       aria-label={`Blood caffeine level chart. Current level: ${Math.round(currentLevel)} mg. Maximum level: ${Math.round(maxLevel)} mg.`}
     >

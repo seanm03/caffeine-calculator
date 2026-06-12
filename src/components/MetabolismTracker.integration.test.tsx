@@ -7,6 +7,7 @@
  */
 
 import { render, screen, fireEvent } from '@testing-library/react';
+import { act } from 'react';
 import { describe, it, expect } from 'vitest';
 import MetabolismTracker from '@/components/MetabolismTracker';
 import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
@@ -87,6 +88,47 @@ describe('MetabolismTracker Integration', () => {
   it('5. Half-life slider renders with default value', () => {
     renderTracker();
 
+    const slider = screen.getByRole('slider');
+    expect(slider).toBeInTheDocument();
+    expect(slider).toHaveValue('5');
+  });
+
+  it('7. Tab-switching resilience: rapid mount/unmount cycles do not lose context or crash', () => {
+    const { rerender } = render(
+      <CaffeineLogProvider>
+        <MetabolismTracker key="tracker-1" />
+      </CaffeineLogProvider>
+    );
+
+    // Log a drink while on the tracker tab
+    toggleLogForm();
+    fireEvent.change(caffeineInput(), { target: { value: '150' } });
+    fireEvent.change(screen.getByPlaceholderText(/morning pour-over/i), { target: { value: 'Tab Test Coffee' } });
+    fireEvent.click(screen.getByRole('button', { name: /log drink/i }));
+    expect(screen.getByText('Tab Test Coffee')).toBeInTheDocument();
+
+    // Cycle through rapid tab switches (4 tabs × 3 cycles = 12 switches)
+    const tabs = ['calculator', 'brands', 'methodology', 'tracker'];
+    for (let cycle = 0; cycle < 3; cycle++) {
+      for (const tab of tabs) {
+        act(() => {
+          rerender(
+            <CaffeineLogProvider>
+              {tab === 'tracker' ? (
+                <MetabolismTracker key={`tracker-${cycle}`} />
+              ) : (
+                <div key={`other-${cycle}-${tab}`}>Other Tab: {tab}</div>
+              )}
+            </CaffeineLogProvider>
+          );
+        });
+      }
+    }
+
+    // After cycling, the tracker tab should still show the logged drink
+    expect(screen.getByText('Tab Test Coffee')).toBeInTheDocument();
+
+    // Verify the half-life slider is still functional (no context loss)
     const slider = screen.getByRole('slider');
     expect(slider).toBeInTheDocument();
     expect(slider).toHaveValue('5');

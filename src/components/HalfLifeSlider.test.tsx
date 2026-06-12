@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import HalfLifeSlider from '@/components/HalfLifeSlider';
 import { assertA11y } from '@/test/axe';
@@ -22,15 +22,12 @@ describe('HalfLifeSlider', () => {
     expect(slider).toHaveAttribute('aria-label', 'Caffeine half-life: 5 hours');
   });
 
-  it('calls onChange when slider value changes', () => {
+  it('calls onChange with Hours value when slider value changes', () => {
     const onChange = vi.fn();
     render(<HalfLifeSlider halfLifeHours={Hours(5)} onChange={onChange} />);
     const slider = screen.getByRole('slider');
-    // Simulate a change event rather than a browser-native input event
-    // jsdom fires `change` on programmatic value change + dispatchEvent
-    slider.dispatchEvent(new Event('change', { bubbles: true }));
-    // Just check that the slider is interactive
-    expect(slider).toBeInstanceOf(HTMLInputElement);
+    fireEvent.change(slider, { target: { value: '3.5' } });
+    expect(onChange).toHaveBeenCalledWith(Hours(3.5));
   });
 
   it('has no accessibility violations', async () => {

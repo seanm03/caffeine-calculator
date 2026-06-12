@@ -16,32 +16,40 @@ import { ThemeProvider } from '@/hooks/useTheme';
 import { UnitProvider, useUnits } from '@/hooks/useUnits';
 import type { Tab } from '@/hooks/useHashTab';
 
-// ── Tab content registry ────────────────────────────────────────────────────
+// ── Tab content renderer ────────────────────────────────────────────────────
 
-const TAB_CONTENT: Record<Tab, ReactNode> = {
-  calculator: (
-    <TabPanel label="Calculator">
-      <CalculatorStateProvider>
-        <Calculator />
-      </CalculatorStateProvider>
-    </TabPanel>
-  ),
-  brands: (
-    <TabPanel label="Brand Reference" card>
-      <BrandReference />
-    </TabPanel>
-  ),
-  methodology: (
-    <TabPanel label="Methodology" card>
-      <MethodologyInfo />
-    </TabPanel>
-  ),
-  tracker: (
-    <TabPanel label="Caffeine Tracker">
-      <MetabolismTracker />
-    </TabPanel>
-  ),
-};
+/** Creates fresh React elements per tab to avoid reconciliation edge cases
+ *  from pre-created module-level elements reused across mount/unmount cycles. */
+function renderTab(tab: Tab): ReactNode {
+  switch (tab) {
+    case 'calculator':
+      return (
+        <TabPanel label="Calculator">
+          <CalculatorStateProvider>
+            <Calculator />
+          </CalculatorStateProvider>
+        </TabPanel>
+      );
+    case 'brands':
+      return (
+        <TabPanel label="Brand Reference" card>
+          <BrandReference />
+        </TabPanel>
+      );
+    case 'methodology':
+      return (
+        <TabPanel label="Methodology" card>
+          <MethodologyInfo />
+        </TabPanel>
+      );
+    case 'tracker':
+      return (
+        <TabPanel label="Caffeine Tracker">
+          <MetabolismTracker />
+        </TabPanel>
+      );
+  }
+}
 
 // ── App content (inner, with context available) ─────────────────────────────
 
@@ -60,7 +68,7 @@ function AppContent() {
 
       <main className="flex-1 max-w-2xl lg:max-w-5xl mx-auto w-full px-4 sm:px-6 py-8 space-y-6">
         <TabBar tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
-        {TAB_CONTENT[activeTab]}
+        <div key={activeTab}>{renderTab(activeTab)}</div>
       </main>
 
       <Footer />

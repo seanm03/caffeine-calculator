@@ -23,6 +23,7 @@ const BREW_METHODS: { value: BrewMethod | ''; label: string }[] = [
   { value: 'cold-brew', label: 'Cold Brew' },
   { value: 'turkish', label: 'Turkish' },
   { value: 'instant', label: 'Instant' },
+  { value: 'paper-filtered-immersion', label: 'Filter Immersion' },
 ];
 
 export default function DrinkLogForm({ onAdd }: DrinkLogFormProps) {

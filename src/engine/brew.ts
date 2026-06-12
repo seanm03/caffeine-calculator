@@ -90,7 +90,7 @@ export const GRIND_MULTIPLIERS: Record<string, [number, number]> = {
  * with specialty coffee industry standards (SCA cupping protocol at
  * 850 μm target) and Duke et al. (2025) grind size categorizations.
  *
- *   - Extra fine:  200–400 μm (Turkish, very fine espresso)
+ *   - Extra fine:  100–400 μm (Turkish, very fine espresso)
  *   - Fine:        400–600 μm (espresso, moka pot)
  *   - Medium:      600–800 μm (pour-over, drip, Aeropress)
  *   - Coarse:      800–1,000 μm (French press, cupping)
@@ -100,7 +100,7 @@ export const GRIND_MULTIPLIERS: Record<string, [number, number]> = {
  * @see Duke et al. (2025), Journal of Food Quality, 2405668
  */
 export const GRIND_MICRON_RANGES: Record<string, string> = {
-  'extra-fine': '200–400 μm',
+  'extra-fine': '100–400 μm',
   fine: '400–600 μm',
   medium: '600–800 μm',
   coarse: '800–1,000 μm',

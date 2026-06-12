@@ -17,9 +17,11 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov', 'html'],
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.test.*', 'src/test/**', 'src/vite-env.d.ts', 'src/main.tsx'],
-      // Stage 2/5: Bump from pass-current to next milestone. Staged trajectory to 75/65/80/75 pre-v1.0
-      thresholds: { statements: 40, branches: 35, functions: 55, lines: 40 },
+      exclude: ['src/**/*.test.*', 'src/test/**', 'src/vite-env.d.ts', 'src/main.tsx', 'src/types/index.ts'],
+      // Stage 4/5: 90/80/83/80. Funcs at 83% — remaining gaps in Recharts SVG
+      // callbacks (CustomTooltip, tickFormatters) and hook/provider internals
+      // that require browser-level rendering not available in jsdom.
+      thresholds: { statements: 90, branches: 80, functions: 83, lines: 80 },
     },
   },
 });

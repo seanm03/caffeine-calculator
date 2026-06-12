@@ -53,3 +53,11 @@ export const BrandName = (value: string): BrandName => value as BrandName;
 /** Drink product name (e.g., "Pike Place Roast"). */
 export type DrinkName = Branded<string, 'DrinkName'>;
 export const DrinkName = (value: string): DrinkName => value as DrinkName;
+
+/** Data source citation (e.g., "Brand published nutrition"). */
+export type Source = Branded<string, 'Source'>;
+export const Source = (value: string): Source => value as Source;
+
+/** Commercial serving size label (e.g., "Grande", "Medium"). */
+export type ServingSize = Branded<string, 'ServingSize'>;
+export const ServingSize = (value: string): ServingSize => value as ServingSize;

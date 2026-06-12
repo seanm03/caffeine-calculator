@@ -195,14 +195,16 @@ function persistSettings(settings: SettingsPayload): void {
 // ---------------------------------------------------------------------------
 
 export function CaffeineLogProvider({ children }: { children: React.ReactNode }) {
-  const { entries: initialEntries, error: initialError } = loadEntries();
-  const initialSettings = loadSettings();
-  const [entries, setEntries] = useState<CaffeineLogEntry[]>(initialEntries);
-  const [loadError, setLoadError] = useState<LoadError>(initialError);
-  const [halfLifeHours, setHalfLifeHoursState] = useState<Hours>(Hours(initialSettings.halfLifeHours));
-  const [customSafeLimitMg, setCustomSafeLimitMgState] = useState<CaffeineMg>(CaffeineMg(initialSettings.safeLimitMg));
-  const [bedtimeHour, setBedtimeHourState] = useState<number>(initialSettings.bedtimeHour);
-  const [customSleepThresholdMg, setCustomSleepThresholdMgState] = useState<CaffeineMg>(CaffeineMg(initialSettings.sleepThresholdMg));
+  const [initial] = useState(() => {
+    const { entries: initialEntries, error: initialError } = loadEntries();
+    return { entries: initialEntries, error: initialError, settings: loadSettings() };
+  });
+  const [entries, setEntries] = useState<CaffeineLogEntry[]>(initial.entries);
+  const [loadError, setLoadError] = useState<LoadError>(initial.error);
+  const [halfLifeHours, setHalfLifeHoursState] = useState<Hours>(Hours(initial.settings.halfLifeHours));
+  const [customSafeLimitMg, setCustomSafeLimitMgState] = useState<CaffeineMg>(CaffeineMg(initial.settings.safeLimitMg));
+  const [bedtimeHour, setBedtimeHourState] = useState<number>(initial.settings.bedtimeHour);
+  const [customSleepThresholdMg, setCustomSleepThresholdMgState] = useState<CaffeineMg>(CaffeineMg(initial.settings.sleepThresholdMg));
 
   // Persist entries to localStorage on every entries change
   useEffect(() => {

@@ -98,7 +98,8 @@ const HEATMAP_TEMPS = [70, 75, 80, 85, 90, 95, 100];
 // Custom Tooltip
 // ---------------------------------------------------------------------------
 
-function CustomTooltip({
+/** Custom tooltip for chart data points. Exported for testing. */
+export function SensitivityChartTooltip({
   active,
   payload,
   label,
@@ -224,9 +225,9 @@ const SensitivityCharts = memo(function SensitivityCharts({ currentParams, compa
           Caffeine by Brew Method
         </h4>
         <p className="text-xs text-coffee-500 dark:text-coffee-400 mb-4">
-          Comparing all 8 methods at your current coffee weight, species, and parameters
+          Comparing all 9 methods at your current coffee weight, species, and parameters
         </p>
-        <div className="w-full h-64 sm:h-72">
+        <div className="w-full h-64 sm:h-72 min-w-[200px] min-h-[100px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={brewMethodData}
@@ -257,7 +258,7 @@ const SensitivityCharts = memo(function SensitivityCharts({ currentParams, compa
                 domain={[0, Math.max(maxBrewMethodCaffeine * 1.15, 10)]}
                 tickFormatter={(v: number) => `${Math.round(v)}`}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<SensitivityChartTooltip />} />
               <Bar
                 dataKey="caffeineMg"
                 fill="#c67b4b"
@@ -284,7 +285,7 @@ const SensitivityCharts = memo(function SensitivityCharts({ currentParams, compa
         <p className="text-xs text-coffee-500 dark:text-coffee-400 mb-4">
           How caffeine scales with coffee weight (1–100g) using your current brew method
         </p>
-        <div className="w-full h-64 sm:h-72">
+        <div className="w-full h-64 sm:h-72 min-w-[200px] min-h-[100px]">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={weightData}
@@ -316,7 +317,7 @@ const SensitivityCharts = memo(function SensitivityCharts({ currentParams, compa
                 width={45}
                 tickFormatter={(v: number) => `${Math.round(v)}`}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<SensitivityChartTooltip />} />
               <Legend
                 wrapperStyle={{ fontSize: 12, color: '#8b7355' }}
               />
@@ -343,7 +344,7 @@ const SensitivityCharts = memo(function SensitivityCharts({ currentParams, compa
         <p className="text-xs text-coffee-500 dark:text-coffee-400 mb-4">
           How each parameter multiplier affects the total caffeine (100% = no adjustment)
         </p>
-        <div className="w-full h-72 sm:h-80">
+        <div className="w-full h-72 sm:h-80 min-w-[200px] min-h-[100px]">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
               <PolarGrid stroke="#8b7355" strokeOpacity={0.3} />

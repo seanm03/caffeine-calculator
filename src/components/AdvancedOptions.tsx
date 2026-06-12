@@ -167,6 +167,18 @@ export default function AdvancedOptions({
                 may result in over-extraction and a gritty cup.
               </p>
             )}
+            {brewMethod === 'espresso' && grindSize === 'extra-coarse' && (
+              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1" role="alert">
+                ⚠️ Espresso requires fine grinds for proper pressure resistance. An extra-coarse
+                grind will produce weak, under-extracted shots with little crema.
+              </p>
+            )}
+            {brewMethod === 'french-press' && grindSize === 'extra-fine' && (
+              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1" role="alert">
+                ⚠️ French press typically uses coarse grinds. Extra-fine grinds may slip through
+                the metal filter, producing a muddy, over-extracted cup.
+              </p>
+            )}
           </fieldset>
 
           {/* Water Temperature */}

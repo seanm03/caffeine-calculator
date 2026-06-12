@@ -5,7 +5,7 @@
  * These form the contract between engine outputs and rendering logic.
  */
 
-import type { CaffeineMg, WeightG, VolumeMl, TemperatureC, BrandName, DrinkName } from './branded';
+import type { CaffeineMg, WeightG, VolumeMl, TemperatureC, BrandName, DrinkName, Source, ServingSize } from './branded';
 
 /** Supported coffee brewing methods */
 export type BrewMethod =
@@ -111,12 +111,12 @@ export interface BrandDrink {
   /** Drink name (e.g., "Caffè Americano") */
   name: DrinkName;
   /** Size label (e.g., "Grande") */
-  size: string;
+  size: ServingSize;
   /** Volume in milliliters */
   volumeMl: VolumeMl;
   /** Caffeine content in milligrams */
   caffeineMg: CaffeineMg;
-  source: string;
+  source: Source;
   /** ISO date when the data was last verified */
   lastUpdated: string;
 }

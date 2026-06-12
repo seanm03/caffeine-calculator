@@ -111,7 +111,7 @@ describe('getAltitudeMultiplier', () => {
 });
 
 describe('getBrewMethodEfficiency', () => {
-  it('returns correct values for all 8 brew methods', () => {
+  it('returns correct values for all 9 brew methods', () => {
     expect(getBrewMethodEfficiency('espresso')).toBe(0.8);
     expect(getBrewMethodEfficiency('pour-over')).toBe(0.9);
     expect(getBrewMethodEfficiency('french-press')).toBe(0.92);
@@ -120,6 +120,7 @@ describe('getBrewMethodEfficiency', () => {
     expect(getBrewMethodEfficiency('cold-brew')).toBe(0.9);
     expect(getBrewMethodEfficiency('turkish')).toBe(0.92);
     expect(getBrewMethodEfficiency('instant')).toBe(1.0);
+    expect(getBrewMethodEfficiency('paper-filtered-immersion')).toBe(0.91);
   });
 });
 
