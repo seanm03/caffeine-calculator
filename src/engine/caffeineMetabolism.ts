@@ -37,7 +37,9 @@ import type { CaffeineLogEntry, BloodLevelPoint } from '@/types';
 /** Validate a single log entry has plausible values. */
 function isValidLogEntry(entry: CaffeineLogEntry): boolean {
   if (!entry || typeof entry !== 'object') return false;
-  if (!isValidNumber(entry.caffeineMg) || entry.caffeineMg < 0 || entry.caffeineMg > MAX_PLAUSIBLE_DOSE_MG) return false;
+  if (!isValidNumber(entry.caffeineMg)) return false;
+  if (entry.caffeineMg < 0) return false;
+  if (entry.caffeineMg > MAX_PLAUSIBLE_DOSE_MG) return false;
   if (typeof entry.timestamp !== 'string') return false;
   const ts = new Date(entry.timestamp);
   if (!isValidDate(ts)) return false;
@@ -206,11 +208,6 @@ export function computeDailySummary(
       }
     }
 
-    // Also sample at current time
-    if (currentLevel > peakLevel) {
-      peakLevel = currentLevel;
-      peakTime = now;
-    }
   }
 
   return {

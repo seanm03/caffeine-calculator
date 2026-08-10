@@ -88,6 +88,16 @@ describe('Calculator', () => {
     }, { timeout: 5000 });
   });
 
+  it('renders with a blend species carrying a robusta percentage', () => {
+    localStorage.setItem(
+      'coffee-calc-state',
+      JSON.stringify({ version: 1, state: { species: 'blend', robustaPercent: 60 } }),
+    );
+    renderCalculator();
+    // Blend is a valid species — the calculator still renders the Result view
+    expect(screen.getByRole('button', { name: 'Result' })).toHaveClass('bg-coffee-600');
+  });
+
   // ── Accessibility ────────────────────────────────────────────────
   it('has no accessibility violations', async () => {
     const { container } = renderCalculator();

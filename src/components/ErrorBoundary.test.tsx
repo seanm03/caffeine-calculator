@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import { type ErrorInfo, type ReactNode } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { assertA11y } from '@/test/axe';
@@ -9,6 +10,14 @@ function BrokenComponent({ shouldThrow }: { shouldThrow: boolean }) {
     throw new Error('Test explosion');
   }
   return <p>Everything is fine</p>;
+}
+
+/** Non-Error thrown value — exercises the generic fallback message branch. */
+class NonErrorException {}
+
+/** Component that throws a value without a `.message` property. */
+function ThrowsNonErrorException(): ReactNode {
+  throw new NonErrorException();
 }
 
 describe('ErrorBoundary', () => {
@@ -81,6 +90,27 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>,
     );
     expect(screen.getByRole('alert')).toBeInTheDocument();
+    spy.mockRestore();
+  });
+
+  it('shows the generic fallback message when the thrown value has no message', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    render(
+      <ErrorBoundary>
+        <ThrowsNonErrorException />
+      </ErrorBoundary>,
+    );
+    expect(screen.getByText('An unexpected error occurred.')).toBeInTheDocument();
+    spy.mockRestore();
+  });
+
+  it('handles componentDidCatch when componentStack is missing', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    // Exercise the defensive `componentStack ?? undefined` path directly.
+    const boundary = new ErrorBoundary({ children: null });
+    expect(() =>
+      boundary.componentDidCatch(new Error('No stack'), {} as ErrorInfo),
+    ).not.toThrow();
     spy.mockRestore();
   });
 

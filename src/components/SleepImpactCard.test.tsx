@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import SleepImpactCard from '@/components/SleepImpactCard';
+import * as caffeineMetabolism from '@/engine/caffeineMetabolism';
 import { assertA11y } from '@/test/axe';
 import { Hours, CaffeineMg } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
@@ -113,6 +114,27 @@ describe('SleepImpactCard', () => {
     const safeElement = screen.queryByText(/unlikely to affect sleep/i);
     // At least one should be present
     expect(safeByElement || safeElement).toBeTruthy();
+  });
+
+  it('formats time-until-safe in minutes when it is under an hour', () => {
+    const spy = vi
+      .spyOn(caffeineMetabolism, 'assessSleepImpact')
+      .mockReturnValue({
+        bedtimeLevel: CaffeineMg(55),
+        safeTime: new Date(),
+        isSafe: false,
+        hoursUntilSafe: 0.5,
+      });
+    render(
+      <SleepImpactCard
+        entries={[makeEntry()]}
+        halfLifeHours={Hours(5)}
+        bedtimeHour={22}
+      />,
+    );
+    // 0.5h → "30 min"
+    expect(screen.getByText(/estimated safe by/i)).toHaveTextContent(/30 min from now/i);
+    spy.mockRestore();
   });
 
   // ── Accessibility ──────────────────────────────────────────

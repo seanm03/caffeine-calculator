@@ -18,11 +18,13 @@ export default defineConfig({
       reporter: ['text', 'lcov', 'html'],
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/**/*.test.*', 'src/test/**', 'src/vite-env.d.ts', 'src/main.tsx', 'src/types/index.ts'],
-      // Stage 5: 90/85/85/80 — branches and functions raised after targeted
-      // tests for ResultsDisplay branch states, DrinkLogForm/MetabolismTracker
-      // handlers, useTheme OS-preference listener, branded unwrappers, and
-      // engine/utils validation helpers.
-      thresholds: { statements: 90, branches: 85, functions: 85, lines: 80 },
+      // Stage 10: 99/96/99/99 — raised after Coverage Stage 10
+      // (MethodologyInfo reference-link branches, caffeineCalculator
+      // invalid-input branches, caffeineMetabolism dead-code removal +
+      // bedtime projection + input-validation guards, SensitivityCharts
+      // flat-heatmap branch + dead `?? 0` guard removal). All four targets
+      // now 100% branches. Prior stage: 97/93/97/98.
+      thresholds: { statements: 99, branches: 96, functions: 99, lines: 99 },
     },
   },
 });

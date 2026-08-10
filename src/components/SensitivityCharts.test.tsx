@@ -144,6 +144,23 @@ describe('SensitivityCharts', () => {
     expect(mgLabels.length).toBeGreaterThanOrEqual(2);
   });
 
+  it('renders a flat heatmap color when all caffeine values are equal', () => {
+    // Invalid coffee weight (0) → every heatmap cell computes to 0 mg, so
+    // heatmapMin === heatmapMax and heatmapColor returns the flat fallback.
+    const zeroParams: BrewingParameters = { ...defaultParams, coffeeWeightG: WeightG(0) };
+    render(<SensitivityCharts currentParams={zeroParams} />);
+    const table = screen.getByRole('table', { name: /grind size and temperature interaction/i });
+    const cells = table.querySelectorAll('td[title]');
+    expect(cells.length).toBeGreaterThan(0);
+
+    const firstColor = (cells[0] as HTMLElement).style.backgroundColor;
+    expect(firstColor).toBeTruthy();
+    // Every cell uses the same flat fallback color (heatmapMin === heatmapMax)
+    cells.forEach((cell) => {
+      expect((cell as HTMLElement).style.backgroundColor).toBe(firstColor);
+    });
+  });
+
   // ── Decaf affects all views ────────────────────────────────
   it('renders with decaf params without error', () => {
     const decafParams: BrewingParameters = { ...defaultParams, isDecaf: true };

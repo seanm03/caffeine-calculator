@@ -224,4 +224,36 @@ describe('useCalculatorState', () => {
     });
     expect(result.current.waterTemperatureC).toBe(93);
   });
+
+  it('changes grind size via setGrindSize', () => {
+    const { result } = renderHook(() => useCalculatorState(), { wrapper });
+    act(() => {
+      result.current.setGrindSize('coarse');
+    });
+    expect(result.current.grindSize).toBe('coarse');
+  });
+
+  it('changes processing method via setProcessingMethod', () => {
+    const { result } = renderHook(() => useCalculatorState(), { wrapper });
+    act(() => {
+      result.current.setProcessingMethod('natural');
+    });
+    expect(result.current.processingMethod).toBe('natural');
+  });
+
+  it('changes altitude via setAltitude', () => {
+    const { result } = renderHook(() => useCalculatorState(), { wrapper });
+    act(() => {
+      result.current.setAltitude('high');
+    });
+    expect(result.current.altitude).toBe('high');
+  });
+
+  it('clamps water volume above 5000 to 5000', () => {
+    const { result } = renderHook(() => useCalculatorState(), { wrapper });
+    act(() => {
+      result.current.setWaterVolumeMl(VolumeMl(9000));
+    });
+    expect(result.current.waterVolumeMl).toBe(5000);
+  });
 });

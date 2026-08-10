@@ -88,7 +88,12 @@ const BREW_METHOD_EFFICIENCY_INFO: { method: BrewMethod; type: string; highlight
   { method: 'paper-filtered-immersion', type: 'Immersion + paper filtration', highlighted: true },
 ];
 
-export default function MethodologyInfo() {
+interface MethodologyInfoProps {
+  /** Scientific references to display; defaults to the curated citation list. */
+  references?: typeof SCIENTIFIC_REFERENCES;
+}
+
+export default function MethodologyInfo({ references = SCIENTIFIC_REFERENCES }: MethodologyInfoProps) {
   return (
     <div className="space-y-8 max-w-none">
       {/* Section 1: How We Calculate Caffeine */}
@@ -236,7 +241,7 @@ export default function MethodologyInfo() {
         </h2>
         <div className="bg-coffee-50 dark:bg-coffee-800 border border-coffee-200 dark:border-coffee-700 rounded-xl overflow-hidden">
           <ul className="divide-y divide-coffee-200 dark:divide-coffee-700 text-sm">
-            {SCIENTIFIC_REFERENCES.map((ref) => (
+            {references.map((ref) => (
               <li key={`${ref.author}-${ref.year}`} className="px-5 py-3">
                 <p className="text-coffee-800 dark:text-coffee-100 font-medium">
                   {ref.author} ({ref.year})

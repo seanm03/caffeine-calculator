@@ -19,7 +19,7 @@ import {
 import { DAILY_SAFE_LIMIT_MG } from '@/engine/metabolism';
 import { DECAF_CAFFEINE_MG_PER_G } from '@/engine/species';
 import { CaffeineMg, WeightG, VolumeMl, TemperatureC } from '@/types/branded';
-import type { BrewingParameters, BrewMethod } from '@/types';
+import type { BrewingParameters, BrewMethod, Species } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Individual lookup function tests
@@ -54,6 +54,11 @@ describe('getSpeciesCaffeine', () => {
 
   it('returns 0.3 for decaf (via DECAF_CAFFEINE_MG_PER_G)', () => {
     expect(DECAF_CAFFEINE_MG_PER_G).toBe(0.3);
+  });
+
+  it('returns 0 for an invalid/empty species', () => {
+    expect(getSpeciesCaffeine(undefined as unknown as Species)).toBe(0);
+    expect(getSpeciesCaffeine('' as Species)).toBe(0);
   });
 });
 
@@ -312,6 +317,15 @@ describe('calculateCaffeine', () => {
     const result = calculateCaffeine(params);
 
     expect(result.totalCaffeineMg).toBe(0);
+  });
+
+  it('Edge case: null/undefined params → zero result', () => {
+    const result = calculateCaffeine(null as unknown as BrewingParameters);
+
+    expect(result.totalCaffeineMg).toBe(0);
+    expect(result.dailyLimitPercent).toBe(0);
+    expect(result.equivalentCups).toBe(0);
+    expect(result.breakdown.baseCaffeineMg).toBe(0);
   });
 
   it('Edge case: missing optional params → uses defaults correctly, no NaN', () => {

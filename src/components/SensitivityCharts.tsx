@@ -364,10 +364,12 @@ const SensitivityCharts = memo(function SensitivityCharts({ currentParams, compa
                     {GRIND_LABELS[grind]}
                   </td>
                   {HEATMAP_TEMPS.map((temp) => {
+                    // heatmapData is built from ALL_GRIND_SIZES × HEATMAP_TEMPS, so
+                    // every cell rendered here is guaranteed to have a matching entry.
                     const cell = heatmapData.find(
                       (d) => d.grind === GRIND_LABELS[grind] && d.temp === temp,
-                    );
-                    const mg = cell?.caffeineMg ?? 0;
+                    )!;
+                    const mg = cell.caffeineMg;
                     const isLight = mg > (heatmapMin + heatmapMax) / 2;
                     return (
                       <td

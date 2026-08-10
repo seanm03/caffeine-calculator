@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import MetabolismTracker from '@/components/MetabolismTracker';
 import { CaffeineLogProvider } from '@/hooks/useCaffeineLog';
 import { assertA11y } from '@/test/axe';
@@ -10,6 +10,16 @@ vi.mock('@/utils/csvExport', async (importOriginal) => {
   return { ...actual, exportEntriesToCsv: vi.fn() };
 });
 
+// Controllable storageAvailable mock so the quota/unavailable load-error
+// variants can be simulated (jsdom localStorage never throws).
+const { mockStorageAvailable } = vi.hoisted(() => ({
+  mockStorageAvailable: vi.fn(() => ({ available: true, quotaExceeded: false })),
+}));
+
+vi.mock('@/utils/storageAvailable', () => ({
+  storageAvailable: mockStorageAvailable,
+}));
+
 function renderTracker() {
   return render(
     <CaffeineLogProvider>
@@ -17,6 +27,11 @@ function renderTracker() {
     </CaffeineLogProvider>
   );
 }
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  mockStorageAvailable.mockReturnValue({ available: true, quotaExceeded: false });
+});
 
 /** Seed today's drink log in localStorage with one entry. */
 function seedEntries() {
@@ -113,5 +128,41 @@ describe('MetabolismTracker', () => {
     localStorage.setItem('coffee-calc-logs', '{invalid json');
     renderTracker();
     expect(screen.getByText(/could not load saved data/i)).toBeInTheDocument();
+  });
+
+  it('shows the storage-full banner when the storage quota is exceeded', () => {
+    mockStorageAvailable.mockReturnValue({ available: false, quotaExceeded: true });
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('QuotaExceededError');
+    });
+    renderTracker();
+    expect(screen.getByText('Storage full')).toBeInTheDocument();
+  });
+
+  it('shows the storage-unavailable banner when storage is not accessible', () => {
+    mockStorageAvailable.mockReturnValue({ available: false, quotaExceeded: false });
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('SecurityError');
+    });
+    renderTracker();
+    expect(screen.getByText('Storage unavailable')).toBeInTheDocument();
+  });
+
+  it('ignores non-numeric input for the daily safe limit', () => {
+    renderTracker();
+    const input = screen.getByLabelText(/custom daily safe caffeine limit/i);
+    fireEvent.change(input, { target: { value: '350' } });
+    expect(input).toHaveValue(350);
+    fireEvent.change(input, { target: { value: 'abc' } });
+    expect(input).toHaveValue(350);
+  });
+
+  it('ignores non-numeric input for the sleep advisory threshold', () => {
+    renderTracker();
+    const input = screen.getByLabelText(/custom sleep advisory caffeine threshold/i);
+    fireEvent.change(input, { target: { value: '75' } });
+    expect(input).toHaveValue(75);
+    fireEvent.change(input, { target: { value: 'xyz' } });
+    expect(input).toHaveValue(75);
   });
 });

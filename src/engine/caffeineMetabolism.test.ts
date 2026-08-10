@@ -10,6 +10,7 @@ import {
   computeBloodLevel,
   generateBloodLevelCurve,
   computeDailySummary,
+  computeBedtimeLevel,
   timeUntilBelow,
 } from '@/engine/caffeineMetabolism';
 import { CaffeineMg, Hours } from '@/types/branded';
@@ -265,6 +266,26 @@ describe('timeUntilBelow', () => {
 });
 
 // ---------------------------------------------------------------------------
+// computeBedtimeLevel tests
+// ---------------------------------------------------------------------------
+
+describe('computeBedtimeLevel', () => {
+  it('returns 0 for empty entries', () => {
+    const level = computeBedtimeLevel([], Hours(5), 22, 0, new Date('2026-08-10T20:00:00'));
+    expect(level).toBe(0);
+  });
+
+  it("projects bedtime to the next day when today's bedtime has already passed", () => {
+    // now = 23:30 — the 22:00 bedtime has already passed today
+    const now = new Date('2026-08-10T23:30:00');
+    const dose = makeEntry('1', new Date(now.getTime() - 60 * 60 * 1000), 100);
+    const level = computeBedtimeLevel([dose], Hours(5), 22, 0, now);
+    // Bedtime projects to 2026-08-11T22:00 → dose decayed ~23.5h → still > 0
+    expect(level).toBeGreaterThan(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Edge Case & Input Validation Tests
 // ---------------------------------------------------------------------------
 
@@ -333,6 +354,16 @@ describe('computeBloodLevel — edge cases', () => {
     expect(level).toBe(0);
   });
 
+  it('skips an entry with a non-string timestamp', () => {
+    const entry: CaffeineLogEntry = {
+      id: '1',
+      timestamp: 1234567890 as unknown as string,
+      caffeineMg: CaffeineMg(100),
+    };
+    const level = computeBloodLevel([entry], new Date());
+    expect(level).toBe(0);
+  });
+
   it('handles nullish entry by skipping gracefully', () => {
     const level = computeBloodLevel([null as unknown as CaffeineLogEntry], new Date());
     expect(level).toBe(0);
@@ -364,6 +395,12 @@ describe('computeBloodLevel — edge cases', () => {
     expect(level).toBeCloseTo(2000, 0);
   });
 
+  it('skips an entry whose dose exceeds the plausible maximum (> 2000mg)', () => {
+    const entry = makeEntry('1', hoursAgo(5), 3000);
+    const level = computeBloodLevel([entry], new Date());
+    expect(level).toBe(0);
+  });
+
   it('returns effectively zero after many half-lives (24h tail)', () => {
     const dose = makeEntry('1', hoursAgo(24), 400);
     const level = computeBloodLevel([dose], new Date());
@@ -379,11 +416,24 @@ describe('computeBloodLevel — edge cases', () => {
     // At or beyond 120h threshold — level should be negligible (< 0.001 mg)
     expect(level).toBeLessThan(0.001);
   });
+
+  it('skips doses older than 120h entirely (elapsed-time guard)', () => {
+    const dose = makeEntry('1', hoursAgo(121), 400);
+    const level = computeBloodLevel([dose], new Date());
+    // elapsedHours = 121 > 120 → the dose is skipped entirely
+    expect(level).toBe(0);
+  });
 });
 
 describe('generateBloodLevelCurve — edge cases', () => {
   it('handles null doses by returning empty curve', () => {
     const curve = generateBloodLevelCurve(null as unknown as readonly CaffeineLogEntry[]);
+    expect(curve.length).toBeGreaterThan(0);
+    expect(curve.every((p) => p.caffeineMg === 0)).toBe(true);
+  });
+
+  it('uses the default window when doses are invalid and windowHours is invalid', () => {
+    const curve = generateBloodLevelCurve(null as unknown as readonly CaffeineLogEntry[], Hours(5), Hours(NaN));
     expect(curve.length).toBeGreaterThan(0);
     expect(curve.every((p) => p.caffeineMg === 0)).toBe(true);
   });
@@ -414,6 +464,15 @@ describe('generateBloodLevelCurve — edge cases', () => {
     const curve = generateBloodLevelCurve([dose], Hours(5), Hours(336)); // 2 weeks
     // Should be capped to 168h: 168 / 0.25 + 1 ≈ 673 points
     expect(curve.length).toBeLessThanOrEqual(700);
+  });
+
+  it('stops sampling at the window end when windowHours is not a whole interval', () => {
+    const dose = makeEntry('1', hoursAgo(2), 100);
+    // 1.3h window with a 0.25h sampling interval → the final sample would
+    // overshoot the window end, so the loop breaks before pushing it
+    const curve = generateBloodLevelCurve([dose], Hours(5), Hours(1.3));
+    expect(curve.length).toBe(6); // samples at 0, 0.25, ..., 1.25h
+    expect(curve[curve.length - 1].hoursSinceStart).toBeLessThanOrEqual(1.3);
   });
 
   it('handles single entry with very large dose', () => {
@@ -477,6 +536,15 @@ describe('computeDailySummary — edge cases', () => {
     const summary = computeDailySummary([dose1, dose2], Hours(5), now);
     expect(summary.totalToday).toBe(300);
     expect(summary.peakLevel).toBeGreaterThanOrEqual(300);
+  });
+
+  it('keeps the peak at the large old dose when a small late dose does not exceed it', () => {
+    const bigOld = makeEntry('1', hoursAgo(100), 100);
+    const tinyRecent = makeEntry('2', hoursAgo(1), 0.5);
+    const summary = computeDailySummary([bigOld, tinyRecent], Hours(5));
+    // Peak is sampled right after the 100mg dose; the tiny late dose stays below it
+    expect(summary.peakLevel).toBe(100);
+    expect(summary.peakTime).not.toBeNull();
   });
 });
 

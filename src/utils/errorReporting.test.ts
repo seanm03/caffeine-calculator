@@ -5,7 +5,7 @@ vi.hoisted(() => {
   vi.stubEnv('VITE_ERROR_REPORTING_ENDPOINT', 'https://errors.example.com/report');
 });
 
-import { reportError } from '@/utils/errorReporting';
+import { reportError, reportErrorWithComponentStack } from '@/utils/errorReporting';
 
 // ── Mocks ──────────────────────────────────────────────────────────────────
 
@@ -144,5 +144,34 @@ describe('reportError', () => {
 
     // Must not throw — the catch block silently swallows the rejected promise
     expect(() => reportError(error)).not.toThrow();
+  });
+});
+
+describe('reportErrorWithComponentStack', () => {
+  it('includes componentStack in extra when provided', async () => {
+    const error = new Error('Stacked error');
+    reportErrorWithComponentStack(error, 'at Foo (Bar.tsx:10:5)');
+
+    const payload = await parseBeaconBlob(mockSendBeacon.mock.calls[0]);
+    expect(payload.extra).toEqual({ componentStack: 'at Foo (Bar.tsx:10:5)' });
+  });
+
+  it('omits componentStack when not provided', async () => {
+    const error = new Error('Bare error');
+    reportErrorWithComponentStack(error);
+
+    const payload = await parseBeaconBlob(mockSendBeacon.mock.calls[0]);
+    expect(payload.extra).toEqual({});
+  });
+
+  it('includes extra context alongside componentStack', async () => {
+    const error = new Error('Contextual stack');
+    reportErrorWithComponentStack(error, 'at Baz (Qux.tsx:3:1)', { source: 'test' });
+
+    const payload = await parseBeaconBlob(mockSendBeacon.mock.calls[0]);
+    expect(payload.extra).toEqual({
+      source: 'test',
+      componentStack: 'at Baz (Qux.tsx:3:1)',
+    });
   });
 });

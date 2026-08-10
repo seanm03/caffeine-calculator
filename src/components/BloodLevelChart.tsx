@@ -104,7 +104,9 @@ const BloodLevelChart = memo(function BloodLevelChart({ entries, halfLifeHours }
   }
 
   const maxLevel = Math.max(...data.map((d) => d.caffeineMg), DAILY_SAFE_LIMIT_MG);
-  const currentLevel = data.length > 0 ? data[data.length - 1]?.caffeineMg ?? 0 : 0;
+  // data.length > 0 is guaranteed here (empty data early-returns above), so the
+  // last point always exists — no defensive `?: 0` / `?? 0` fallbacks needed.
+  const currentLevel = data[data.length - 1].caffeineMg;
 
   return (
     <div

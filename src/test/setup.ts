@@ -51,13 +51,17 @@ console.error = (...args: unknown[]) => {
 };
 
 // ── Recharts ResponsiveContainer mock ──────────────────────────────
-// Provides fixed dimensions in test environments where layout is unavailable.
+// jsdom has no layout engine, so the real ResponsiveContainer's
+// ResizeObserver-based sizing never fires. Delegate to the real component
+// with fixed numeric dimensions instead of a plain div: the real component
+// then supplies width/height through Recharts' context, so chart axes render
+// their ticks and axis tickFormatters become coverable in tests.
 // Uses React.createElement instead of JSX because this file is .ts (not .tsx).
 vi.mock('recharts', async (importOriginal) => {
   const actual = await importOriginal<typeof import('recharts')>();
   return {
     ...actual,
-    ResponsiveContainer: ({ children }: { children: React.ReactNode }) =>
-      React.createElement('div', { style: { width: 500, height: 300 } }, children),
+    ResponsiveContainer: (props: React.ComponentProps<typeof actual.ResponsiveContainer>) =>
+      React.createElement(actual.ResponsiveContainer, { ...props, width: 500, height: 300 }),
   };
 });
