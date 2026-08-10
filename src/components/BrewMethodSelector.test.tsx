@@ -9,7 +9,7 @@ describe('BrewMethodSelector', () => {
     expect(screen.getByText('Espresso')).toBeInTheDocument();
     expect(screen.getByText('Pour Over')).toBeInTheDocument();
     expect(screen.getByText('French Press')).toBeInTheDocument();
-    expect(screen.getByText('Aeropress')).toBeInTheDocument();
+    expect(screen.getByText('AeroPress')).toBeInTheDocument();
     expect(screen.getByText('Moka Pot')).toBeInTheDocument();
     expect(screen.getByText('Cold Brew')).toBeInTheDocument();
     expect(screen.getByText('Turkish')).toBeInTheDocument();

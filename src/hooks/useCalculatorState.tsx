@@ -50,6 +50,27 @@ interface CalculatorStateContextValue extends CalculatorState {
 
 const [useCalculatorStateCtx, CalculatorStateContextProvider] = createCtxWithName<CalculatorStateContextValue>('CalculatorStateContext');
 
+/**
+ * Build a complete CalculatorState from a partial persisted state, filling any
+ * missing fields with defaults via per-field `??` fallback semantics.
+ * An empty object yields the full default state.
+ */
+function withDefaults(p: Partial<CalculatorState> = {}): CalculatorState {
+  return {
+    brewMethod: p.brewMethod ?? DEFAULT_PARAMS.brewMethod,
+    coffeeWeightG: WeightG(p.coffeeWeightG ?? DEFAULT_PARAMS.coffeeWeightG),
+    waterVolumeMl: VolumeMl(p.waterVolumeMl ?? DEFAULT_PARAMS.waterVolumeMl),
+    species: p.species ?? DEFAULT_PARAMS.species,
+    isDecaf: p.isDecaf ?? false,
+    robustaPercent: p.robustaPercent ?? DEFAULT_PARAMS.robustaPercent,
+    roastLevel: p.roastLevel ?? DEFAULT_PARAMS.roastLevel,
+    grindSize: p.grindSize ?? DEFAULT_PARAMS.grindSize,
+    waterTemperatureC: TemperatureC(p.waterTemperatureC ?? DEFAULT_PARAMS.waterTemperatureC),
+    processingMethod: p.processingMethod ?? DEFAULT_PARAMS.processingMethod,
+    altitude: p.altitude ?? DEFAULT_PARAMS.altitude,
+  };
+}
+
 function getInitialState(): CalculatorState {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -57,43 +78,14 @@ function getInitialState(): CalculatorState {
       const payload = JSON.parse(saved) as PersistedPayload;
       // Version check: discard payloads with mismatched version
       if (payload.version !== STORAGE_VERSION) {
-        return getDefaults();
+        return withDefaults();
       }
-      const p = payload.state;
-      return {
-        brewMethod: p.brewMethod ?? DEFAULT_PARAMS.brewMethod,
-        coffeeWeightG: WeightG(p.coffeeWeightG ?? DEFAULT_PARAMS.coffeeWeightG),
-        waterVolumeMl: VolumeMl(p.waterVolumeMl ?? DEFAULT_PARAMS.waterVolumeMl),
-        species: p.species ?? DEFAULT_PARAMS.species,
-        isDecaf: p.isDecaf ?? false,
-        robustaPercent: p.robustaPercent ?? DEFAULT_PARAMS.robustaPercent,
-        roastLevel: p.roastLevel ?? DEFAULT_PARAMS.roastLevel,
-        grindSize: p.grindSize ?? DEFAULT_PARAMS.grindSize,
-        waterTemperatureC: TemperatureC(p.waterTemperatureC ?? DEFAULT_PARAMS.waterTemperatureC),
-        processingMethod: p.processingMethod ?? DEFAULT_PARAMS.processingMethod,
-        altitude: p.altitude ?? DEFAULT_PARAMS.altitude,
-      };
+      return withDefaults(payload.state);
     }
   } catch {
     // Ignore parse errors, fall through to defaults
   }
-  return getDefaults();
-}
-
-function getDefaults(): CalculatorState {
-  return {
-    brewMethod: DEFAULT_PARAMS.brewMethod,
-    coffeeWeightG: WeightG(DEFAULT_PARAMS.coffeeWeightG),
-    waterVolumeMl: VolumeMl(DEFAULT_PARAMS.waterVolumeMl),
-    species: DEFAULT_PARAMS.species,
-    isDecaf: false,
-    robustaPercent: DEFAULT_PARAMS.robustaPercent,
-    roastLevel: DEFAULT_PARAMS.roastLevel,
-    grindSize: DEFAULT_PARAMS.grindSize,
-    waterTemperatureC: TemperatureC(DEFAULT_PARAMS.waterTemperatureC),
-    processingMethod: DEFAULT_PARAMS.processingMethod,
-    altitude: DEFAULT_PARAMS.altitude,
-  };
+  return withDefaults();
 }
 
 /** Persist state to localStorage with versioning, silently failing on error. */

@@ -16,7 +16,7 @@ import {
   getGrindMultiplier,
   buildBreakdown,
 } from '@/engine/caffeineCalculator';
-import { DAILY_SAFE_LIMIT_MG, SPECIES_CAFFEINE } from '@/engine/constants';
+import { DAILY_SAFE_LIMIT_MG, DECAF_CAFFEINE_MG_PER_G } from '@/engine/constants';
 import { CaffeineMg, WeightG, VolumeMl, TemperatureC } from '@/types/branded';
 import type { BrewingParameters, BrewMethod } from '@/types';
 
@@ -51,8 +51,8 @@ describe('getSpeciesCaffeine', () => {
     expect(getSpeciesCaffeine('blend', 30)).toBeCloseTo(14.4, 5);
   });
 
-  it('returns 0.3 for decaf (via SPECIES_CAFFEINE lookup)', () => {
-    expect(SPECIES_CAFFEINE.decaf).toBe(0.3);
+  it('returns 0.3 for decaf (via DECAF_CAFFEINE_MG_PER_G)', () => {
+    expect(DECAF_CAFFEINE_MG_PER_G).toBe(0.3);
   });
 });
 

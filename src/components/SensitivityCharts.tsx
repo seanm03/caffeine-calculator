@@ -2,7 +2,7 @@
  * SensitivityCharts — Caffeine visualization charts using Recharts.
  *
  * Provides four analysis views:
- * 1. Bar chart comparing caffeine across all 8 brew methods at current parameters
+ * 1. Bar chart comparing caffeine across all 9 brew methods at current parameters
  * 2. Line chart showing caffeine vs. coffee weight (1–100g range)
  * 3. Radar chart showing parameter contribution multipliers
  * 4. Heatmap for grind × temperature interactions
@@ -28,8 +28,9 @@ import {
   Legend,
 } from 'recharts';
 import { calculateCaffeine } from '@/engine/caffeineCalculator';
+import { ALL_BREW_METHODS, BREW_METHOD_LABELS } from '@/engine/constants';
 import { WeightG, TemperatureC } from '@/types/branded';
-import type { BrewMethod, BrewingParameters, CaffeineResult, GrindSize } from '@/types';
+import type { BrewingParameters, CaffeineResult, GrindSize } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -45,30 +46,6 @@ interface SensitivityChartsProps {
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-
-const ALL_BREW_METHODS: BrewMethod[] = [
-  'espresso',
-  'pour-over',
-  'french-press',
-  'aeropress',
-  'moka-pot',
-  'cold-brew',
-  'turkish',
-  'instant',
-  'paper-filtered-immersion',
-];
-
-const BREW_METHOD_LABELS: Record<BrewMethod, string> = {
-  espresso: 'Espresso',
-  'pour-over': 'Pour-Over',
-  'french-press': 'French Press',
-  aeropress: 'AeroPress',
-  'moka-pot': 'Moka Pot',
-  'cold-brew': 'Cold Brew',
-  turkish: 'Turkish',
-  instant: 'Instant',
-  'paper-filtered-immersion': 'Filter Immersion',
-};
 
 const COFFEE_WEIGHT_RANGE = {
   min: 1,

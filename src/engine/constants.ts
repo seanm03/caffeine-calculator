@@ -8,9 +8,11 @@
  * @module constants
  */
 
-export { SPECIES_CAFFEINE } from '@/engine/species';
+export { SPECIES_CAFFEINE, DECAF_CAFFEINE_MG_PER_G } from '@/engine/species';
 export {
+  ALL_BREW_METHODS,
   BREW_METHOD_EFFICIENCY,
+  BREW_METHOD_LABELS,
   GRIND_MULTIPLIERS,
   getTemperatureMultiplier,
   PROCESSING_MULTIPLIERS,

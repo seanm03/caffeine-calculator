@@ -44,6 +44,41 @@ export const BREW_METHOD_EFFICIENCY: Record<BrewMethod, number> = {
   'paper-filtered-immersion': 0.91,
 };
 
+/**
+ * Canonical display labels for each brew method, shared across the UI.
+ * Single source of truth — components import this instead of re-declaring
+ * their own label maps.
+ */
+export const BREW_METHOD_LABELS: Record<BrewMethod, string> = {
+  espresso: 'Espresso',
+  'pour-over': 'Pour Over',
+  'french-press': 'French Press',
+  aeropress: 'AeroPress',
+  'moka-pot': 'Moka Pot',
+  'cold-brew': 'Cold Brew',
+  turkish: 'Turkish',
+  instant: 'Instant',
+  'paper-filtered-immersion': 'Filter Immersion',
+};
+
+/**
+ * Canonical ordered list of all brew methods, shared across the UI.
+ * Single source of truth — components import this instead of re-declaring
+ * their own orderings (which must stay in this order to preserve keyboard
+ * navigation, dropdown order, and chart rendering order).
+ */
+export const ALL_BREW_METHODS: BrewMethod[] = [
+  'espresso',
+  'pour-over',
+  'french-press',
+  'aeropress',
+  'moka-pot',
+  'cold-brew',
+  'turkish',
+  'instant',
+  'paper-filtered-immersion',
+];
+
 // ---------------------------------------------------------------------------
 // Grind size multipliers
 // ---------------------------------------------------------------------------

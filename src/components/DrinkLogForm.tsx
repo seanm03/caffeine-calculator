@@ -6,7 +6,12 @@
  */
 
 import { useState, useCallback } from 'react';
-import { MAX_PLAUSIBLE_COFFEE_WEIGHT_G, MAX_PLAUSIBLE_DOSE_MG } from '@/engine/constants';
+import {
+  ALL_BREW_METHODS,
+  BREW_METHOD_LABELS,
+  MAX_PLAUSIBLE_COFFEE_WEIGHT_G,
+  MAX_PLAUSIBLE_DOSE_MG,
+} from '@/engine/constants';
 import { CaffeineMg, WeightG, VolumeMl } from '@/types/branded';
 import type { CaffeineLogEntry, BrewMethod } from '@/types';
 
@@ -14,17 +19,9 @@ interface DrinkLogFormProps {
   onAdd: (entry: Omit<CaffeineLogEntry, 'id'>) => void;
 }
 
-const BREW_METHODS: { value: BrewMethod | ''; label: string }[] = [
+const BREW_METHOD_OPTIONS: { value: BrewMethod | ''; label: string }[] = [
   { value: '', label: '— Select —' },
-  { value: 'espresso', label: 'Espresso' },
-  { value: 'pour-over', label: 'Pour-Over' },
-  { value: 'french-press', label: 'French Press' },
-  { value: 'aeropress', label: 'AeroPress' },
-  { value: 'moka-pot', label: 'Moka Pot' },
-  { value: 'cold-brew', label: 'Cold Brew' },
-  { value: 'turkish', label: 'Turkish' },
-  { value: 'instant', label: 'Instant' },
-  { value: 'paper-filtered-immersion', label: 'Filter Immersion' },
+  ...ALL_BREW_METHODS.map((method) => ({ value: method, label: BREW_METHOD_LABELS[method] })),
 ];
 
 export default function DrinkLogForm({ onAdd }: DrinkLogFormProps) {
@@ -124,7 +121,7 @@ export default function DrinkLogForm({ onAdd }: DrinkLogFormProps) {
             onChange={(e) => setBrewMethod(e.target.value as BrewMethod | '')}
             className="input-coffee text-sm"
           >
-            {BREW_METHODS.map((m) => (
+            {BREW_METHOD_OPTIONS.map((m) => (
               <option key={m.value} value={m.value}>
                 {m.label}
               </option>

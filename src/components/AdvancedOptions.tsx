@@ -57,7 +57,10 @@ const ALTITUDE_OPTIONS: { value: Altitude; label: string }[] = [
 // Effect magnitude help text (★ = weak, ★★★★★ = strong)
 // ---------------------------------------------------------------------------
 
-const EFFECT_MAGNITUDE: Record<string, string> = {
+/** Advanced-option parameter keys that carry effect-magnitude help text. */
+type EffectMagnitudeKey = 'roast' | 'grind' | 'temperature' | 'processing' | 'altitude';
+
+const EFFECT_MAGNITUDE: Record<EffectMagnitudeKey, string> = {
   roast: '★★★ Moderate — Light roasts retain ~5% more caffeine; dark roasts lose ~10%',
   grind: '★★★★ Strong — Finer grinds increase surface area and extraction rate',
   temperature: '★★ Weak — Effect modest (<5%) within typical brewing ranges',

@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback, memo } from 'react';
+import { BREW_METHOD_LABELS } from '@/engine/constants';
 import type { CaffeineLogEntry } from '@/types';
 
 interface DrinkLogTimelineProps {
@@ -33,15 +34,6 @@ function timeToISO(isoTimestamp: string, timeValue: string): string {
   const [h, m] = timeValue.split(':').map(Number);
   d.setHours(h, m, 0, 0);
   return d.toISOString();
-}
-
-/** Format the brew method label for display. */
-function formatBrewMethod(method?: string): string {
-  if (!method) return '';
-  return method
-    .split('-')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
 }
 
 const DrinkLogTimeline = memo(function DrinkLogTimeline({ entries, onRemove, onUpdate }: DrinkLogTimelineProps) {
@@ -130,7 +122,7 @@ const DrinkLogTimeline = memo(function DrinkLogTimeline({ entries, onRemove, onU
                 </span>
               ) : (
                 <span className="text-sm text-coffee-500 dark:text-coffee-400 italic">
-                  {entry.brewMethod ? formatBrewMethod(entry.brewMethod) : 'Coffee'}
+                  {entry.brewMethod ? BREW_METHOD_LABELS[entry.brewMethod] : 'Coffee'}
                 </span>
               )}
               <span className="text-sm font-bold text-coffee-700 dark:text-coffee-200 flex-shrink-0">
@@ -142,7 +134,7 @@ const DrinkLogTimeline = memo(function DrinkLogTimeline({ entries, onRemove, onU
               <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-0.5">
                 {entry.brewMethod && (
                   <span className="text-xs text-coffee-400 dark:text-coffee-500">
-                    {formatBrewMethod(entry.brewMethod)}
+                    {BREW_METHOD_LABELS[entry.brewMethod]}
                   </span>
                 )}
                 {entry.coffeeWeightG !== undefined && (

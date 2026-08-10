@@ -16,6 +16,7 @@
 
 import {
   SPECIES_CAFFEINE,
+  DECAF_CAFFEINE_MG_PER_G,
   ROAST_MULTIPLIERS,
   BREW_METHOD_EFFICIENCY,
   GRIND_MULTIPLIERS,
@@ -218,7 +219,7 @@ export function calculateCaffeine(params: BrewingParameters): CaffeineResult {
 
   // --- Step 1: Base caffeine in grounds ---
   const speciesCaffeineMgPerG = isDecaf
-    ? SPECIES_CAFFEINE.decaf
+    ? DECAF_CAFFEINE_MG_PER_G
     : getSpeciesCaffeine(species, robustaPercent);
   const baseCaffeineMg = coffeeWeightG * speciesCaffeineMgPerG;
 

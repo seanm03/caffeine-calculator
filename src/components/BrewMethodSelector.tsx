@@ -1,19 +1,6 @@
 import { useCallback } from 'react';
+import { ALL_BREW_METHODS, BREW_METHOD_LABELS } from '@/engine/constants';
 import type { BrewMethod } from '@/types';
-
-const BREW_METHODS: { value: BrewMethod; label: string }[] = [
-  { value: 'espresso', label: 'Espresso' },
-  { value: 'pour-over', label: 'Pour Over' },
-  { value: 'french-press', label: 'French Press' },
-  { value: 'aeropress', label: 'Aeropress' },
-  { value: 'moka-pot', label: 'Moka Pot' },
-  { value: 'cold-brew', label: 'Cold Brew' },
-  { value: 'turkish', label: 'Turkish' },
-  { value: 'instant', label: 'Instant' },
-  { value: 'paper-filtered-immersion', label: 'Filter Immersion' },
-];
-
-const BREW_VALUES = BREW_METHODS.map((m) => m.value);
 
 export interface BrewMethodSelectorProps {
   value: BrewMethod;
@@ -25,20 +12,20 @@ export default function BrewMethodSelector({ value, onChange }: BrewMethodSelect
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault();
-        const idx = BREW_VALUES.indexOf(value);
-        const nextIdx = (idx + 1) % BREW_VALUES.length;
-        onChange(BREW_VALUES[nextIdx]);
+        const idx = ALL_BREW_METHODS.indexOf(value);
+        const nextIdx = (idx + 1) % ALL_BREW_METHODS.length;
+        onChange(ALL_BREW_METHODS[nextIdx]);
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault();
-        const idx = BREW_VALUES.indexOf(value);
-        const prevIdx = (idx - 1 + BREW_VALUES.length) % BREW_VALUES.length;
-        onChange(BREW_VALUES[prevIdx]);
+        const idx = ALL_BREW_METHODS.indexOf(value);
+        const prevIdx = (idx - 1 + ALL_BREW_METHODS.length) % ALL_BREW_METHODS.length;
+        onChange(ALL_BREW_METHODS[prevIdx]);
       } else if (e.key === 'Home') {
         e.preventDefault();
-        onChange(BREW_VALUES[0]);
+        onChange(ALL_BREW_METHODS[0]);
       } else if (e.key === 'End') {
         e.preventDefault();
-        onChange(BREW_VALUES[BREW_VALUES.length - 1]);
+        onChange(ALL_BREW_METHODS[ALL_BREW_METHODS.length - 1]);
       }
     },
     [value, onChange],
@@ -55,7 +42,7 @@ export default function BrewMethodSelector({ value, onChange }: BrewMethodSelect
         aria-label="Brew Method"
         onKeyDown={handleKeyDown}
       >
-        {BREW_METHODS.map(({ value: method, label }) => {
+        {ALL_BREW_METHODS.map((method) => {
           const isSelected = value === method;
           return (
             <button
@@ -84,7 +71,7 @@ export default function BrewMethodSelector({ value, onChange }: BrewMethodSelect
                     : 'text-coffee-600 dark:text-coffee-200'
                 }`}
               >
-                {label}
+                {BREW_METHOD_LABELS[method]}
               </span>
             </button>
           );

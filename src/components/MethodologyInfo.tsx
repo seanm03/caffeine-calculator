@@ -3,6 +3,9 @@
  * and links to James Hoffmann's video.
  */
 
+import { BREW_METHOD_EFFICIENCY, BREW_METHOD_LABELS } from '@/engine/constants';
+import type { BrewMethod } from '@/types';
+
 const SCIENTIFIC_REFERENCES: { author: string; year: number; title: string; doi?: string; link?: string }[] = [
   {
     author: 'Spiro, M. & Selwood, R.M.',
@@ -70,6 +73,19 @@ const SCIENTIFIC_REFERENCES: { author: string; year: number; title: string; doi?
     title: 'Effects of roasting degree and grinding size on caffeine content and sensorial quality of coffee',
     doi: '10.1155/jfq/2405668',
   },
+];
+
+/** Brew method efficiency table data — efficiency values derive from the shared map. */
+const BREW_METHOD_EFFICIENCY_INFO: { method: BrewMethod; type: string; highlighted?: boolean }[] = [
+  { method: 'espresso', type: 'Percolation (pressure)' },
+  { method: 'pour-over', type: 'Percolation' },
+  { method: 'french-press', type: 'Immersion' },
+  { method: 'aeropress', type: 'Immersion (pressure-assisted)' },
+  { method: 'moka-pot', type: 'Percolation (steam pressure)' },
+  { method: 'cold-brew', type: 'Immersion (cold)' },
+  { method: 'turkish', type: 'Immersion (boiled)' },
+  { method: 'instant', type: 'Dissolution' },
+  { method: 'paper-filtered-immersion', type: 'Immersion + paper filtration', highlighted: true },
 ];
 
 export default function MethodologyInfo() {
@@ -182,51 +198,17 @@ export default function MethodologyInfo() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-coffee-100 dark:divide-coffee-800">
-                <tr>
-                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Espresso</td>
-                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Percolation (pressure)</td>
-                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.80</td>
-                </tr>
-                <tr>
-                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Pour-Over</td>
-                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Percolation</td>
-                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.90</td>
-                </tr>
-                <tr>
-                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">French Press</td>
-                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Immersion</td>
-                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.92</td>
-                </tr>
-                <tr>
-                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">AeroPress</td>
-                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Immersion (pressure-assisted)</td>
-                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.87</td>
-                </tr>
-                <tr>
-                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Moka Pot</td>
-                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Percolation (steam pressure)</td>
-                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.85</td>
-                </tr>
-                <tr>
-                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Cold Brew</td>
-                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Immersion (cold)</td>
-                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.90</td>
-                </tr>
-                <tr>
-                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Turkish</td>
-                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Immersion (boiled)</td>
-                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">0.92</td>
-                </tr>
-                <tr>
-                  <td className="py-2 pr-4 text-coffee-700 dark:text-coffee-200">Instant</td>
-                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Dissolution</td>
-                  <td className="py-2 text-right tabular-nums text-coffee-700 dark:text-coffee-200">1.00</td>
-                </tr>
-                <tr className="bg-coffee-100/50 dark:bg-coffee-700/50">
-                  <td className="py-2 pr-4 font-medium text-coffee-800 dark:text-coffee-100">Filter Immersion</td>
-                  <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">Immersion + paper filtration</td>
-                  <td className="py-2 text-right tabular-nums font-medium text-coffee-800 dark:text-coffee-100">0.91</td>
-                </tr>
+                {BREW_METHOD_EFFICIENCY_INFO.map((row) => (
+                  <tr key={row.method} className={row.highlighted ? 'bg-coffee-100/50 dark:bg-coffee-700/50' : undefined}>
+                    <td className={`py-2 pr-4 ${row.highlighted ? 'font-medium text-coffee-800 dark:text-coffee-100' : 'text-coffee-700 dark:text-coffee-200'}`}>
+                      {BREW_METHOD_LABELS[row.method]}
+                    </td>
+                    <td className="py-2 pr-4 text-coffee-500 dark:text-coffee-300">{row.type}</td>
+                    <td className={`py-2 text-right tabular-nums ${row.highlighted ? 'font-medium text-coffee-800 dark:text-coffee-100' : 'text-coffee-700 dark:text-coffee-200'}`}>
+                      {BREW_METHOD_EFFICIENCY[row.method].toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

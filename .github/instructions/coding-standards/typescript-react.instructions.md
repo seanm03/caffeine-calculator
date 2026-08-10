@@ -215,19 +215,27 @@ interface PersistedPayload {
   state: MyState;
 }
 
-// Read with version check and error handling
+// Read with version check and error handling.
+// `withDefaults` applies per-field `??` fallbacks — an empty partial yields full defaults.
+function withDefaults(p: Partial<MyState> = {}): MyState {
+  return {
+    fieldA: p.fieldA ?? DEFAULT.fieldA,
+    // ...one `??` fallback per field
+  };
+}
+
 function getInitialState(): MyState {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const payload = JSON.parse(saved) as PersistedPayload;
-      if (payload.version !== STORAGE_VERSION) return getDefaults();
-      return { ...getDefaults(), ...payload.state };
+      if (payload.version !== STORAGE_VERSION) return withDefaults();
+      return withDefaults(payload.state);
     }
   } catch {
     // Ignore parse errors
   }
-  return getDefaults();
+  return withDefaults();
 }
 
 // Write silently on error
