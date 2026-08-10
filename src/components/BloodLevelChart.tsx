@@ -20,7 +20,7 @@ import {
   ReferenceLine,
   ReferenceArea,
 } from 'recharts';
-import { generateBloodLevelCurve, DAILY_SAFE_LIMIT_MG } from '@/engine/caffeineMetabolism';
+import { generateBloodLevelCurve, DAILY_SAFE_LIMIT_MG, MS_PER_HOUR } from '@/engine/caffeineMetabolism';
 import { CaffeineMg, Hours } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
 
@@ -39,7 +39,7 @@ interface ChartDataPoint {
 /** Format hours as readable time of day.
  *  Exported for testing — used internally as Recharts tickFormatter. */
 export function formatHour(hoursSinceStart: number, startTime: Date): string {
-  const d = new Date(startTime.getTime() + hoursSinceStart * 3600000);
+  const d = new Date(startTime.getTime() + hoursSinceStart * MS_PER_HOUR);
   return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 }
 
@@ -91,7 +91,7 @@ const BloodLevelChart = memo(function BloodLevelChart({ entries, halfLifeHours }
   // Find current time position
   const now = new Date();
   const currentHours = data.length > 0
-    ? (now.getTime() - startTime.getTime()) / 3600000
+    ? (now.getTime() - startTime.getTime()) / MS_PER_HOUR
     : 0;
 
   if (data.length === 0) {

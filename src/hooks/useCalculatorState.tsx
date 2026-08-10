@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { DEFAULT_PARAMS } from '@/engine/constants';
+import { DEFAULT_PARAMS, MAX_PLAUSIBLE_COFFEE_WEIGHT_G } from '@/engine/constants';
 import { clampNumber } from '@/engine/utils';
 import { WeightG, VolumeMl, TemperatureC } from '@/types/branded';
 import { createCtxWithName } from '@/utils/createCtx';
@@ -119,7 +119,7 @@ export function CalculatorStateProvider({ children }: { children: React.ReactNod
   }, []);
 
   const setCoffeeWeightG = useCallback((value: WeightG) => {
-    setState((prev) => ({ ...prev, coffeeWeightG: WeightG(clampNumber(value, 0, 500, 0)) }));
+    setState((prev) => ({ ...prev, coffeeWeightG: WeightG(clampNumber(value, 0, MAX_PLAUSIBLE_COFFEE_WEIGHT_G, 0)) }));
   }, []);
 
   const setWaterVolumeMl = useCallback((value: VolumeMl) => {

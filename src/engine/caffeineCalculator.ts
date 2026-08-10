@@ -24,6 +24,7 @@ import {
   ALTITUDE_MULTIPLIERS,
   DAILY_SAFE_LIMIT_MG,
   STANDARD_CUP_CAFFEINE_MG,
+  MAX_PLAUSIBLE_COFFEE_WEIGHT_G,
   isPercolationMethod,
 } from '@/engine/constants';
 import { isValidNumber } from '@/engine/utils';
@@ -39,9 +40,6 @@ import type {
   Altitude,
   Species,
 } from '@/types';
-
-/** Maximum plausible coffee weight in grams. */
-const MAX_PLAUSIBLE_COFFEE_WEIGHT_G = 500;
 
 // ---------------------------------------------------------------------------
 // Parameter-level lookup helpers

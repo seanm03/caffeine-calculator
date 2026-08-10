@@ -26,6 +26,7 @@ import {
   MAX_HALF_LIFE_HOURS,
   DEFAULT_WINDOW_HOURS,
   CURVE_SAMPLING_INTERVAL_H,
+  MS_PER_HOUR,
   SLEEP_ADVISORY_THRESHOLD_MG,
   MAX_PLAUSIBLE_DOSE_MG,
 } from '@/engine/constants';
@@ -40,6 +41,7 @@ export {
   MAX_HALF_LIFE_HOURS,
   DEFAULT_WINDOW_HOURS,
   CURVE_SAMPLING_INTERVAL_H,
+  MS_PER_HOUR,
   SLEEP_ADVISORY_THRESHOLD_MG,
   HEALTH_ADVISORY_THRESHOLD_MG,
   MAX_PLAUSIBLE_DOSE_MG,
@@ -95,7 +97,7 @@ export function computeBloodLevel(
     // Skip future doses
     if (doseTimeMs > targetMs) continue;
 
-    const elapsedHours = (targetMs - doseTimeMs) / (1000 * 60 * 60);
+    const elapsedHours = (targetMs - doseTimeMs) / MS_PER_HOUR;
     // Guard against extreme elapsed time (24h tail decay → effectively zero)
     if (elapsedHours > 120) continue; // 5 days → < 2^-24 → negligible
 
@@ -144,13 +146,13 @@ export function generateBloodLevelCurve(
     .sort((a, b) => a - b);
   const firstDoseMs = sortedTimes[0];
   const windowStartMs = firstDoseMs;
-  const windowEndMs = windowStartMs + windowHours * 3600000;
+  const windowEndMs = windowStartMs + windowHours * MS_PER_HOUR;
 
   const points: BloodLevelPoint[] = [];
   const steps = Math.ceil(windowHours / CURVE_SAMPLING_INTERVAL_H);
 
   for (let i = 0; i <= steps; i++) {
-    const pointMs = windowStartMs + i * CURVE_SAMPLING_INTERVAL_H * 3600000;
+    const pointMs = windowStartMs + i * CURVE_SAMPLING_INTERVAL_H * MS_PER_HOUR;
     // Stop if past window end
     if (pointMs > windowEndMs) break;
 
@@ -268,7 +270,7 @@ export function timeUntilBelow(
 
   for (let i = 0; i < 30; i++) {
     const mid = (low + high) / 2;
-    const futureTime = new Date(now.getTime() + mid * 3600000);
+    const futureTime = new Date(now.getTime() + mid * MS_PER_HOUR);
     const level = computeBloodLevel(entries, futureTime, halfLifeHours);
 
     if (level <= thresholdMg) {
@@ -278,7 +280,7 @@ export function timeUntilBelow(
     }
   }
 
-  return new Date(now.getTime() + high * 3600000);
+  return new Date(now.getTime() + high * MS_PER_HOUR);
 }
 
 /**
@@ -332,7 +334,7 @@ export function assessSleepImpact(
   const isSafe = bedtimeLevel <= sleepThresholdMg;
   const safeTime = isSafe ? null : timeUntilBelow(entries, halfLifeHours, sleepThresholdMg, now);
   const hoursUntilSafe = safeTime
-    ? Math.max(0, (safeTime.getTime() - now.getTime()) / 3600000)
+    ? Math.max(0, (safeTime.getTime() - now.getTime()) / MS_PER_HOUR)
     : null;
 
   return { bedtimeLevel, safeTime, isSafe, hoursUntilSafe };
@@ -351,7 +353,7 @@ function generateEmptyCurve(windowHours: Hours): BloodLevelPoint[] {
   const points: BloodLevelPoint[] = [];
   const steps = Math.ceil(windowHours / CURVE_SAMPLING_INTERVAL_H);
   for (let i = 0; i <= steps; i++) {
-    const t = new Date(now.getTime() - windowHours * 3600000 + i * CURVE_SAMPLING_INTERVAL_H * 3600000);
+    const t = new Date(now.getTime() - windowHours * MS_PER_HOUR + i * CURVE_SAMPLING_INTERVAL_H * MS_PER_HOUR);
     points.push({
       time: t,
       hoursSinceStart: i * CURVE_SAMPLING_INTERVAL_H,

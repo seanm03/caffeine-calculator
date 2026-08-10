@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { MAX_PLAUSIBLE_COFFEE_WEIGHT_G, MAX_PLAUSIBLE_DOSE_MG } from '@/engine/constants';
 import { CaffeineMg, WeightG, VolumeMl } from '@/types/branded';
 import type { CaffeineLogEntry, BrewMethod } from '@/types';
 
@@ -39,7 +40,7 @@ export default function DrinkLogForm({ onAdd }: DrinkLogFormProps) {
       e.preventDefault();
 
       const mg = parseFloat(caffeineMg);
-      if (isNaN(mg) || mg <= 0 || mg > 2000) return;
+      if (isNaN(mg) || mg <= 0 || mg > MAX_PLAUSIBLE_DOSE_MG) return;
 
       onAdd({
         timestamp: new Date().toISOString(),
@@ -62,7 +63,7 @@ export default function DrinkLogForm({ onAdd }: DrinkLogFormProps) {
     [caffeineMg, drinkName, brewMethod, coffeeWeightG, waterVolumeMl, notes, onAdd],
   );
 
-  const isValid = caffeineMg && parseFloat(caffeineMg) > 0 && parseFloat(caffeineMg) <= 2000;
+  const isValid = caffeineMg && parseFloat(caffeineMg) > 0 && parseFloat(caffeineMg) <= MAX_PLAUSIBLE_DOSE_MG;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3" aria-label="Log a caffeine drink">
@@ -80,7 +81,7 @@ export default function DrinkLogForm({ onAdd }: DrinkLogFormProps) {
             type="number"
             inputMode="decimal"
             min={0}
-            max={2000}
+            max={MAX_PLAUSIBLE_DOSE_MG}
             step={1}
             value={caffeineMg}
             onChange={(e) => setCaffeineMg(e.target.value)}
@@ -144,7 +145,7 @@ export default function DrinkLogForm({ onAdd }: DrinkLogFormProps) {
             type="number"
             inputMode="decimal"
             min={0}
-            max={500}
+            max={MAX_PLAUSIBLE_COFFEE_WEIGHT_G}
             step={0.1}
             value={coffeeWeightG}
             onChange={(e) => setCoffeeWeightG(e.target.value)}

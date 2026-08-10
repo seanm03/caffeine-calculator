@@ -28,6 +28,9 @@ export const DEFAULT_WINDOW_HOURS: Hours = Hours(24);
 /** Sampling interval in hours for blood level curve generation (15 minutes). */
 export const CURVE_SAMPLING_INTERVAL_H = 0.25;
 
+/** Milliseconds in one hour (unit conversion for PK time arithmetic). */
+export const MS_PER_HOUR = 3600000;
+
 /** Level at which caffeine may begin to affect sleep (mg). */
 export const SLEEP_ADVISORY_THRESHOLD_MG: CaffeineMg = CaffeineMg(50);
 

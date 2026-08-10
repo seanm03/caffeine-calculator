@@ -249,6 +249,12 @@ export function isPercolationMethod(method: BrewMethod): boolean {
 // ---------------------------------------------------------------------------
 
 /**
+ * Maximum physiologically plausible dry coffee weight in grams.
+ * Used to bound calculator input and storage clamping.
+ */
+export const MAX_PLAUSIBLE_COFFEE_WEIGHT_G = 500;
+
+/**
  * Sensible default values for the calculator.
  * Arabica pour-over at standard specialty coffee parameters.
  */
