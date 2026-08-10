@@ -4,10 +4,10 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react()],
-  resolve: { alias: { '@': path.resolve(__dirname, './src') } },
+  resolve: { alias: { '@': path.resolve(import.meta.dirname, './src') } },
   test: {
     globals: true,
-    // jsdom v25+ (downgraded to ^25.0.1 for Node 20.10 ESM compatibility)
+    // jsdom ^26.1.0 — DOM environment for component/integration tests
     environment: 'jsdom',
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
     setupFiles: ['./src/test/setup.ts'],

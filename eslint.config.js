@@ -1,8 +1,8 @@
-import tseslint from 'typescript-eslint';
+import importPlugin from 'eslint-plugin-import';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import importPlugin from 'eslint-plugin-import';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   // Global ignores
@@ -16,6 +16,15 @@ export default tseslint.config(
   // React configs
   react.configs.flat.recommended,
   react.configs.flat['jsx-runtime'],
+
+  // React version (silences eslint-plugin-react version detection warning)
+  {
+    settings: {
+      react: {
+        version: '18.3',
+      },
+    },
+  },
 
   // React Hooks (without React Compiler rules — project uses manual memoization)
   {

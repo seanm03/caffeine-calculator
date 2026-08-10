@@ -3,10 +3,13 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint src/ --max-warnings 0",
+    "build": "tsc && tsc -p tsconfig.node.json && vite build",
+    "lint": "eslint src/ vite.config.ts vitest.config.ts eslint.config.js --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest run",
     "deploy": "gh-pages -d dist"
@@ -41,5 +44,8 @@
     "vite": "^8.2.1",
     "vitest": "^4.1.8",
     "vitest-axe": "^0.1.0"
+  },
+  "overrides": {
+    "js-yaml": "4.3.1"
   }
 }
