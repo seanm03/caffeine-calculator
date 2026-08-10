@@ -4,7 +4,8 @@ import {
   useEffect,
   useMemo,
 } from 'react';
-import { computeDailySummary, DEFAULT_HALF_LIFE_HOURS, DAILY_SAFE_LIMIT_MG, SLEEP_ADVISORY_THRESHOLD_MG } from '@/engine/caffeineMetabolism';
+import { computeDailySummary, DEFAULT_HALF_LIFE_HOURS, MIN_HALF_LIFE_HOURS, MAX_HALF_LIFE_HOURS, DAILY_SAFE_LIMIT_MG, SLEEP_ADVISORY_THRESHOLD_MG } from '@/engine/caffeineMetabolism';
+import { clampNumber } from '@/engine/utils';
 import { CaffeineMg, Hours } from '@/types/branded';
 import { createCtxWithName } from '@/utils/createCtx';
 import { storageAvailable } from '@/utils/storageAvailable';
@@ -18,6 +19,15 @@ const STORAGE_KEY = 'coffee-calc-logs';
 const SETTINGS_KEY = 'coffee-calc-settings';
 const STORAGE_VERSION = 1;
 const SETTINGS_VERSION = 1;
+
+/** Default bedtime hour (10 PM) used when no saved setting exists. */
+const DEFAULT_BEDTIME_HOUR = 22;
+const BEDTIME_MIN = 0;
+const BEDTIME_MAX = 23;
+const SAFE_LIMIT_MIN_MG = 50;
+const SAFE_LIMIT_MAX_MG = 1000;
+const SLEEP_THRESHOLD_MIN_MG = 10;
+const SLEEP_THRESHOLD_MAX_MG = 200;
 
 // ---------------------------------------------------------------------------
 // Types
@@ -161,25 +171,37 @@ function loadSettings(): SettingsPayload {
       if (payload.version === SETTINGS_VERSION) {
         return {
           version: SETTINGS_VERSION,
-          safeLimitMg: CaffeineMg(typeof payload.safeLimitMg === 'number' && payload.safeLimitMg >= 50 && payload.safeLimitMg <= 1000
-            ? payload.safeLimitMg
-            : DAILY_SAFE_LIMIT_MG),
-          halfLifeHours: Hours(typeof payload.halfLifeHours === 'number' && payload.halfLifeHours >= 2 && payload.halfLifeHours <= 12
-            ? payload.halfLifeHours
-            : DEFAULT_HALF_LIFE_HOURS),
-          bedtimeHour: typeof payload.bedtimeHour === 'number' && payload.bedtimeHour >= 0 && payload.bedtimeHour <= 23
+          safeLimitMg: CaffeineMg(
+            typeof payload.safeLimitMg === 'number' && payload.safeLimitMg >= SAFE_LIMIT_MIN_MG && payload.safeLimitMg <= SAFE_LIMIT_MAX_MG
+              ? payload.safeLimitMg
+              : DAILY_SAFE_LIMIT_MG,
+          ),
+          halfLifeHours: Hours(
+            typeof payload.halfLifeHours === 'number' && payload.halfLifeHours >= MIN_HALF_LIFE_HOURS && payload.halfLifeHours <= MAX_HALF_LIFE_HOURS
+              ? payload.halfLifeHours
+              : DEFAULT_HALF_LIFE_HOURS,
+          ),
+          bedtimeHour: typeof payload.bedtimeHour === 'number' && payload.bedtimeHour >= BEDTIME_MIN && payload.bedtimeHour <= BEDTIME_MAX
             ? payload.bedtimeHour
-            : 22,
-      sleepThresholdMg: CaffeineMg(typeof payload.sleepThresholdMg === 'number' && payload.sleepThresholdMg >= 10 && payload.sleepThresholdMg <= 200
-        ? payload.sleepThresholdMg
-        : SLEEP_ADVISORY_THRESHOLD_MG),
+            : DEFAULT_BEDTIME_HOUR,
+          sleepThresholdMg: CaffeineMg(
+            typeof payload.sleepThresholdMg === 'number' && payload.sleepThresholdMg >= SLEEP_THRESHOLD_MIN_MG && payload.sleepThresholdMg <= SLEEP_THRESHOLD_MAX_MG
+              ? payload.sleepThresholdMg
+              : SLEEP_ADVISORY_THRESHOLD_MG,
+          ),
         };
       }
     }
   } catch {
     // Silently return defaults on parse error
   }
-  return { version: SETTINGS_VERSION, safeLimitMg: CaffeineMg(DAILY_SAFE_LIMIT_MG), halfLifeHours: Hours(DEFAULT_HALF_LIFE_HOURS), bedtimeHour: 22, sleepThresholdMg: CaffeineMg(SLEEP_ADVISORY_THRESHOLD_MG) };
+  return {
+    version: SETTINGS_VERSION,
+    safeLimitMg: CaffeineMg(DAILY_SAFE_LIMIT_MG),
+    halfLifeHours: Hours(DEFAULT_HALF_LIFE_HOURS),
+    bedtimeHour: DEFAULT_BEDTIME_HOUR,
+    sleepThresholdMg: CaffeineMg(SLEEP_ADVISORY_THRESHOLD_MG),
+  };
 }
 
 function persistSettings(settings: SettingsPayload): void {
@@ -188,6 +210,15 @@ function persistSettings(settings: SettingsPayload): void {
   } catch {
     // Silently fail on QuotaExceededError
   }
+}
+
+/**
+ * Round a value to the nearest integer, then clamp it to [min, max].
+ * Non-finite values pass through unchanged (clampNumber falls back to the
+ * input), preserving the previous Math.max/Math.min NaN behavior.
+ */
+function clampRounded(value: number, min: number, max: number): number {
+  return Math.round(clampNumber(value, min, max, value));
 }
 
 // ---------------------------------------------------------------------------
@@ -266,19 +297,19 @@ export function CaffeineLogProvider({ children }: { children: React.ReactNode })
   }, []);
 
   const setHalfLifeHours = useCallback((h: Hours) => {
-    setHalfLifeHoursState(Hours(Math.max(2, Math.min(12, h))));
+    setHalfLifeHoursState(Hours(clampNumber(h, MIN_HALF_LIFE_HOURS, MAX_HALF_LIFE_HOURS, h)));
   }, []);
 
   const setCustomSafeLimitMg = useCallback((mg: CaffeineMg) => {
-    setCustomSafeLimitMgState(CaffeineMg(Math.max(50, Math.min(1000, Math.round(mg)))));
+    setCustomSafeLimitMgState(CaffeineMg(clampRounded(mg, SAFE_LIMIT_MIN_MG, SAFE_LIMIT_MAX_MG)));
   }, []);
 
   const setBedtimeHour = useCallback((h: number) => {
-    setBedtimeHourState(Math.max(0, Math.min(23, Math.round(h))));
+    setBedtimeHourState(clampRounded(h, BEDTIME_MIN, BEDTIME_MAX));
   }, []);
 
   const setCustomSleepThresholdMg = useCallback((mg: CaffeineMg) => {
-    setCustomSleepThresholdMgState(CaffeineMg(Math.max(10, Math.min(200, Math.round(mg)))));
+    setCustomSleepThresholdMgState(CaffeineMg(clampRounded(mg, SLEEP_THRESHOLD_MIN_MG, SLEEP_THRESHOLD_MAX_MG)));
   }, []);
 
   const dismissLoadError = useCallback(() => {
