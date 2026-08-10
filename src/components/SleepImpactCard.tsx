@@ -8,6 +8,7 @@
 import { memo, useMemo } from 'react';
 import { assessSleepImpact, SLEEP_ADVISORY_THRESHOLD_MG } from '@/engine/caffeineMetabolism';
 import { CaffeineMg, Hours } from '@/types/branded';
+import { formatHour12 } from '@/utils/format';
 import type { CaffeineLogEntry } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -28,13 +29,6 @@ export interface SleepImpactCardProps {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function formatTime(hours: number): string {
-  const h = hours % 24;
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  const display = h === 0 ? 12 : h > 12 ? h - 12 : h;
-  return `${display}:00 ${ampm}`;
-}
 
 function formatHoursUntil(hours: number): string {
   if (hours < 1) return `${Math.round(hours * 60)} min`;
@@ -93,7 +87,7 @@ const SleepImpactCard = memo(function SleepImpactCard({
           {/* Bedtime level */}
           <div className="flex items-baseline justify-between">
             <span className="text-xs text-coffee-500 dark:text-coffee-400">
-              Bedtime level ({formatTime(bedtimeHour)})
+              Bedtime level ({formatHour12(bedtimeHour)})
             </span>
             <span className={`text-xl font-extrabold ${statusText}`}>
               {Math.round(bedtimeLevel)} mg

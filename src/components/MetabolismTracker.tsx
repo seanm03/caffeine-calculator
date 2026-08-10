@@ -17,6 +17,7 @@ import StorageStatusBanner from '@/components/StorageStatusBanner';
 import { useCaffeineLog } from '@/hooks/useCaffeineLog';
 import { CaffeineMg } from '@/types/branded';
 import { exportEntriesToCsv } from '@/utils/csvExport';
+import { formatHour12 } from '@/utils/format';
 import type { StorageStatus } from '@/components/StorageStatusBanner';
 const BloodLevelChart = lazy(() => import('@/components/BloodLevelChart'));
 
@@ -96,16 +97,11 @@ const MetabolismTracker = memo(function MetabolismTracker() {
             className="input-coffee text-sm w-36"
             aria-label="Bedtime hour for sleep impact prediction"
           >
-            {Array.from({ length: 24 }, (_, i) => {
-              const h = i % 24;
-              const ampm = h >= 12 ? 'PM' : 'AM';
-              const display = h === 0 ? 12 : h > 12 ? h - 12 : h;
-              return (
-                <option key={i} value={i}>
-                  {display}:00 {ampm}
-                </option>
-              );
-            })}
+            {Array.from({ length: 24 }, (_, i) => (
+              <option key={i} value={i}>
+                {formatHour12(i)}
+              </option>
+            ))}
           </select>
         </div>
         <div className="flex-1 min-w-[200px] flex flex-col items-end">
