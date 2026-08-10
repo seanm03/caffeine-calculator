@@ -7,7 +7,7 @@
  * @module engine/brew
  */
 
-import type { BrewMethod } from '@/types';
+import type { Altitude, BrewMethod, GrindSize, ProcessingMethod, RoastLevel } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Brew method base extraction efficiency (η)
@@ -32,7 +32,7 @@ import type { BrewMethod } from '@/types';
  * @see Hoffmann (2023), "I Did Caffeine Analysis: Some Unexpected Results!"
  * @see Olechno et al. (2021), Foods, 10(6):1208
  */
-export const BREW_METHOD_EFFICIENCY: Record<string, number> = {
+export const BREW_METHOD_EFFICIENCY: Record<BrewMethod, number> = {
   espresso: 0.8,
   'pour-over': 0.9,
   'french-press': 0.92,
@@ -70,7 +70,7 @@ export const BREW_METHOD_EFFICIENCY: Record<string, number> = {
  * @see Bell et al. (1996), Food Research International, 29:785-789
  * @see Severini et al. (2016) — percolation paradox
  */
-export const GRIND_MULTIPLIERS: Record<string, [number, number]> = {
+export const GRIND_MULTIPLIERS: Record<GrindSize, [number, number]> = {
   'extra-fine': [1.05, 1.02],
   fine: [1.0, 1.01],
   medium: [0.9, 1.0],
@@ -99,7 +99,7 @@ export const GRIND_MULTIPLIERS: Record<string, [number, number]> = {
  * @see Bell et al. (1996), Food Research International, 29:785-789
  * @see Duke et al. (2025), Journal of Food Quality, 2405668
  */
-export const GRIND_MICRON_RANGES: Record<string, string> = {
+export const GRIND_MICRON_RANGES: Record<GrindSize, string> = {
   'extra-fine': '100–400 μm',
   fine: '400–600 μm',
   medium: '600–800 μm',
@@ -155,7 +155,7 @@ export function getTemperatureMultiplier(tempC: number): number {
  * @see Várady et al. (2022)
  * @see Wulandari et al. (2021)
  */
-export const PROCESSING_MULTIPLIERS: Record<string, number> = {
+export const PROCESSING_MULTIPLIERS: Record<ProcessingMethod, number> = {
   washed: 1.0,
   honey: 1.02,
   natural: 1.03,
@@ -191,7 +191,7 @@ export const PROCESSING_MULTIPLIERS: Record<string, number> = {
  * @see Worku et al. (2018)
  * @see Rusinek et al. (2025), Scientific Reports, 15:30117
  */
-export const ALTITUDE_MULTIPLIERS: Record<string, number> = {
+export const ALTITUDE_MULTIPLIERS: Record<Altitude, number> = {
   /** Low altitude (<1,000 m): slightly higher caffeine */
   low: 1.05,
   /** Medium altitude (1,000–1,600 m): baseline */
@@ -220,7 +220,7 @@ export const ALTITUDE_MULTIPLIERS: Record<string, number> = {
  * @see Severini et al. (2017), The Question of Caffeine, IntechOpen
  * @see Duke et al. (2025), Journal of Food Quality, 2405668
  */
-export const ROAST_MULTIPLIERS: Record<string, number> = {
+export const ROAST_MULTIPLIERS: Record<RoastLevel, number> = {
   light: 1.05,
   medium: 1.0,
   dark: 0.9,
