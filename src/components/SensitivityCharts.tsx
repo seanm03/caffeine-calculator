@@ -27,10 +27,10 @@ import {
   LabelList,
   Legend,
 } from 'recharts';
+import { ALL_BREW_METHODS, ALL_GRIND_SIZES, BREW_METHOD_LABELS, GRIND_LABELS } from '@/engine/brew';
 import { calculateCaffeine } from '@/engine/caffeineCalculator';
-import { ALL_BREW_METHODS, BREW_METHOD_LABELS } from '@/engine/constants';
 import { WeightG, TemperatureC } from '@/types/branded';
-import type { BrewingParameters, CaffeineResult, GrindSize } from '@/types';
+import type { BrewingParameters, CaffeineResult } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -51,22 +51,6 @@ const COFFEE_WEIGHT_RANGE = {
   min: 1,
   max: 100,
   step: 2,
-};
-
-const ALL_GRIND_SIZES: GrindSize[] = [
-  'extra-fine',
-  'fine',
-  'medium',
-  'coarse',
-  'extra-coarse',
-];
-
-const GRIND_LABELS: Record<GrindSize, string> = {
-  'extra-fine': 'Extra Fine',
-  fine: 'Fine',
-  medium: 'Medium',
-  coarse: 'Coarse',
-  'extra-coarse': 'Extra Coarse',
 };
 
 const HEATMAP_TEMPS = [70, 75, 80, 85, 90, 95, 100];

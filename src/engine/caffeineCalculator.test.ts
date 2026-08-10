@@ -16,7 +16,8 @@ import {
   getGrindMultiplier,
   buildBreakdown,
 } from '@/engine/caffeineCalculator';
-import { DAILY_SAFE_LIMIT_MG, DECAF_CAFFEINE_MG_PER_G } from '@/engine/constants';
+import { DAILY_SAFE_LIMIT_MG } from '@/engine/metabolism';
+import { DECAF_CAFFEINE_MG_PER_G } from '@/engine/species';
 import { CaffeineMg, WeightG, VolumeMl, TemperatureC } from '@/types/branded';
 import type { BrewingParameters, BrewMethod } from '@/types';
 

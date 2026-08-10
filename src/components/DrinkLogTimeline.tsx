@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, memo } from 'react';
-import { BREW_METHOD_LABELS } from '@/engine/constants';
+import { BREW_METHOD_LABELS } from '@/engine/brew';
 import type { CaffeineLogEntry } from '@/types';
 
 interface DrinkLogTimelineProps {

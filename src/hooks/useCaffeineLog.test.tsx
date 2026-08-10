@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, beforeEach } from 'vitest';
-import { SLEEP_ADVISORY_THRESHOLD_MG, DAILY_SAFE_LIMIT_MG, DEFAULT_HALF_LIFE_HOURS } from '@/engine/caffeineMetabolism';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { SLEEP_ADVISORY_THRESHOLD_MG, DAILY_SAFE_LIMIT_MG, DEFAULT_HALF_LIFE_HOURS } from '@/engine/metabolism';
 import { useCaffeineLog, CaffeineLogProvider } from '@/hooks/useCaffeineLog';
 import { CaffeineMg, Hours } from '@/types/branded';
 
@@ -11,6 +11,10 @@ function wrapper({ children }: { children: React.ReactNode }) {
 describe('useCaffeineLog', () => {
   beforeEach(() => {
     localStorage.clear();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   // ── Default values ─────────────────────────────────────────
@@ -213,6 +217,19 @@ describe('useCaffeineLog', () => {
     expect(result.current.entries[0].id.length).toBeGreaterThan(0);
   });
 
+  it('preserves an explicit id when provided', () => {
+    const { result } = renderHook(() => useCaffeineLog(), { wrapper });
+    act(() => {
+      result.current.addEntry({
+        id: 'explicit-1',
+        timestamp: new Date().toISOString(),
+        caffeineMg: CaffeineMg(120),
+        drinkName: 'Explicit',
+      });
+    });
+    expect(result.current.entries[0].id).toBe('explicit-1');
+  });
+
   it('removes an entry by id', () => {
     const { result } = renderHook(() => useCaffeineLog(), { wrapper });
     act(() => {
@@ -255,5 +272,139 @@ describe('useCaffeineLog', () => {
     expect(result.current.todaySummary.totalToday).toBeGreaterThan(0);
     expect(result.current.todaySummary.currentLevel).toBeGreaterThan(0);
     expect(result.current.todaySummary.entryCount).toBe(1);
+  });
+
+  // ── Entry updates ──────────────────────────────────────────
+  it('updates an entry by id', () => {
+    const { result } = renderHook(() => useCaffeineLog(), { wrapper });
+    act(() => {
+      result.current.addEntry({
+        timestamp: new Date().toISOString(),
+        caffeineMg: CaffeineMg(100),
+        drinkName: 'Original',
+      });
+      result.current.addEntry({
+        timestamp: new Date().toISOString(),
+        caffeineMg: CaffeineMg(50),
+        drinkName: 'Second',
+      });
+    });
+    const id = result.current.entries.find((e) => e.drinkName === 'Original')!.id;
+    act(() => {
+      result.current.updateEntry(id, { drinkName: 'Updated' });
+    });
+    expect(result.current.entries).toHaveLength(2);
+    const updated = result.current.entries.find((e) => e.id === id)!;
+    expect(updated.drinkName).toBe('Updated');
+    expect(updated.caffeineMg).toBe(CaffeineMg(100));
+  });
+
+  // ── Multi-entry sorting ────────────────────────────────────
+  it('sorts today entries newest first with multiple entries', () => {
+    const { result } = renderHook(() => useCaffeineLog(), { wrapper });
+    const earlier = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const later = new Date().toISOString();
+    act(() => {
+      result.current.addEntry({ timestamp: earlier, caffeineMg: CaffeineMg(100) });
+      result.current.addEntry({ timestamp: later, caffeineMg: CaffeineMg(50) });
+    });
+    expect(result.current.todayEntries).toHaveLength(2);
+    expect(result.current.todayEntries[0].timestamp).toBe(later);
+    expect(result.current.todayEntries[1].timestamp).toBe(earlier);
+    expect(result.current.todaySummary.entryCount).toBe(2);
+  });
+
+  // ── Load error handling ────────────────────────────────────
+  it('restores entries from localStorage on mount when data is valid', () => {
+    const savedEntry = {
+      id: 'saved-1',
+      timestamp: new Date().toISOString(),
+      caffeineMg: 80,
+      drinkName: 'Saved coffee',
+    };
+    localStorage.setItem(
+      'coffee-calc-logs',
+      JSON.stringify({ version: 1, entries: [savedEntry] }),
+    );
+    const { result } = renderHook(() => useCaffeineLog(), { wrapper });
+    expect(result.current.loadError).toBeNull();
+    expect(result.current.entries).toHaveLength(1);
+    expect(result.current.entries[0].drinkName).toBe('Saved coffee');
+    expect(result.current.entries[0].caffeineMg).toBe(80);
+  });
+
+  it('reports a parse_error when saved log JSON is malformed', () => {
+    localStorage.setItem('coffee-calc-logs', 'not-valid-json');
+    const { result } = renderHook(() => useCaffeineLog(), { wrapper });
+    expect(result.current.loadError).toEqual({
+      type: 'parse_error',
+      message: 'Failed to parse saved data',
+    });
+    expect(result.current.entries).toEqual([]);
+  });
+
+  it('reports a parse_error with the raw message when the thrown error is not a SyntaxError', () => {
+    // getItem throws while storage remains available → falls through to parse_error
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('boom');
+    });
+    const { result } = renderHook(() => useCaffeineLog(), { wrapper });
+    expect(result.current.loadError).toEqual({
+      type: 'parse_error',
+      message: 'Error: boom',
+    });
+  });
+
+  it('reports storage_unavailable when localStorage access throws', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    const { result } = renderHook(() => useCaffeineLog(), { wrapper });
+    expect(result.current.loadError?.type).toBe('storage_unavailable');
+  });
+
+  it('reports quota_exceeded when localStorage is full', () => {
+    localStorage.setItem('seed', 'x'); // ensure length > 0 so quotaExceeded is detected
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new DOMException('quota', 'QuotaExceededError');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('quota', 'QuotaExceededError');
+    });
+    const { result } = renderHook(() => useCaffeineLog(), { wrapper });
+    expect(result.current.loadError?.type).toBe('quota_exceeded');
+  });
+
+  it('dismisses the load error', () => {
+    localStorage.setItem('coffee-calc-logs', 'not-valid-json');
+    const { result } = renderHook(() => useCaffeineLog(), { wrapper });
+    expect(result.current.loadError).not.toBeNull();
+    act(() => {
+      result.current.dismissLoadError();
+    });
+    expect(result.current.loadError).toBeNull();
+  });
+
+  // ── ID generation fallback ─────────────────────────────────
+  it('falls back to a UUID-like id when crypto.randomUUID is unavailable', () => {
+    const original = crypto.randomUUID;
+    Object.defineProperty(crypto, 'randomUUID', { value: undefined, configurable: true });
+    try {
+      const { result } = renderHook(() => useCaffeineLog(), { wrapper });
+      act(() => {
+        result.current.addEntry({
+          timestamp: new Date().toISOString(),
+          caffeineMg: CaffeineMg(100),
+        });
+      });
+      expect(result.current.entries[0].id).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+      );
+    } finally {
+      Object.defineProperty(crypto, 'randomUUID', { value: original, configurable: true });
+    }
   });
 });

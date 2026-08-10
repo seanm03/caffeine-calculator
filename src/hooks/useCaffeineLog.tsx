@@ -4,7 +4,8 @@ import {
   useEffect,
   useMemo,
 } from 'react';
-import { computeDailySummary, DEFAULT_HALF_LIFE_HOURS, MIN_HALF_LIFE_HOURS, MAX_HALF_LIFE_HOURS, DAILY_SAFE_LIMIT_MG, SLEEP_ADVISORY_THRESHOLD_MG } from '@/engine/caffeineMetabolism';
+import { computeDailySummary } from '@/engine/caffeineMetabolism';
+import { DEFAULT_HALF_LIFE_HOURS, MIN_HALF_LIFE_HOURS, MAX_HALF_LIFE_HOURS, DAILY_SAFE_LIMIT_MG, SLEEP_ADVISORY_THRESHOLD_MG } from '@/engine/metabolism';
 import { clampNumber } from '@/engine/utils';
 import { CaffeineMg, Hours } from '@/types/branded';
 import { createCtxWithName } from '@/utils/createCtx';

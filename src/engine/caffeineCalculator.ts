@@ -15,19 +15,17 @@
 
 
 import {
-  SPECIES_CAFFEINE,
-  DECAF_CAFFEINE_MG_PER_G,
-  ROAST_MULTIPLIERS,
-  BREW_METHOD_EFFICIENCY,
-  GRIND_MULTIPLIERS,
-  getTemperatureMultiplier,
-  PROCESSING_MULTIPLIERS,
   ALTITUDE_MULTIPLIERS,
-  DAILY_SAFE_LIMIT_MG,
-  STANDARD_CUP_CAFFEINE_MG,
-  MAX_PLAUSIBLE_COFFEE_WEIGHT_G,
+  BREW_METHOD_EFFICIENCY,
+  getTemperatureMultiplier,
+  GRIND_MULTIPLIERS,
   isPercolationMethod,
-} from '@/engine/constants';
+  MAX_PLAUSIBLE_COFFEE_WEIGHT_G,
+  PROCESSING_MULTIPLIERS,
+  ROAST_MULTIPLIERS,
+} from '@/engine/brew';
+import { DAILY_SAFE_LIMIT_MG, STANDARD_CUP_CAFFEINE_MG } from '@/engine/metabolism';
+import { DECAF_CAFFEINE_MG_PER_G, SPECIES_CAFFEINE } from '@/engine/species';
 import { isValidNumber } from '@/engine/utils';
 import { CaffeineMg } from '@/types/branded';
 import type {

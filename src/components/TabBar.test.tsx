@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import TabBar from '@/components/TabBar';
 import { assertA11y } from '@/test/axe';
 import type { Tab } from '@/hooks/useHashTab';
@@ -33,6 +33,14 @@ describe('TabBar', () => {
     render(<TabBar tabs={TABS} activeTab="calculator" onTabChange={() => {}} />);
     const inactiveTab = screen.getByRole('tab', { name: /brand reference/i });
     expect(inactiveTab).toHaveAttribute('aria-selected', 'false');
+  });
+
+  it('calls onTabChange with the tab key when a tab is clicked', () => {
+    const onTabChange = vi.fn();
+    render(<TabBar tabs={TABS} activeTab="calculator" onTabChange={onTabChange} />);
+    fireEvent.click(screen.getByRole('tab', { name: /brand reference/i }));
+    expect(onTabChange).toHaveBeenCalledTimes(1);
+    expect(onTabChange).toHaveBeenCalledWith('brands');
   });
 
   it('has no accessibility violations', async () => {

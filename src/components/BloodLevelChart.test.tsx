@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import BloodLevelChart, { formatHour, CustomTooltip } from '@/components/BloodLevelChart';
+import * as metabolism from '@/engine/caffeineMetabolism';
 import { assertA11y } from '@/test/axe';
 import { Hours, CaffeineMg } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
@@ -12,6 +13,10 @@ function entryAt(hoursAgo: number, mg: number): CaffeineLogEntry {
   const ts = new Date(Date.now() - hoursAgo * 3600000).toISOString();
   return { id: `entry-${hoursAgo}`, timestamp: ts, caffeineMg: CaffeineMg(mg) };
 }
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 // ── Tests ──────────────────────────────────────────────────────────────────
 
@@ -94,6 +99,14 @@ describe('BloodLevelChart', () => {
       <BloodLevelChart entries={[]} halfLifeHours={Hours(5)} />
     );
     expect(container.querySelector('.recharts-wrapper')).toBeInTheDocument();
+  });
+
+  it('shows the empty-state message when the curve has no data points', () => {
+    // The engine always produces a curve, but the component defensively handles
+    // an empty curve — cover that defensive branch directly.
+    vi.spyOn(metabolism, 'generateBloodLevelCurve').mockReturnValue([]);
+    render(<BloodLevelChart entries={[entryAt(0, 100)]} halfLifeHours={Hours(5)} />);
+    expect(screen.getByText(/log a drink to see your blood caffeine curve/i)).toBeInTheDocument();
   });
 
   it('shows aria-label with current and max levels', () => {

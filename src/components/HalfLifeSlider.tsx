@@ -7,7 +7,7 @@
  */
 
 import { memo } from 'react';
-import { MIN_HALF_LIFE_HOURS, MAX_HALF_LIFE_HOURS } from '@/engine/caffeineMetabolism';
+import { MIN_HALF_LIFE_HOURS, MAX_HALF_LIFE_HOURS } from '@/engine/metabolism';
 import { Hours } from '@/types/branded';
 
 interface HalfLifeSliderProps {

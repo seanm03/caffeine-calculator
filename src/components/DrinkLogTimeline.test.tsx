@@ -60,6 +60,40 @@ describe('DrinkLogTimeline', () => {
     expect(screen.getByLabelText(/edit drink time/i)).toBeInTheDocument();
   });
 
+  it('updates the entry timestamp when the time input changes', () => {
+    const { props } = renderTimeline();
+    fireEvent.click(screen.getAllByRole('button', { name: /edit time/i })[0]);
+    const timeInput = screen.getByLabelText(/edit drink time/i);
+    fireEvent.change(timeInput, { target: { value: '07:30' } });
+    expect(props.onUpdate).toHaveBeenCalledTimes(1);
+    expect(props.onUpdate).toHaveBeenCalledWith('1', { timestamp: expect.any(String) });
+  });
+
+  it('exits editing mode when the time input loses focus', () => {
+    renderTimeline();
+    fireEvent.click(screen.getAllByRole('button', { name: /edit time/i })[0]);
+    const timeInput = screen.getByLabelText(/edit drink time/i);
+    fireEvent.blur(timeInput);
+    // Input is replaced by the time button again
+    expect(screen.queryByLabelText(/edit drink time/i)).not.toBeInTheDocument();
+  });
+
+  it('exits editing mode when Enter is pressed in the time input', () => {
+    renderTimeline();
+    fireEvent.click(screen.getAllByRole('button', { name: /edit time/i })[0]);
+    const timeInput = screen.getByLabelText(/edit drink time/i);
+    fireEvent.keyDown(timeInput, { key: 'Enter' });
+    expect(screen.queryByLabelText(/edit drink time/i)).not.toBeInTheDocument();
+  });
+
+  it('stays in editing mode when a non-Enter key is pressed', () => {
+    renderTimeline();
+    fireEvent.click(screen.getAllByRole('button', { name: /edit time/i })[0]);
+    const timeInput = screen.getByLabelText(/edit drink time/i);
+    fireEvent.keyDown(timeInput, { key: 'a' });
+    expect(screen.getByLabelText(/edit drink time/i)).toBeInTheDocument();
+  });
+
   it('calls onRemove when delete button is clicked', () => {
     const { props } = renderTimeline();
     const deleteButtons = screen.getAllByRole('button', { name: /remove/i });

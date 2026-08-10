@@ -10,8 +10,8 @@ import {
   ALL_BREW_METHODS,
   BREW_METHOD_LABELS,
   MAX_PLAUSIBLE_COFFEE_WEIGHT_G,
-  MAX_PLAUSIBLE_DOSE_MG,
-} from '@/engine/constants';
+} from '@/engine/brew';
+import { MAX_PLAUSIBLE_DOSE_MG } from '@/engine/metabolism';
 import { CaffeineMg, WeightG, VolumeMl } from '@/types/branded';
 import type { CaffeineLogEntry, BrewMethod } from '@/types';
 

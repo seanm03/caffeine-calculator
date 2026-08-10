@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { ALL_BREW_METHODS, BREW_METHOD_LABELS } from '@/engine/constants';
+import { ALL_BREW_METHODS, BREW_METHOD_LABELS } from '@/engine/brew';
 import type { BrewMethod } from '@/types';
 
 export interface BrewMethodSelectorProps {

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import SegmentedControl from '@/components/SegmentedControl';
-import { GRIND_MICRON_RANGES } from '@/engine/brew';
+import { ALL_GRIND_SIZES, GRIND_LABELS, GRIND_MICRON_RANGES } from '@/engine/brew';
 import { useUnits } from '@/hooks/useUnits';
 import { TemperatureC } from '@/types/branded';
 import type { BrewMethod, RoastLevel, GrindSize, ProcessingMethod, Altitude } from '@/types';
@@ -33,13 +33,10 @@ const ROAST_OPTIONS: { value: RoastLevel; label: string; indicator: string }[] =
   { value: 'dark', label: 'Dark', indicator: '#3d2415' },
 ];
 
-const GRIND_OPTIONS: { value: GrindSize; label: string }[] = [
-  { value: 'extra-fine', label: 'Extra Fine' },
-  { value: 'fine', label: 'Fine' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'coarse', label: 'Coarse' },
-  { value: 'extra-coarse', label: 'Extra Coarse' },
-];
+const GRIND_OPTIONS: { value: GrindSize; label: string }[] = ALL_GRIND_SIZES.map((value) => ({
+  value,
+  label: GRIND_LABELS[value],
+}));
 
 const PROCESSING_OPTIONS: { value: ProcessingMethod; label: string }[] = [
   { value: 'washed', label: 'Washed' },

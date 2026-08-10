@@ -3,7 +3,7 @@
  * and links to James Hoffmann's video.
  */
 
-import { BREW_METHOD_EFFICIENCY, BREW_METHOD_LABELS } from '@/engine/constants';
+import { BREW_METHOD_EFFICIENCY, BREW_METHOD_LABELS } from '@/engine/brew';
 import type { BrewMethod } from '@/types';
 
 const SCIENTIFIC_REFERENCES: { author: string; year: number; title: string; doi?: string; link?: string }[] = [

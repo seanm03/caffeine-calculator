@@ -6,7 +6,8 @@
  */
 
 import { memo, useMemo } from 'react';
-import { assessSleepImpact, SLEEP_ADVISORY_THRESHOLD_MG } from '@/engine/caffeineMetabolism';
+import { assessSleepImpact } from '@/engine/caffeineMetabolism';
+import { SLEEP_ADVISORY_THRESHOLD_MG } from '@/engine/metabolism';
 import { CaffeineMg, Hours } from '@/types/branded';
 import { formatHour12 } from '@/utils/format';
 import type { CaffeineLogEntry } from '@/types';

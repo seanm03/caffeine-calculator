@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { DEFAULT_PARAMS, MAX_PLAUSIBLE_COFFEE_WEIGHT_G } from '@/engine/constants';
+import { DEFAULT_PARAMS, MAX_PLAUSIBLE_COFFEE_WEIGHT_G } from '@/engine/brew';
 import { clampNumber } from '@/engine/utils';
 import { WeightG, VolumeMl, TemperatureC } from '@/types/branded';
 import { createCtxWithName } from '@/utils/createCtx';

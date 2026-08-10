@@ -29,26 +29,10 @@ import {
   MS_PER_HOUR,
   SLEEP_ADVISORY_THRESHOLD_MG,
   MAX_PLAUSIBLE_DOSE_MG,
-} from '@/engine/constants';
+} from '@/engine/metabolism';
 import { isValidNumber, isValidDate, isValidArray, clampNumber } from '@/engine/utils';
 import { CaffeineMg, Hours } from '@/types/branded';
 import type { CaffeineLogEntry, BloodLevelPoint } from '@/types';
-
-// Re-export constants consumed by other modules for backward compatibility
-export {
-  DEFAULT_HALF_LIFE_HOURS,
-  MIN_HALF_LIFE_HOURS,
-  MAX_HALF_LIFE_HOURS,
-  DEFAULT_WINDOW_HOURS,
-  CURVE_SAMPLING_INTERVAL_H,
-  MS_PER_HOUR,
-  SLEEP_ADVISORY_THRESHOLD_MG,
-  HEALTH_ADVISORY_THRESHOLD_MG,
-  MAX_PLAUSIBLE_DOSE_MG,
-  MAX_PLAUSIBLE_ENTRIES,
-  DAILY_SAFE_LIMIT_MG,
-  STANDARD_CUP_CAFFEINE_MG,
-} from '@/engine/constants';
 
 /** Validate a single log entry has plausible values. */
 function isValidLogEntry(entry: CaffeineLogEntry): boolean {

@@ -39,6 +39,27 @@ describe('DailySummary', () => {
     expect(screen.getAllByText('0')).toHaveLength(3);
   });
 
+  // ── Zone coloring (zoneBg / zoneText branches) ─────────────────
+  it.each([
+    [75, 'bg-yellow-50'],
+    [95, 'bg-orange-50'],
+    [125, 'bg-red-50'],
+  ])('colors the summary %i%% into the %s zone', (pct, cls) => {
+    const summary: DailyCaffeineSummary = {
+      ...mockSummary,
+      currentLevel: CaffeineMg((pct / 100) * 400),
+    };
+    const { container } = render(<DailySummary summary={summary} />);
+    const card = container.querySelector('.rounded-lg.border.p-3');
+    expect(card).toHaveClass(cls);
+  });
+
+  it('renders a placeholder peak time when peakTime is null', () => {
+    const summary: DailyCaffeineSummary = { ...mockSummary, peakTime: null };
+    render(<DailySummary summary={summary} />);
+    expect(screen.getByText(/mg at —/)).toBeInTheDocument();
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(<DailySummary summary={mockSummary} />);
     await assertA11y(container);

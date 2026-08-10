@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import App from '@/App';
 import { assertA11y } from '@/test/axe';
 
@@ -38,5 +38,27 @@ describe('App', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<App />);
     await assertA11y(container);
+  });
+
+  it('switches to the Brand Reference tab', () => {
+    window.location.hash = '#brands';
+    render(<App />);
+    expect(screen.getByPlaceholderText(/search by brand/i)).toBeInTheDocument();
+  });
+
+  it('switches to the Methodology tab', () => {
+    window.location.hash = '#methodology';
+    render(<App />);
+    expect(screen.getByRole('table', { name: /brew method efficiencies/i })).toBeInTheDocument();
+  });
+
+  it('switches to the Caffeine Tracker tab', () => {
+    window.location.hash = '#tracker';
+    render(<App />);
+    expect(screen.getByText('Caffeine Half-Life')).toBeInTheDocument();
+  });
+
+  afterEach(() => {
+    window.location.hash = '';
   });
 });

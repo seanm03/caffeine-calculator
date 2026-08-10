@@ -142,6 +142,33 @@ export const GRIND_MICRON_RANGES: Record<GrindSize, string> = {
   'extra-coarse': '1,000–1,400 μm',
 };
 
+/**
+ * Canonical display labels for each grind size, shared across the UI.
+ * Single source of truth — components import this instead of re-declaring
+ * their own label maps.
+ */
+export const GRIND_LABELS: Record<GrindSize, string> = {
+  'extra-fine': 'Extra Fine',
+  fine: 'Fine',
+  medium: 'Medium',
+  coarse: 'Coarse',
+  'extra-coarse': 'Extra Coarse',
+};
+
+/**
+ * Canonical ordered list of all grind sizes, shared across the UI.
+ * Single source of truth — components import this instead of re-declaring
+ * their own orderings (which must stay in this order to preserve dropdown
+ * order and chart/heatmap rendering order).
+ */
+export const ALL_GRIND_SIZES: GrindSize[] = [
+  'extra-fine',
+  'fine',
+  'medium',
+  'coarse',
+  'extra-coarse',
+];
+
 // ---------------------------------------------------------------------------
 // Temperature multiplier function
 // ---------------------------------------------------------------------------

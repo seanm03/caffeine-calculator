@@ -88,4 +88,48 @@ describe('CoffeeInputs', () => {
     renderInputs();
     expect(screen.getByText(/water-to-coffee ratio/i)).toBeInTheDocument();
   });
+
+  // ── Additional branch coverage ──────────────────────────────
+  it('calls onCoffeeWeightChange with 0 for an empty weight input', () => {
+    const { props } = renderInputs();
+    const input = screen.getByLabelText(/coffee weight/i);
+    fireEvent.change(input, { target: { value: '' } });
+    expect(props.onCoffeeWeightChange).toHaveBeenCalledWith(0);
+  });
+
+  it('shows imperial equivalents and ratio note in imperial mode', () => {
+    localStorage.setItem('coffee-calc-units', 'imperial');
+    renderInputs();
+    expect(screen.getByText(/= 300 mL/)).toBeInTheDocument();
+    expect(screen.getByText(/ratio always uses metric/i)).toBeInTheDocument();
+  });
+
+  it('converts an imperial weight input to grams', () => {
+    localStorage.setItem('coffee-calc-units', 'imperial');
+    const { props } = renderInputs();
+    const input = screen.getByLabelText(/coffee weight/i);
+    fireEvent.change(input, { target: { value: '1' } });
+    // 1 oz → g ≈ 1 / 0.035274 ≈ 28.35
+    expect(props.onCoffeeWeightChange).toHaveBeenCalledWith(28.3);
+  });
+
+  it('shows a weight hint when the coffee weight is out of range', () => {
+    renderInputs({ coffeeWeightG: WeightG(150) });
+    expect(screen.getByText(/enter a value between 1 and 100 g/i)).toBeInTheDocument();
+  });
+
+  it('shows a water volume hint when out of range', () => {
+    renderInputs({ waterVolumeMl: VolumeMl(5) });
+    expect(screen.getByText(/enter a value between 10 and 1000 mL/i)).toBeInTheDocument();
+  });
+
+  it('shows a dash ratio when coffee weight is zero', () => {
+    renderInputs({ coffeeWeightG: WeightG(0) });
+    expect(screen.getByText(/—/)).toBeInTheDocument();
+  });
+
+  it('shows decaf brewing notes when isDecaf is selected', () => {
+    renderInputs({ isDecaf: true });
+    expect(screen.getByText(/~97% less caffeine/i)).toBeInTheDocument();
+  });
 });

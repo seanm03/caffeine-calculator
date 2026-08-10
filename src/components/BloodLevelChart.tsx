@@ -20,7 +20,8 @@ import {
   ReferenceLine,
   ReferenceArea,
 } from 'recharts';
-import { generateBloodLevelCurve, DAILY_SAFE_LIMIT_MG, MS_PER_HOUR } from '@/engine/caffeineMetabolism';
+import { generateBloodLevelCurve } from '@/engine/caffeineMetabolism';
+import { DAILY_SAFE_LIMIT_MG, MS_PER_HOUR } from '@/engine/metabolism';
 import { CaffeineMg, Hours } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
 

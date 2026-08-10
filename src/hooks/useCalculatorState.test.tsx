@@ -163,4 +163,65 @@ describe('useCalculatorState', () => {
     expect(parsed.version).toBe(1);
     expect(parsed.state.brewMethod).toBe('espresso');
   });
+
+  // ── Persisted-state loading (getInitialState) ─────────────────
+  it('loads a saved state from localStorage with partial merge', () => {
+    localStorage.setItem(
+      'coffee-calc-state',
+      JSON.stringify({
+        version: 1,
+        state: { brewMethod: 'espresso', coffeeWeightG: 22, species: 'robusta', robustaPercent: 60 },
+      }),
+    );
+    const { result } = renderHook(() => useCalculatorState(), { wrapper });
+    expect(result.current.brewMethod).toBe('espresso');
+    expect(result.current.coffeeWeightG).toBe(22);
+    expect(result.current.species).toBe('robusta');
+    expect(result.current.robustaPercent).toBe(60);
+    // Missing fields fall back to defaults via ?? semantics
+    expect(result.current.waterVolumeMl).toBe(300);
+    expect(result.current.roastLevel).toBe('medium');
+    expect(result.current.altitude).toBe('medium');
+  });
+
+  it('discards a saved state with a mismatched version', () => {
+    localStorage.setItem(
+      'coffee-calc-state',
+      JSON.stringify({ version: 99, state: { brewMethod: 'espresso' } }),
+    );
+    const { result } = renderHook(() => useCalculatorState(), { wrapper });
+    expect(result.current.brewMethod).toBe('pour-over');
+  });
+
+  it('falls back to defaults when saved state is corrupted', () => {
+    localStorage.setItem('coffee-calc-state', '{invalid json');
+    const { result } = renderHook(() => useCalculatorState(), { wrapper });
+    expect(result.current.brewMethod).toBe('pour-over');
+    expect(result.current.coffeeWeightG).toBe(18);
+  });
+
+  // ── NaN clamp fallbacks ─────────────────────────────────────
+  it('clamps NaN coffee weight to 0', () => {
+    const { result } = renderHook(() => useCalculatorState(), { wrapper });
+    act(() => {
+      result.current.setCoffeeWeightG(WeightG(NaN));
+    });
+    expect(result.current.coffeeWeightG).toBe(0);
+  });
+
+  it('clamps NaN water volume to 0', () => {
+    const { result } = renderHook(() => useCalculatorState(), { wrapper });
+    act(() => {
+      result.current.setWaterVolumeMl(VolumeMl(NaN));
+    });
+    expect(result.current.waterVolumeMl).toBe(0);
+  });
+
+  it('clamps NaN water temperature to 93', () => {
+    const { result } = renderHook(() => useCalculatorState(), { wrapper });
+    act(() => {
+      result.current.setWaterTemperatureC(TemperatureC(NaN));
+    });
+    expect(result.current.waterTemperatureC).toBe(93);
+  });
 });
