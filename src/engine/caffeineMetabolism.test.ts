@@ -5,7 +5,7 @@
  * decay behavior, superposition, edge cases, and curve generation.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
   computeBloodLevel,
   generateBloodLevelCurve,
@@ -13,6 +13,7 @@ import {
   computeBedtimeLevel,
   timeUntilBelow,
 } from '@/engine/caffeineMetabolism';
+import { mockNow, REFERENCE_NOW, restoreNow } from '@/test/time';
 import { CaffeineMg, Hours } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
 
@@ -33,12 +34,23 @@ function makeEntry(
 }
 
 function hoursAgo(h: number): Date {
-  return new Date(Date.now() - h * 3600000);
+  return new Date(REFERENCE_NOW.getTime() - h * 3600000);
 }
 
 function hoursFromNow(h: number): Date {
-  return new Date(Date.now() + h * 3600000);
+  return new Date(REFERENCE_NOW.getTime() + h * 3600000);
 }
+
+// Freeze the clock at the shared reference so every `new Date()`/`Date.now()`
+// default matches the relative helper timestamps — the whole engine suite is
+// then wall-clock independent (no near-midnight flakes).
+beforeEach(() => {
+  mockNow();
+});
+
+afterEach(() => {
+  restoreNow();
+});
 
 // ---------------------------------------------------------------------------
 // computeBloodLevel tests

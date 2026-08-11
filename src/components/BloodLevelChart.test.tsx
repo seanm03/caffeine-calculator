@@ -3,18 +3,19 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import BloodLevelChart, { formatHour, CustomTooltip } from '@/components/BloodLevelChart';
 import * as metabolism from '@/engine/caffeineMetabolism';
 import { assertA11y } from '@/test/axe';
+import { isoHoursAgo, mockNow, restoreNow } from '@/test/time';
 import { Hours, CaffeineMg } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
-/** Create a CaffeineLogEntry at a specific offset from now. */
+/** Create a CaffeineLogEntry at a specific offset before the mocked reference. */
 function entryAt(hoursAgo: number, mg: number): CaffeineLogEntry {
-  const ts = new Date(Date.now() - hoursAgo * 3600000).toISOString();
-  return { id: `entry-${hoursAgo}`, timestamp: ts, caffeineMg: CaffeineMg(mg) };
+  return { id: `entry-${hoursAgo}`, timestamp: isoHoursAgo(hoursAgo), caffeineMg: CaffeineMg(mg) };
 }
 
 afterEach(() => {
+  restoreNow();
   vi.restoreAllMocks();
 });
 
@@ -85,6 +86,7 @@ describe('CustomTooltip', () => {
 
 describe('BloodLevelChart', () => {
   it('renders chart with entries', () => {
+    mockNow();
     const entries: CaffeineLogEntry[] = [
       { id: '1', timestamp: new Date().toISOString(), caffeineMg: CaffeineMg(100) },
     ];
@@ -102,6 +104,7 @@ describe('BloodLevelChart', () => {
   });
 
   it('shows the empty-state message when the curve has no data points', () => {
+    mockNow();
     // The engine always produces a curve, but the component defensively handles
     // an empty curve — cover that defensive branch directly.
     vi.spyOn(metabolism, 'generateBloodLevelCurve').mockReturnValue([]);
@@ -110,6 +113,7 @@ describe('BloodLevelChart', () => {
   });
 
   it('shows aria-label with current and max levels', () => {
+    mockNow();
     const entries: CaffeineLogEntry[] = [
       { id: '1', timestamp: new Date().toISOString(), caffeineMg: CaffeineMg(250) },
     ];
@@ -122,6 +126,7 @@ describe('BloodLevelChart', () => {
   });
 
   it('renders with multiple entries spanning a time range', () => {
+    mockNow();
     const entries: CaffeineLogEntry[] = [
       entryAt(6, 100),
       entryAt(3, 200),
@@ -134,6 +139,7 @@ describe('BloodLevelChart', () => {
   });
 
   it('renders safe zone reference area when levels exceed daily limit', () => {
+    mockNow();
     // Entries that collectively exceed the 400mg daily safe limit
     const entries: CaffeineLogEntry[] = [
       entryAt(1, 500),
@@ -147,6 +153,7 @@ describe('BloodLevelChart', () => {
   });
 
   it('renders with entries just below daily limit', () => {
+    mockNow();
     const entries: CaffeineLogEntry[] = [
       entryAt(0, 100),
     ];
@@ -157,6 +164,7 @@ describe('BloodLevelChart', () => {
   });
 
   it('handles custom half-life values', () => {
+    mockNow();
     const entries: CaffeineLogEntry[] = [
       entryAt(2, 150),
     ];
@@ -167,6 +175,7 @@ describe('BloodLevelChart', () => {
   });
 
   it('displays screen-reader accessible data summary', () => {
+    mockNow();
     const entries: CaffeineLogEntry[] = [
       entryAt(0, 100),
     ];

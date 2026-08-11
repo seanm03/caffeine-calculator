@@ -43,7 +43,9 @@ describe('MethodologyInfo', () => {
       />,
     );
     expect(screen.getByText('Smith, J. (2021)')).toBeInTheDocument();
-    expect(screen.queryByText(/doi\.org/)).not.toBeInTheDocument();
+    // Anchored because the DOI link text always begins with "doi.org/"; an
+    // unanchored /doi\.org/ could match unexpected locations (CWE-20).
+    expect(screen.queryByText(/^doi\.org/)).not.toBeInTheDocument();
     expect(screen.queryByText('Read online')).not.toBeInTheDocument();
   });
 

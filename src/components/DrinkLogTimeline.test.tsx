@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import DrinkLogTimeline from '@/components/DrinkLogTimeline';
 import { assertA11y } from '@/test/axe';
+import { isoMinutesAgo, isoMinutesFromNow, REFERENCE_NOW } from '@/test/time';
 import { CaffeineMg, WeightG, VolumeMl } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
 
@@ -76,6 +77,27 @@ describe('DrinkLogTimeline', () => {
     fireEvent.change(timeInput, { target: { value: '14:45' } });
     expect(props.onUpdate).toHaveBeenCalledTimes(1);
     expect(props.onUpdate).toHaveBeenCalledWith('2', { timestamp: expect.any(String) });
+  });
+
+  it('preserves the entry date and sets the edited time to the exact minute', () => {
+    // Minute-granularity timestamps around the shared reference: one drink 30
+    // minutes ago and one 30 minutes from now (isoMinutesAgo/isoMinutesFromNow).
+    const entries: CaffeineLogEntry[] = [
+      { id: '1', timestamp: isoMinutesAgo(30), caffeineMg: CaffeineMg(100), drinkName: 'Morning Coffee' },
+      { id: '2', timestamp: isoMinutesFromNow(30), caffeineMg: CaffeineMg(50), drinkName: 'Evening Drink' },
+    ];
+    const { props } = renderTimeline({ entries });
+    fireEvent.click(screen.getAllByRole('button', { name: /edit time/i })[0]);
+    fireEvent.change(screen.getByLabelText(/edit drink time/i), { target: { value: '09:15' } });
+    expect(props.onUpdate).toHaveBeenCalledTimes(1);
+    const edited = new Date(props.onUpdate.mock.calls[0][1].timestamp as string);
+    // Time is updated to the exact minute...
+    expect(edited.getHours()).toBe(9);
+    expect(edited.getMinutes()).toBe(15);
+    // ...while the date is preserved from the original entry.
+    expect(edited.getFullYear()).toBe(REFERENCE_NOW.getFullYear());
+    expect(edited.getMonth()).toBe(REFERENCE_NOW.getMonth());
+    expect(edited.getDate()).toBe(REFERENCE_NOW.getDate());
   });
 
   it('exits editing mode when the time input loses focus', () => {

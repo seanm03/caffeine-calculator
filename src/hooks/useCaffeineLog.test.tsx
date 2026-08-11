@@ -302,8 +302,12 @@ describe('useCaffeineLog', () => {
   // ── Multi-entry sorting ────────────────────────────────────
   it('sorts today entries newest first with multiple entries', () => {
     const { result } = renderHook(() => useCaffeineLog(), { wrapper });
-    const earlier = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-    const later = new Date().toISOString();
+    // Anchor both timestamps to fixed midday hours of today's real date so both
+    // entries are guaranteed to fall on the current calendar day regardless of
+    // when the test runs (avoids a 00:00–01:00 local-time flake in isToday).
+    const now = new Date();
+    const later = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0).toISOString();
+    const earlier = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 11, 0, 0).toISOString();
     act(() => {
       result.current.addEntry({ timestamp: earlier, caffeineMg: CaffeineMg(100) });
       result.current.addEntry({ timestamp: later, caffeineMg: CaffeineMg(50) });

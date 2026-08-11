@@ -15,6 +15,16 @@ afterEach(() => {
   localStorage.clear();
 });
 
+// ── Deterministic time for wall-clock-dependent tests ─────────────
+// Components that compute values relative to `new Date()` (e.g.,
+// SleepImpactCard's bedtime projection, the metabolism engine's "now")
+// make their tests time-of-day dependent — "bedtime 1 hour from now"
+// yields hour 24 near midnight, and hour-offset entries can cross a
+// calendar-day boundary. For any test relying on the wall clock, use
+// `mockNow()` (freezes `new Date()`/`Date.now()` at a fixed local midday)
+// and `isoHoursAgo()` from `@/test/time`, then restore with
+// `afterEach(() => vi.useRealTimers())`. See src/test/time.ts.
+
 // ── window.matchMedia mock ─────────────────────────────────────────
 // Required by components that check prefers-color-scheme (e.g., ThemeToggle).
 Object.defineProperty(window, 'matchMedia', {

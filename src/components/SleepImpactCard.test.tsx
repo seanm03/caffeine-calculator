@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import SleepImpactCard from '@/components/SleepImpactCard';
 import * as caffeineMetabolism from '@/engine/caffeineMetabolism';
 import { assertA11y } from '@/test/axe';
+import { isoHoursAgo, mockNow, REFERENCE_NOW, restoreNow } from '@/test/time';
 import { Hours, CaffeineMg } from '@/types/branded';
 import type { CaffeineLogEntry } from '@/types';
 
@@ -15,6 +16,11 @@ function makeEntry(overrides: Partial<CaffeineLogEntry> = {}): CaffeineLogEntry 
     ...overrides,
   };
 }
+
+afterEach(() => {
+  restoreNow();
+  vi.restoreAllMocks();
+});
 
 describe('SleepImpactCard', () => {
   // ── Empty state ────────────────────────────────────────────
@@ -42,8 +48,9 @@ describe('SleepImpactCard', () => {
 
   // ── Safe state ─────────────────────────────────────────────
   it('shows safe status when bedtime level is below threshold', () => {
-    // 10mg consumed 8 hours ago (well below 50mg default threshold)
-    const eightHoursAgo = new Date(Date.now() - 8 * 3600000).toISOString();
+    mockNow();
+    // 50mg consumed 8 hours ago (well below 50mg default threshold)
+    const eightHoursAgo = isoHoursAgo(8);
     render(
       <SleepImpactCard
         entries={[makeEntry({ caffeineMg: CaffeineMg(50), timestamp: eightHoursAgo })]}
@@ -56,13 +63,14 @@ describe('SleepImpactCard', () => {
 
   // ── Unsafe state ───────────────────────────────────────────
   it('shows unsafe status when bedtime level is above threshold', () => {
-    // 200mg consumed 1 hour before bedtime
-    const oneHourAgo = new Date(Date.now() - 1 * 3600000).toISOString();
+    mockNow();
+    // 200mg consumed 1 hour before bedtime (bedtime 1h after the mocked now)
+    const oneHourAgo = isoHoursAgo(1);
     render(
       <SleepImpactCard
         entries={[makeEntry({ caffeineMg: CaffeineMg(200), timestamp: oneHourAgo })]}
         halfLifeHours={Hours(5)}
-        bedtimeHour={new Date().getHours() + 1} // bedtime in 1 hour from now
+        bedtimeHour={REFERENCE_NOW.getHours() + 1}
       />,
     );
     // Should be either the warning or danger message, not the safe one
@@ -71,13 +79,14 @@ describe('SleepImpactCard', () => {
 
   // ── Custom sleep threshold ─────────────────────────────────
   it('uses custom sleep threshold when provided', () => {
-    // 150mg consumed 1 hour ago — bedtime 1h from now: ~113mg > 100mg custom threshold
-    const oneHourAgo = new Date(Date.now() - 1 * 3600000).toISOString();
+    mockNow();
+    // 150mg consumed 1 hour ago — bedtime 1h after the mocked now: ~114mg > 100mg custom threshold
+    const oneHourAgo = isoHoursAgo(1);
     render(
       <SleepImpactCard
         entries={[makeEntry({ caffeineMg: CaffeineMg(150), timestamp: oneHourAgo })]}
         halfLifeHours={Hours(5)}
-        bedtimeHour={new Date().getHours() + 1}
+        bedtimeHour={REFERENCE_NOW.getHours() + 1}
         sleepThresholdMg={CaffeineMg(100)}
       />,
     );
@@ -87,7 +96,8 @@ describe('SleepImpactCard', () => {
 
   // ── Bedtime level display ──────────────────────────────────
   it('displays bedtime level in mg', () => {
-    const oneHourAgo = new Date(Date.now() - 1 * 3600000).toISOString();
+    mockNow();
+    const oneHourAgo = isoHoursAgo(1);
     render(
       <SleepImpactCard
         entries={[makeEntry({ caffeineMg: CaffeineMg(100), timestamp: oneHourAgo })]}
@@ -101,12 +111,13 @@ describe('SleepImpactCard', () => {
 
   // ── Time until safe ────────────────────────────────────────
   it('shows time until safe when above threshold', () => {
+    mockNow();
     // 300mg just now — should be above threshold
     render(
       <SleepImpactCard
         entries={[makeEntry({ caffeineMg: CaffeineMg(300) })]}
         halfLifeHours={Hours(5)}
-        bedtimeHour={new Date().getHours() + 1}
+        bedtimeHour={REFERENCE_NOW.getHours() + 1}
       />,
     );
     // Should show "Estimated safe by" text or be safe
