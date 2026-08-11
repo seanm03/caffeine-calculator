@@ -60,6 +60,16 @@ describe('DrinkLogForm', () => {
     );
   });
 
+  it('submits with an undefined drink name when none is provided', () => {
+    const onAdd = vi.fn();
+    render(<DrinkLogForm onAdd={onAdd} />);
+    fireEvent.change(screen.getByLabelText(/^caffeine/i), { target: { value: '100' } });
+    fireEvent.click(screen.getByRole('button', { name: /log drink/i }));
+    expect(onAdd).toHaveBeenCalledTimes(1);
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ caffeineMg: 100 }));
+    expect(onAdd.mock.calls[0][0].drinkName).toBeUndefined();
+  });
+
   it('disables the submit button while caffeine is invalid', () => {
     render(<DrinkLogForm onAdd={() => {}} />);
     expect(screen.getByRole('button', { name: /log drink/i })).toBeDisabled();

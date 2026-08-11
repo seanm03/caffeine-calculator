@@ -278,7 +278,9 @@ export function CaffeineLogProvider({ children }: { children: React.ReactNode })
       const newEntry: CaffeineLogEntry = {
         ...entry,
         id: entry.id ?? generateId(),
-        timestamp: entry.timestamp ?? new Date().toISOString(),
+        // timestamp is required by CaffeineLogEntry and every call site passes
+        // it explicitly — the `?? now()` fallback was provably dead.
+        timestamp: entry.timestamp,
       };
       setEntries((prev) => [newEntry, ...prev]);
     },

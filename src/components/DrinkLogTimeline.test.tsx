@@ -69,6 +69,15 @@ describe('DrinkLogTimeline', () => {
     expect(props.onUpdate).toHaveBeenCalledWith('1', { timestamp: expect.any(String) });
   });
 
+  it('updates the second entry timestamp when editing it', () => {
+    const { props } = renderTimeline();
+    fireEvent.click(screen.getAllByRole('button', { name: /edit time/i })[1]);
+    const timeInput = screen.getByLabelText(/edit drink time/i);
+    fireEvent.change(timeInput, { target: { value: '14:45' } });
+    expect(props.onUpdate).toHaveBeenCalledTimes(1);
+    expect(props.onUpdate).toHaveBeenCalledWith('2', { timestamp: expect.any(String) });
+  });
+
   it('exits editing mode when the time input loses focus', () => {
     renderTimeline();
     fireEvent.click(screen.getAllByRole('button', { name: /edit time/i })[0]);

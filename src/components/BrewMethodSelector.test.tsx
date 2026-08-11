@@ -84,4 +84,11 @@ describe('BrewMethodSelector', () => {
     render(<BrewMethodSelector value="pour-over" onChange={() => {}} />);
     expect(screen.getByRole('radiogroup', { name: 'Brew Method' })).toBeInTheDocument();
   });
+
+  it('ignores unrelated keys and does not change the selection', () => {
+    const onChange = vi.fn();
+    render(<BrewMethodSelector value="pour-over" onChange={onChange} />);
+    fireEvent.keyDown(screen.getByRole('radiogroup'), { key: 'x' });
+    expect(onChange).not.toHaveBeenCalled();
+  });
 });

@@ -132,4 +132,32 @@ describe('CoffeeInputs', () => {
     renderInputs({ isDecaf: true });
     expect(screen.getByText(/~97% less caffeine/i)).toBeInTheDocument();
   });
+
+  it('shows an imperial weight hint when weight is out of range in imperial mode', () => {
+    localStorage.setItem('coffee-calc-units', 'imperial');
+    renderInputs({ coffeeWeightG: WeightG(150) });
+    expect(screen.getByText(/enter a value between 0.1 and 4 oz/i)).toBeInTheDocument();
+  });
+
+  it('calls onWaterVolumeChange with 0 for an empty volume input', () => {
+    const { props } = renderInputs();
+    const input = screen.getByLabelText(/water volume/i);
+    fireEvent.change(input, { target: { value: '' } });
+    expect(props.onWaterVolumeChange).toHaveBeenCalledWith(0);
+  });
+
+  it('converts an imperial volume input to milliliters', () => {
+    localStorage.setItem('coffee-calc-units', 'imperial');
+    const { props } = renderInputs();
+    const input = screen.getByLabelText(/water volume/i);
+    fireEvent.change(input, { target: { value: '10' } });
+    // 10 fl oz → mL ≈ 10 / 0.033814 ≈ 295.7
+    expect(props.onWaterVolumeChange).toHaveBeenCalledWith(295.7);
+  });
+
+  it('shows an imperial water hint when volume is out of range in imperial mode', () => {
+    localStorage.setItem('coffee-calc-units', 'imperial');
+    renderInputs({ waterVolumeMl: VolumeMl(5) });
+    expect(screen.getByText(/enter a value between 0.5 and 34 fl oz/i)).toBeInTheDocument();
+  });
 });

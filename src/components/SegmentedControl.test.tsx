@@ -193,6 +193,20 @@ describe('SegmentedControl', () => {
     expect(onChange).toHaveBeenCalledWith('option-c');
   });
 
+  it('ignores unrelated keys and does not change the selection', () => {
+    const onChange = vi.fn();
+    render(
+      <SegmentedControl
+        options={OPTIONS}
+        value="option-a"
+        onChange={onChange}
+      />,
+    );
+    const radiogroup = screen.getByRole('radiogroup');
+    fireEvent.keyDown(radiogroup, { key: 'x' });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it('renders indicators when provided', () => {
     const optionsWithIndicators = [
       { value: 'red', label: 'Red', indicator: '#ff0000' },

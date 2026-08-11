@@ -18,13 +18,15 @@ export default defineConfig({
       reporter: ['text', 'lcov', 'html'],
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/**/*.test.*', 'src/test/**', 'src/vite-env.d.ts', 'src/main.tsx', 'src/types/index.ts'],
-      // Stage 10: 99/96/99/99 — raised after Coverage Stage 10
-      // (MethodologyInfo reference-link branches, caffeineCalculator
-      // invalid-input branches, caffeineMetabolism dead-code removal +
-      // bedtime projection + input-validation guards, SensitivityCharts
-      // flat-heatmap branch + dead `?? 0` guard removal). All four targets
-      // now 100% branches. Prior stage: 97/93/97/98.
-      thresholds: { statements: 99, branches: 96, functions: 99, lines: 99 },
+      // Stage 11: 99.5/98/99.5/99.5 — raised after Coverage Stage 11
+      // (all 13 remaining uncovered branches closed: useTheme auto+OS-dark,
+      // CoffeeInputs imperial branches, AdvancedOptions dead ref-guard removal
+      // + non-numeric temp input, BrewMethodSelector/SegmentedControl
+      // unrelated-key paths, DrinkLogForm empty-drinkName, DrinkLogTimeline
+      // second-entry edit, ResultsDisplay dead `!result` guard removal,
+      // useCaffeineLog dead timestamp-fallback removal). All nine target files
+      // now 100% branches. Prior stage: 99/96/99/99.
+      thresholds: { statements: 99.5, branches: 98, functions: 99.5, lines: 99.5 },
     },
   },
 });

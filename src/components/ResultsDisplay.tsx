@@ -48,10 +48,11 @@ export default function ResultsDisplay({ result, coffeeWeightG, waterVolumeMl, b
   }, [logFeedback]);
 
   const handleLogDrink = useCallback(() => {
-    if (!result) return;
+    // result is provably non-null here: the "Log This Drink" button is only
+    // rendered in the non-null branch below (early-return when !result).
     addEntry({
       timestamp: new Date().toISOString(),
-      caffeineMg: CaffeineMg(Math.round(result.totalCaffeineMg)),
+      caffeineMg: CaffeineMg(Math.round(result!.totalCaffeineMg)),
       brewMethod,
       coffeeWeightG,
       waterVolumeMl,

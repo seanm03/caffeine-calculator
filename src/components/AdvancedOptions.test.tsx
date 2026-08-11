@@ -131,6 +131,16 @@ describe('AdvancedOptions', () => {
     expect(props.onWaterTemperatureChange).not.toHaveBeenCalled();
   });
 
+  it('does not change temperature for a partial non-integer input', () => {
+    const { props } = renderOptions();
+    fireEvent.click(screen.getByRole('button', { name: /fine-tune your estimate/i }));
+    const tempInput = screen.getByLabelText(/water temperature/i);
+    // '.5' is a valid number-input value (not sanitized), but parseInt('.5') is
+    // NaN — it is neither a valid integer nor an empty string, so no change.
+    fireEvent.change(tempInput, { target: { value: '.5' } });
+    expect(props.onWaterTemperatureChange).not.toHaveBeenCalled();
+  });
+
   it('has no accessibility violations in expanded state', async () => {
     const { container } = renderOptions();
     const button = screen.getByRole('button', { name: /fine-tune your estimate/i });

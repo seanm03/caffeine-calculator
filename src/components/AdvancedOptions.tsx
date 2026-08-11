@@ -88,9 +88,9 @@ export default function AdvancedOptions({
   const { unitSystem, cToF } = useUnits();
 
   useEffect(() => {
-    if (contentRef.current) {
-      setContentHeight(contentRef.current.scrollHeight);
-    }
+    // contentRef.current is always set: the collapsible panel div below is
+    // unconditionally rendered and refs attach before effects run.
+    setContentHeight(contentRef.current!.scrollHeight);
   }, [expanded, roastLevel, grindSize, waterTemperatureC, processingMethod, altitude]);
 
   const displayTemp = unitSystem === 'imperial' ? cToF(waterTemperatureC) : waterTemperatureC;

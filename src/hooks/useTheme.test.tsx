@@ -1,4 +1,4 @@
-import { render, act } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { ThemeProvider, useTheme } from '@/hooks/useTheme';
 
@@ -22,6 +22,40 @@ describe('useTheme', () => {
     );
     // matchMedia mock reports matches: false → resolved theme is light
     expect(document.documentElement.classList.contains('dark')).toBe(false);
+  });
+
+  it('resolves dark when auto mode matches the OS dark preference', () => {
+    const matchMediaMock = vi.fn().mockImplementation((query: string) => ({
+      matches: true,
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+    vi.stubGlobal('matchMedia', matchMediaMock);
+
+    try {
+      function Probe() {
+        const { resolvedTheme, isDark } = useTheme();
+        return (
+          <>
+            <span data-testid="resolved">{resolvedTheme}</span>
+            <span data-testid="is-dark">{String(isDark)}</span>
+          </>
+        );
+      }
+      render(
+        <ThemeProvider>
+          <Probe />
+        </ThemeProvider>,
+      );
+      // Theme defaults to 'auto' — with OS dark preference, resolved theme is dark
+      expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(screen.getByTestId('resolved')).toHaveTextContent('dark');
+      expect(screen.getByTestId('is-dark')).toHaveTextContent('true');
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 
   it('toggles the dark class when the OS preference changes in auto theme', () => {
