@@ -216,6 +216,19 @@ These major version bumps are excluded from automatic PRs and require manual rev
 * `@types/react` — version-update:semver-major
 * `@types/react-dom` — version-update:semver-major
 
+### Version Updates Versus Security Updates
+
+The `allow` and `ignore` keys are version-update settings. They do not restrict Dependabot security updates, which the repository's Dependabot security updates toggle governs separately. The `direct` dependency scope in this repository therefore does not explain a missing security-update pull request for a transitive dependency.
+
+For npm, security updates do cover transitive dependencies and can update a parent dependency to reach a patched version, so a vulnerable transitive package recorded in the lock file is eligible for an automatic pull request.
+
+When an alert is open but no security-update pull request arrives, check both of these before blaming the configuration:
+
+1. The Dependabot security updates toggle in the repository's Advanced Security settings. While it is off, Dependabot raises alerts but never opens the accompanying pull requests.
+2. The Dependabot errors entry on the alert itself, which appears when Dependabot cannot compute a compatible upgrade path.
+
+An exact version pin in the `package.json` `overrides` field can block that upgrade path. This is the most likely reason the `js-yaml` alert required a manual fix instead of an automatic pull request.
+
 ## Integration with Existing Skills
 
 | Skill | When to Use |
