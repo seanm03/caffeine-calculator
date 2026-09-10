@@ -8,8 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && tsc -p tsconfig.node.json && vite build",
+    "build": "npm run typecheck && vite build",
     "lint": "eslint src/ vite.config.ts vitest.config.ts eslint.config.js --max-warnings 0",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.node.json --noEmit",
     "preview": "vite preview",
     "test": "vitest run",
     "deploy": "gh-pages -d dist"
