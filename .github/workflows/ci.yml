@@ -22,7 +22,12 @@ jobs:
       # dependencies that Dependabot's direct-only allow list does not
       # surface as version-update pull requests.
       - run: npm audit --audit-level=high
-      - run: npx tsc --noEmit
+      # Reuse the package script so CI and local type checking cover the same
+      # files: app sources plus vite.config.ts and vitest.config.ts.
+      - run: npm run typecheck
       # Reuse the package script so CI and local linting cover the same files.
       - run: npm run lint
+      # Run the full production build so config type errors and bundling
+      # failures cannot reach main unnoticed.
+      - run: npm run build
       - run: npx vitest run
