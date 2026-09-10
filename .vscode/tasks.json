@@ -4,7 +4,7 @@
 		{
 			"label": "type-check",
 			"type": "shell",
-			"command": "npx tsc --noEmit",
+			"command": "npm run typecheck",
 			"group": "build"
 		},
 		{
@@ -46,13 +46,13 @@
 		{
 			"label": "type-check",
 			"type": "shell",
-			"command": "npx tsc --noEmit",
+			"command": "npm run typecheck",
 			"group": "build"
 		},
 		{
 			"label": "eslint",
 			"type": "shell",
-			"command": "npx eslint src/ --max-warnings 0",
+			"command": "npm run lint",
 			"group": "test"
 		},
 		{
