@@ -76,6 +76,20 @@ Dependabot also opens PRs for routine version bumps. These carry the `dependenci
 
 Major version bumps for React (react, react-dom, @types/react, @types/react-dom) are explicitly ignored in the Dependabot config. Other major bumps will appear and require manual review.
 
+### Transitive Dependencies and Overrides
+
+Security alerts cover transitive dependencies even though the version-update configuration is scoped to direct dependencies only. A transitive advisory therefore arrives without a companion version-update PR, and remediation usually means adjusting an `overrides` entry in `package.json`.
+
+Re-verify every `overrides` entry when triaging any advisory. A pin that resolved an earlier advisory can hold a package behind a later fix, which is how `js-yaml` remained at `4.3.1` after `CVE-2026-84375` was patched in `4.3.2`.
+
+Follow these steps when updating an override:
+
+1. Confirm the patched version satisfies the range the parent dependency declares, so the override needs no forced resolution.
+2. Prefer a caret range such as `^4.3.2` over an exact pin. The caret keeps the security floor while allowing future patch releases to resolve on their own.
+3. Verify the result with `npm ls {package}` and `git diff package-lock.json`, then run type checking, linting, tests, and a production build.
+
+CI enforces this floor with `npm audit --audit-level=high`, which fails the build on high and critical advisories across direct and transitive dependencies.
+
 ## Review Workflow
 
 ### Step 1: Check Out and Inspect
@@ -201,6 +215,19 @@ These major version bumps are excluded from automatic PRs and require manual rev
 * `react-dom` — version-update:semver-major
 * `@types/react` — version-update:semver-major
 * `@types/react-dom` — version-update:semver-major
+
+### Version Updates Versus Security Updates
+
+The `allow` and `ignore` keys are version-update settings. They do not restrict Dependabot security updates, which the repository's Dependabot security updates toggle governs separately. The `direct` dependency scope in this repository therefore does not explain a missing security-update pull request for a transitive dependency.
+
+For npm, security updates do cover transitive dependencies and can update a parent dependency to reach a patched version, so a vulnerable transitive package recorded in the lock file is eligible for an automatic pull request.
+
+When an alert is open but no security-update pull request arrives, check both of these before blaming the configuration:
+
+1. The Dependabot security updates toggle in the repository's Advanced Security settings. While it is off, Dependabot raises alerts but never opens the accompanying pull requests.
+2. The Dependabot errors entry on the alert itself, which appears when Dependabot cannot compute a compatible upgrade path.
+
+An exact version pin in the `package.json` `overrides` field can block that upgrade path. This is the most likely reason the `js-yaml` alert required a manual fix instead of an automatic pull request.
 
 ## Integration with Existing Skills
 
