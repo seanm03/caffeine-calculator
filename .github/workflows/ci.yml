@@ -23,5 +23,6 @@ jobs:
       # surface as version-update pull requests.
       - run: npm audit --audit-level=high
       - run: npx tsc --noEmit
-      - run: npx eslint src/ --max-warnings 0
+      # Reuse the package script so CI and local linting cover the same files.
+      - run: npm run lint
       - run: npx vitest run
