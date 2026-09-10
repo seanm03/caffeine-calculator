@@ -18,6 +18,10 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
+      # Fail on high and critical advisories, including the transitive
+      # dependencies that Dependabot's direct-only allow list does not
+      # surface as version-update pull requests.
+      - run: npm audit --audit-level=high
       - run: npx tsc --noEmit
       - run: npx eslint src/ --max-warnings 0
       - run: npx vitest run
