@@ -76,6 +76,20 @@ Dependabot also opens PRs for routine version bumps. These carry the `dependenci
 
 Major version bumps for React (react, react-dom, @types/react, @types/react-dom) are explicitly ignored in the Dependabot config. Other major bumps will appear and require manual review.
 
+### Transitive Dependencies and Overrides
+
+Security alerts cover transitive dependencies even though the version-update configuration is scoped to direct dependencies only. A transitive advisory therefore arrives without a companion version-update PR, and remediation usually means adjusting an `overrides` entry in `package.json`.
+
+Re-verify every `overrides` entry when triaging any advisory. A pin that resolved an earlier advisory can hold a package behind a later fix, which is how `js-yaml` remained at `4.3.1` after `CVE-2026-84375` was patched in `4.3.2`.
+
+Follow these steps when updating an override:
+
+1. Confirm the patched version satisfies the range the parent dependency declares, so the override needs no forced resolution.
+2. Prefer a caret range such as `^4.3.2` over an exact pin. The caret keeps the security floor while allowing future patch releases to resolve on their own.
+3. Verify the result with `npm ls {package}` and `git diff package-lock.json`, then run type checking, linting, tests, and a production build.
+
+CI enforces this floor with `npm audit --audit-level=high`, which fails the build on high and critical advisories across direct and transitive dependencies.
+
 ## Review Workflow
 
 ### Step 1: Check Out and Inspect
