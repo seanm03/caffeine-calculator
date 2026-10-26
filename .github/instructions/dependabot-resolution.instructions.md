@@ -88,7 +88,7 @@ Follow these steps when updating an override:
 2. Prefer a caret range such as `^4.3.2` over an exact pin. The caret keeps the security floor while allowing future patch releases to resolve on their own.
 3. Verify the result with `npm ls {package}` and `git diff package-lock.json`, then run type checking, linting, tests, and a production build.
 
-CI enforces this floor with `npm audit --audit-level=high`, which fails the build on high and critical advisories across direct and transitive dependencies.
+CI surfaces this floor with `npm audit --audit-level=high`. The audit step emits a workflow warning annotation for high and critical advisories across direct and transitive dependencies, then lets the remaining validation steps (type check, lint, build, tests) run. A non-zero audit result does not fail the build, so treat the annotation as a required follow-up rather than a merge signal.
 
 ## Review Workflow
 

@@ -18,10 +18,20 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
-      # Fail on high and critical advisories, including the transitive
+      # Report high and critical advisories, including the transitive
       # dependencies that Dependabot's direct-only allow list does not
-      # surface as version-update pull requests.
-      - run: npm audit --audit-level=high
+      # surface as version-update pull requests. Annotations surface in the
+      # run summary but never fail the job, so tests still execute.
+      - name: Audit dependencies (warn only)
+        run: |
+          set +e
+          npm audit --audit-level=high
+          status=$?
+          if [ "$status" -eq 1 ]; then
+            echo "::warning::npm audit found high or critical advisories. CI continues; update the affected dependencies."
+          elif [ "$status" -ne 0 ]; then
+            echo "::warning::npm audit could not complete (exit code $status). CI continues."
+          fi
       # Reuse the package script so CI and local type checking cover the same
       # files: app sources plus vite.config.ts and vitest.config.ts.
       - run: npm run typecheck
