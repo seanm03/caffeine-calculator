@@ -45,6 +45,7 @@
     "vitest-axe": "^0.1.0"
   },
   "overrides": {
-    "js-yaml": "^4.3.2"
+    "js-yaml": "^4.3.2",
+    "zod": "^4.6.6"
   }
 }
