@@ -88,6 +88,8 @@ Follow these steps when updating an override:
 2. Prefer a caret range such as `^4.3.2` over an exact pin. The caret keeps the security floor while allowing future patch releases to resolve on their own.
 3. Verify the result with `npm ls {package}` and `git diff package-lock.json`, then run type checking, linting, tests, and a production build.
 
+Some advisories publish only a major patched release, so no version satisfies the range the parents declare and the override forces a version they never opted into. `minimatch` is the current example: the advisory covers `< 11.0.1`, while `eslint-plugin-import` and `eslint-plugin-react` still declare `^3.1.2`. When that happens, confirm each consumer loads the forced version by its published API shape. `minimatch` 11 keeps the `minimatch` and `Minimatch` named exports that `eslint`, `@eslint/config-array`, `@eslint/eslintrc`, and `@typescript-eslint/typescript-estree` use, but drops the callable default export those two plugins rely on in option-gated paths (`pathGroups`, `customComponentNames`, `ignore`). Linting passes because the project configures none of those options.
+
 CI surfaces this floor with `npm audit --audit-level=high`. The audit step emits a workflow warning annotation for high and critical advisories across direct and transitive dependencies, then lets the remaining validation steps (type check, lint, build, tests) run. A non-zero audit result does not fail the build, so treat the annotation as a required follow-up rather than a merge signal.
 
 ## Review Workflow
